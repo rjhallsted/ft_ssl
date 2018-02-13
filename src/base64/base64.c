@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/13 00:05:49 by suedadam         ###   ########.fr       */
+/*   Updated: 2018/02/13 11:51:26 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,13 @@ char *base64_encode(const char *input)
 
 	len = ft_strlen(input);
 	output = base64_encode_block(input);
-	if (len >= 3)
+	len -= 3;
+	input += 3;
+	while (len > 0)
 	{
+		output = ft_strjoinfree(output, base64_encode_block(input), 3);
 		len -= 3;
 		input += 3;
-		while (len > 0)
-		{
-			output = ft_strjoinfree(output, base64_encode_block(input), 3);
-			len -= 3;
-			input += 3;
-		}	
 	}
 	return (output);
 }
