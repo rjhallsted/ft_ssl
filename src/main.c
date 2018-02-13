@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/12 23:42:34 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/13 11:37:51 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,7 @@ char *get_block(int fd, int block_size)
 	ft_bzero(buffer, block_size + 1);
 	while (prog < block_size &&
 		   (ret = read(fd, buffer + prog, block_size - prog)))
-	{
 		prog += ret;
-		ft_printf("ret: %d\n", ret);
-		ft_printf("buff: %s\n", buffer);
-	}
 	return ((prog > 0) ? ft_strdup(buffer) : NULL);
 }
 
@@ -69,6 +65,7 @@ int main(int argc, char **argv)
 			ft_printf("%s", output);
 			free(output);
 		}
+		ft_printf("\n");
 		close(fd);
 	}
 	return (0);
