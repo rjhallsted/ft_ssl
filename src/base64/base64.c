@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   base64.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
+/*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/13 00:05:37 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/13 00:05:49 by suedadam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,16 @@ char *base64_encode(const char *input)
 
 	len = ft_strlen(input);
 	output = base64_encode_block(input);
-	len -= 3;
-	input += 3;
-	while (len > 0)
+	if (len >= 3)
 	{
-		output = ft_strjoinfree(output, base64_encode_block(input), 3);
 		len -= 3;
 		input += 3;
+		while (len > 0)
+		{
+			output = ft_strjoinfree(output, base64_encode_block(input), 3);
+			len -= 3;
+			input += 3;
+		}	
 	}
 	return (output);
 }
