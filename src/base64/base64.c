@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 11:18:36 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 11:52:03 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,25 +95,32 @@ static int	find_in_table(char c)
 
 static char *base64_decode_block(const char *input)
 {
-	int		i;
-	int		bits;
-	char	output[5];
+	int				i;
+	unsigned int	bits;
+	char			output[4];
+	int				len;
 
 	i = 0;
 	bits = 0;
-	while (*(input + i) && input[i] != '=')
+	len = 0;
+	while (i < 4 && *(input + i) && input[i] != '=')
 	{
-		bits |= find_in_table(input[i]);
 		bits <<= 6;
+		len += 6;
+		bits |= find_in_table(input[i]);
+		i++;
 	}
 	if (i < 4)
-		bits <<= i * 2;
-	ft_bzero(output + i, 5 - i);
-	while (i >= 0)
 	{
-		output[i] = bits & 0x5f;
+		bits <<= i * 2;
+		len += i * 2;
+	}
+	i = len / 8;
+	ft_bzero(output + i, 4 - i);
+	while (i > 0)
+	{
+		output[--i] = (unsigned char)(bits & 0xff);
 		bits >>= 8;
-		i--;
 	}
 	return (ft_strdup(output));
 }
@@ -129,7 +136,7 @@ char *ft_ssl_base64_decode(const char *input)
 	input += 4;
 	while (len >= 4)
 	{
-		output = ft_strjoinfree(output, base64_encode_block(input), 3);
+		output = ft_strjoinfree(output, base64_decode_block(input), 3);
 		len -= 4;
 		input += 4;
 	}
