@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 20:22:06 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/14 20:44:23 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,17 @@ static char		*get_block(int fd, int block_size)
 	return ((prog > 0) ? ft_strdup(buffer) : NULL);
 }
 
+static void file_open_error(char *filename)
+{
+	ft_printf_fd(STDERR_FILENO, "Unable to open '%s': No such file or directory\n", filename);
+}
+
 int			main(int argc, char **argv)
 {
-	int			block_size;
 	char		*block;
 	char		*output;
-	int			fd;
+	int			input_fd;
+	int			output_fd;
 	t_flag_data	flag_data;
 	
 	if (argc < 2)
@@ -49,31 +54,48 @@ int			main(int argc, char **argv)
 		ft_printf("usage: ft_ssl command [command opts] [command args]\n");
 		return (0);
 	}
-	fd = 0;
 	flag_data = ft_ssl_get_flags(argc, argv);
 	if (!(ft_ssl_check_flags(flag_data)))
 	{
 		ft_ssl_flag_error();
 		return (-1);
 	}
+	if (flag_data.has_input_file && ft_strcmp(flag_data.input_file, "-") != 0)
+	{
+		input_fd = open(flag_data.input_file, O_RDONLY);
+		if (input_fd == -1)
+		{
+			file_open_error(flag_data.input_file);
+			return (-1);
+		}
+	}
+	else
+		input_fd = STDIN_FILENO;
+	if (flag_data.has_output_file)
+	{
+		output_fd = open(flag_data.output_file, O_WRONLY);
+		if (output_fd == -1)
+		{
+			file_open_error(flag_data.output_file);
+			close(input_fd);
+			return (-1);
+		}
+	}
+	else
+		output_fd = STDOUT_FILENO;
 	if (ft_strcmp(flag_data.command, "base64") == 0)
 	{
-		block_size = 3;
-//		if ((fd = open(STDIN_FILENO, O_RDONLY)) == -1)
-//		{
-//			ft_printf_fd(2, "Error: Failed to open file\n");
-//			return (-1);
-//		}
-		while ((block = get_block(fd, block_size)))
+		while ((block = get_block(input_fd, B64_BLOCKSIZE)))
 		{
 			output = base64_encode(block);
 			free(block);
 			block = NULL;
-			ft_printf("%s", output);
+			ft_printf_fd(output_fd, "%s", output);
 			free(output);
 		}
-		ft_printf("\n");
-		close(fd);
+		ft_printf_fd(output_fd, "\n");
 	}
+	close(input_fd);
+	close(output_fd);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 20:22:54 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/14 20:44:40 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 # define FT_SSL_H
 
 enum e_modes {
-	MODE_ERROR,
-	MODE_ENCRYPT,
-	MODE_DECRYPT
+	ERROR_MODE,
+	ENCRYPT_MODE,
+	DECRYPT_MODE
 };
 
 typedef struct	s_flag_data {
@@ -27,6 +27,11 @@ typedef struct	s_flag_data {
 	char		*output_file;
 	int			mode;
 }				t_flag_data;
+
+enum e_block_sizes {
+	B64_BLOCKSIZE = 3,
+	DES_BLOCKSIZE = 64
+};
 
 t_flag_data	ft_ssl_get_flags(int argc, char **argv);
 void		ft_ssl_flag_error(void);

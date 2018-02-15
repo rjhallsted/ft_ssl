@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 20:24:44 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/14 20:35:36 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_flag_data	init_flag_data(void)
 	t_flag_data data;
 
 	data.command = NULL;
-	data.mode = MODE_ENCRYPT;
+	data.mode = ENCRYPT_MODE;
 	data.has_input_file = 0;
 	data.input_file = NULL;
 	data.has_output_file = 0;
@@ -45,9 +45,9 @@ t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 	while (i < argc)
 	{
 		if (ft_strcmp("-e", argv[i]) == 0 || ft_strcmp("--encrypt", argv[i]) == 0)
-			flag_data.mode = MODE_ENCRYPT;
+			flag_data.mode = ENCRYPT_MODE;
 		else if (ft_strcmp("-d", argv[i]) == 0 || ft_strcmp("--decrypt", argv[i]) == 0)
-			flag_data.mode = MODE_DECRYPT;
+			flag_data.mode = DECRYPT_MODE;
 		else if (ft_strcmp("-i", argv[i]))
 		{
 			flag_data.has_input_file = 1;
@@ -62,8 +62,7 @@ t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 		}
 		else
 		{
-			ft_ssl_flag_error();
-			flag_data.mode = MODE_ERROR;
+			flag_data.mode = ERROR_MODE;
 			return (flag_data);
 		}
 		i++;
@@ -73,7 +72,7 @@ t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 
 int					ft_ssl_check_flags(t_flag_data flag_data)
 {
-	if (flag_data.mode == MODE_ERROR)
+	if (flag_data.mode == ERROR_MODE)
 		return (0);
 	if (flag_data.has_input_file && flag_data.input_file == NULL)
 		return (0);
