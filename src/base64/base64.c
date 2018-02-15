@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/13 11:51:26 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/14 21:42:05 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ const static char g_base64_table[64] = {
 
 static char *base64_encode_block(const char *input)
 {
-	unsigned int	sum;
+	unsigned int	bits;
 	char			output[5];
 	int				len;
 	int				i;
@@ -38,18 +38,29 @@ static char *base64_encode_block(const char *input)
 	len = 0;
 	while (len < 3 && *(input + len))
 		len++;
-	sum = (len > 0) ? input[0] : 0;
-	sum <<= 8;
-	sum |= (len > 1) ? input[1] : 0;
-	sum <<= 8;
-	sum |= (len > 2) ? input[2] : 0;
+	bits = (len > 0) ? (unsigned char)input[0] : 0;
+	bits <<= 4;
+	if (len > 1)
+	{
+		bits <<= 4;
+		bits |= (len > 1) ? (unsigned char)input[1] : 0;
+		bits <<= 2;
+		if (len > 2)
+		{
+			bits <<= 6;
+			bits |= (len > 2) ? (unsigned char)input[2] : 0;
+		}
+	}
 
 	output[4] = '\0';
-	i = 4;
-	while (i-- > 0)
+	i = 3;
+	while (i > len)
+		output[i--] = '=';
+	while (i >= 0)
 	{
-		output[i] = (sum & 0x3f) ? g_base64_table[sum & 0x3f] : '=';
-		sum >>= 6;
+		output[i] = g_base64_table[bits & 0x3f];
+		bits >>= 6;
+		i--;
 	}
 	return (ft_strdup(output));
 }
@@ -63,7 +74,7 @@ char *base64_encode(const char *input)
 	output = base64_encode_block(input);
 	len -= 3;
 	input += 3;
-	while (len > 0)
+	while (len >= 3)
 	{
 		output = ft_strjoinfree(output, base64_encode_block(input), 3);
 		len -= 3;
