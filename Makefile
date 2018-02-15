@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/02/12 23:56:39 by rhallste         ###   ########.fr        #
+#    Updated: 2018/02/14 20:23:45 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -17,7 +17,7 @@ CFLAGS		=	-Wall -Werror -Wextra #$(EXTRA_FLAGS)
 
 BASE64		=	base64/base64
 
-FT_SSL		=	main
+FT_SSL		=	main flags
 
 FILES		=	$(BASE64) $(FT_SSL)
 
