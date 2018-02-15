@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 20:44:23 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/14 20:58:04 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,9 @@ int			main(int argc, char **argv)
 		}
 		ft_printf_fd(output_fd, "\n");
 	}
-	close(input_fd);
-	close(output_fd);
+	if (input_fd != STDIN_FILENO)
+		close(input_fd);
+	if (output_fd != STDOUT_FILENO)
+		close(output_fd);
 	return (0);
 }

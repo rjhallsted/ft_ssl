@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 20:35:36 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/14 20:57:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 	int			i;
 
 	flag_data = init_flag_data();
+	flag_data.command = ft_strdup(argv[1]);
 	i = 2;
 	while (i < argc)
 	{
@@ -48,13 +49,13 @@ t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 			flag_data.mode = ENCRYPT_MODE;
 		else if (ft_strcmp("-d", argv[i]) == 0 || ft_strcmp("--decrypt", argv[i]) == 0)
 			flag_data.mode = DECRYPT_MODE;
-		else if (ft_strcmp("-i", argv[i]))
+		else if (ft_strcmp("-i", argv[i]) == 0 || ft_strcmp("--input", argv[i]) == 0)
 		{
 			flag_data.has_input_file = 1;
 			if (++i < argc)
 				flag_data.input_file = ft_strdup(argv[i]);
 		}
-		else if (ft_strcmp("-o", argv[i]))
+		else if (ft_strcmp("-o", argv[i]) == 0 || ft_strcmp("--output", argv[i]) == 0)
 		{
 			flag_data.has_output_file = 1;
 			if (++i < argc)
@@ -72,6 +73,8 @@ t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 
 int					ft_ssl_check_flags(t_flag_data flag_data)
 {
+	if (!(flag_data.command))
+		return (0);
 	if (flag_data.mode == ERROR_MODE)
 		return (0);
 	if (flag_data.has_input_file && flag_data.input_file == NULL)
