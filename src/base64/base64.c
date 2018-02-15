@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 13:05:59 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 14:52:23 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * in the table below.
 */
 
-const static char g_base64_table[64] = {
+const static unsigned char g_b64e[64] = {
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
 	'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
 	'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
@@ -28,41 +28,16 @@ const static char g_base64_table[64] = {
 	'w', 'x', 'y', 'z', '0', '1', '2', '3',
 	'4', '5', '6', '7', '8', '9', '+', '/' };
 
-static char *base64_encode_block(const char *input)
+static char *base64_encode_block(const unsigned char *in, int len)
 {
-	unsigned int	bits;
-	char			output[5];
-	int				len;
-	int				i;
+	char			out[5];
 
-	len = 0;
-	while (len < 3 && *(input + len))
-		len++;
-	bits = (len > 0) ? (unsigned char)input[0] : 0;
-	bits <<= 4;
-	if (len > 1)
-	{
-		bits <<= 4;
-		bits |= (len > 1) ? (unsigned char)input[1] : 0;
-		bits <<= 2;
-		if (len > 2)
-		{
-			bits <<= 6;
-			bits |= (len > 2) ? (unsigned char)input[2] : 0;
-		}
-	}
-
-	output[4] = '\0';
-	i = 3;
-	while (i > len)
-		output[i--] = '=';
-	while (i >= 0)
-	{
-		output[i] = g_base64_table[bits & 0x3f];
-		bits >>= 6;
-		i--;
-	}
-	return (ft_strdup(output));
+	out[4] = '\0';
+	out[0] = (unsigned char) g_b64e[in[0] >> 2];
+	out[1] = (unsigned char) g_b64e[((in[0] & 0x3) << 4) | (in[1] >> 4)];
+	out[2] = (unsigned char) (len > 1) ? g_b64e[((in[1] & 0xf) << 2) | (in[2] >> 6)] : '=';
+	out[3] = (unsigned char) (len > 2) ? g_b64e[in[2] & 0x3f] : '=';
+	return (ft_strdup(out));
 }
 
 char *ft_ssl_base64_encode(const char *input)
@@ -71,12 +46,12 @@ char *ft_ssl_base64_encode(const char *input)
 	int		len;
 
 	len = ft_strlen(input);
-	output = base64_encode_block(input);
+	output = base64_encode_block((unsigned char *)input, len);
 	len -= 3;
 	input += 3;
 	while (len >= 3)
 	{
-		output = ft_strjoinfree(output, base64_encode_block(input), 3);
+		output = ft_strjoinfree(output, base64_encode_block((unsigned char *)input, len), 3);
 		len -= 3;
 		input += 3;
 	}
@@ -88,7 +63,7 @@ static int	find_in_table(char c)
 	int i;
 
 	i = 0;
-	while (i < 64 && g_base64_table[i] != c)
+	while (i < 64 && g_b64e[i] != c)
 		i++;
 	return (i);
 }
