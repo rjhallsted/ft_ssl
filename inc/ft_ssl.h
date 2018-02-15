@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 11:58:10 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 14:58:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void		ft_ssl_b64_flag_error(void);
 void		ft_ssl_nocommand_error(void);
 int			ft_ssl_check_flags(t_flag_data flag_data);
 
-char *ft_ssl_base64_encode(const char *input);
-char *ft_ssl_base64_decode(const char *input);
+char *ft_ssl_base64_encode(const char *input, int len);
+char *ft_ssl_base64_decode(const char *input, int len);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 14:52:23 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 14:57:17 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,10 @@ static char *base64_encode_block(const unsigned char *in, int len)
 	return (ft_strdup(out));
 }
 
-char *ft_ssl_base64_encode(const char *input)
+char *ft_ssl_base64_encode(const char *input, int len)
 {
 	char	*output;
-	int		len;
 
-	len = ft_strlen(input);
 	output = base64_encode_block((unsigned char *)input, len);
 	len -= 3;
 	input += 3;
@@ -100,12 +98,10 @@ static char *base64_decode_block(const char *input)
 	return (ft_strdup(output));
 }
 
-char *ft_ssl_base64_decode(const char *input)
+char *ft_ssl_base64_decode(const char *input, int len)
 {
 	char	*output;
-	int		len;
 
-	len = ft_strlen(input);
 	output = base64_decode_block(input);
 	len -= 4;
 	input += 4;

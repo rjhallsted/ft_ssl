@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 13:35:15 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 14:56:49 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * DES accepts 8 (64 bits)
  */
 
-static char		*get_block(int fd, int block_size)
+static int	get_block(int fd, char **block, int block_size)
 {
 	char	buffer[block_size + 1];
 	int		ret;
@@ -34,7 +34,8 @@ static char		*get_block(int fd, int block_size)
 	while (prog < block_size &&
 		   (ret = read(fd, buffer + prog, block_size - prog)))
 		prog += ret;
-	return ((prog > 0) ? ft_strdup(buffer) : NULL);
+	*block = ft_strdup(buffer);
+	return (prog);
 }
 
 static void file_open_error(char *filename, int permissions)
@@ -59,7 +60,8 @@ static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 	int 	blocksize;
 	char	*block;
 	char	*output;
-	char	*(*filter)(const char *);
+	char	*(*filter)(const char *, int);
+	int		len;
 
 	//if (flags.command = B64_SSLCOM)
 	//{
@@ -67,9 +69,9 @@ static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 		filter = (flags.mode == DECRYPT_MODE) ? &ft_ssl_base64_decode : &ft_ssl_base64_encode;
 		//}
 	block = NULL;
-	while ((block = get_block(in_fd, blocksize)))
+	while ((len = get_block(in_fd, &block, blocksize)))
 	{
-		output = filter(block);
+		output = filter(block, len);
 		free(block);
 		block = NULL;
 		ft_printf_fd(out_fd, "%s", output);
