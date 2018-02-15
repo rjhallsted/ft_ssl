@@ -6,13 +6,14 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 21:28:16 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/14 22:01:42 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "../inc/ft_ssl.h"
 #include "../inc/libft/inc/libft.h"
 
@@ -36,9 +37,21 @@ static char		*get_block(int fd, int block_size)
 	return ((prog > 0) ? ft_strdup(buffer) : NULL);
 }
 
-static void file_open_error(char *filename)
+static void file_open_error(char *filename, int permissions)
 {
-	ft_printf_fd(STDERR_FILENO, "Unable to open '%s': No such file or directory\n", filename);
+	char *message;
+	char *action;
+
+	if (permissions & O_CREAT)
+		action = "create";
+	else
+		action = "open";
+	ft_printf_fd(STDERR_FILENO, "Unable to %s '%s': ", action, filename);
+	if (errno == EACCES)
+		message = "Permission denied";
+	else
+		message = "No such file or directory";
+	ft_printf_fd(STDERR_FILENO, "%s\n", message);
 }
 
 int			main(int argc, char **argv)
@@ -65,7 +78,7 @@ int			main(int argc, char **argv)
 		input_fd = open(flag_data.input_file, O_RDONLY);
 		if (input_fd == -1)
 		{
-			file_open_error(flag_data.input_file);
+			file_open_error(flag_data.input_file, O_RDONLY);
 			return (-1);
 		}
 	}
@@ -73,10 +86,10 @@ int			main(int argc, char **argv)
 		input_fd = STDIN_FILENO;
 	if (flag_data.has_output_file)
 	{
-		output_fd = open(flag_data.output_file, O_WRONLY);
+		output_fd = open(flag_data.output_file, O_WRONLY|O_CREAT, 0644);
 		if (output_fd == -1)
 		{
-			file_open_error(flag_data.output_file);
+			file_open_error(flag_data.output_file, O_WRONLY|O_CREAT);
 			close(input_fd);
 			return (-1);
 		}
