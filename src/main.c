@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 14:56:49 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 15:55:08 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * DES accepts 8 (64 bits)
  */
 
-static int	get_block(int fd, char **block, int block_size)
+static int	get_block(int fd, unsigned char **block, int block_size)
 {
 	char	buffer[block_size + 1];
 	int		ret;
@@ -34,7 +34,8 @@ static int	get_block(int fd, char **block, int block_size)
 	while (prog < block_size &&
 		   (ret = read(fd, buffer + prog, block_size - prog)))
 		prog += ret;
-	*block = ft_strdup(buffer);
+	*block = (unsigned char *)ft_strnew(block_size);
+	ft_memcpy(*block, buffer, block_size);
 	return (prog);
 }
 
@@ -57,11 +58,11 @@ static void file_open_error(char *filename, int permissions)
 
 static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 {
-	int 	blocksize;
-	char	*block;
-	char	*output;
-	char	*(*filter)(const char *, int);
-	int		len;
+	int 			blocksize;
+	unsigned char	*block;
+	char			*output;
+	char			*(*filter)(const unsigned char *, int);
+	int				len;
 
 	//if (flags.command = B64_SSLCOM)
 	//{
@@ -113,10 +114,10 @@ int			main(int argc, char **argv)
 		input_fd = STDIN_FILENO;
 	if (flag_data.has_output_file && ft_strcmp(flag_data.output_file, "-") != 0)
 	{
-		output_fd = open(flag_data.output_file, O_WRONLY|O_CREAT, 0644);
+		output_fd = open(flag_data.output_file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
 		if (output_fd == -1)
 		{
-			file_open_error(flag_data.output_file, O_WRONLY|O_CREAT);
+			file_open_error(flag_data.output_file, O_WRONLY|O_CREAT|O_TRUNC);
 			close(input_fd);
 			return (-1);
 		}

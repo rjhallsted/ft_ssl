@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 14:57:17 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 15:49:39 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char *base64_encode_block(const unsigned char *in, int len)
 	return (ft_strdup(out));
 }
 
-char *ft_ssl_base64_encode(const char *input, int len)
+char *ft_ssl_base64_encode(const unsigned char *input, int len)
 {
 	char	*output;
 
@@ -66,7 +66,7 @@ static int	find_in_table(char c)
 	return (i);
 }
 
-static char *base64_decode_block(const char *input)
+static char *base64_decode_block(const unsigned char *input)
 {
 	int				i;
 	unsigned int	bits;
@@ -98,14 +98,14 @@ static char *base64_decode_block(const char *input)
 	return (ft_strdup(output));
 }
 
-char *ft_ssl_base64_decode(const char *input, int len)
+char *ft_ssl_base64_decode(const unsigned char *input, int len)
 {
 	char	*output;
 
 	output = base64_decode_block(input);
 	len -= 4;
 	input += 4;
-	while (len >= 4 && !ft_strchr(input, '='))
+	while (len >= 4 && !ft_strchr((char *)input, '='))
 	{
 		output = ft_strjoinfree(output, base64_decode_block(input), 3);
 		len -= 4;
