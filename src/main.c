@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 11:21:04 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 11:58:26 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,16 @@ int			main(int argc, char **argv)
 	
 	if (argc < 2)
 	{
-		ft_printf("usage: ft_ssl command [command opts] [command args]\n");
+		ft_ssl_nocommand_error();
 		return (0);
 	}
 	flag_data = ft_ssl_get_flags(argc, argv);
 	if (!(ft_ssl_check_flags(flag_data)))
 	{
-		ft_ssl_flag_error();
+		if (flag_data.command == ERROR_SSLCOM)
+			ft_ssl_nocommand_error();
+		else
+			ft_ssl_b64_flag_error();
 		return (-1);
 	}
 	if (flag_data.has_input_file && ft_strcmp(flag_data.input_file, "-") != 0)
@@ -106,7 +109,7 @@ int			main(int argc, char **argv)
 	}
 	else
 		input_fd = STDIN_FILENO;
-	if (flag_data.has_output_file)
+	if (flag_data.has_output_file && ft_strcmp(flag_data.output_file, "-") != 0)
 	{
 		output_fd = open(flag_data.output_file, O_WRONLY|O_CREAT, 0644);
 		if (output_fd == -1)

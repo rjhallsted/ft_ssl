@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 11:21:38 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 11:55:54 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,18 @@ static t_flag_data	init_flag_data(void)
 	return (data);
 }
 
-void				ft_ssl_flag_error(void)
+void				ft_ssl_b64_flag_error(void)
 {
 	ft_printf("Usage:\t./ft_ssl base64 [-ed] [-i in_file] [-o out_file]\n");
 	ft_printf("\t\t-e, --encode\tencodes input\n");	
 	ft_printf("\t\t-d, --decode\tdecodes input\n");
 	ft_printf("\t\t-i, --input\tinput file (default: \"-\" for stdin)\n");
 	ft_printf("\t\t-o, --output\toutput file (default: \"-\" for stdout)\n");
+}
+
+void				ft_ssl_nocommand_error(void)
+{
+	ft_printf("usage: ft_ssl command [command opts] [command args]\n");
 }
 
 /* 
