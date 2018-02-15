@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 22:01:42 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 11:21:04 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,32 @@ static void file_open_error(char *filename, int permissions)
 	ft_printf_fd(STDERR_FILENO, "%s\n", message);
 }
 
+static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
+{
+	int 	blocksize;
+	char	*block;
+	char	*output;
+	char	*(*filter)(const char *);
+
+	//if (flags.command = B64_SSLCOM)
+	//{
+		blocksize = (flags.mode == DECRYPT_MODE) ? B64D_BLOCKSIZE : B64E_BLOCKSIZE;
+		filter = (flags.mode == DECRYPT_MODE) ? &ft_ssl_base64_decode : &ft_ssl_base64_encode;
+		//}
+	block = NULL;
+	while ((block = get_block(in_fd, blocksize)))
+	{
+		output = filter(block);
+		free(block);
+		block = NULL;
+		ft_printf_fd(out_fd, "%s", output);
+		free(output);
+	}
+	ft_printf_fd(out_fd, "\n");
+}
+
 int			main(int argc, char **argv)
 {
-	char		*block;
-	char		*output;
 	int			input_fd;
 	int			output_fd;
 	t_flag_data	flag_data;
@@ -96,18 +118,7 @@ int			main(int argc, char **argv)
 	}
 	else
 		output_fd = STDOUT_FILENO;
-	if (ft_strcmp(flag_data.command, "base64") == 0)
-	{
-		while ((block = get_block(input_fd, B64_BLOCKSIZE)))
-		{
-			output = base64_encode(block);
-			free(block);
-			block = NULL;
-			ft_printf_fd(output_fd, "%s", output);
-			free(output);
-		}
-		ft_printf_fd(output_fd, "\n");
-	}
+	do_blocks(flag_data, input_fd, output_fd);
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
 	if (output_fd != STDOUT_FILENO)

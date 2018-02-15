@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 20:57:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 11:21:38 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_flag_data	init_flag_data(void)
 {
 	t_flag_data data;
 
-	data.command = NULL;
+	data.command = ERROR_SSLCOM;
 	data.mode = ENCRYPT_MODE;
 	data.has_input_file = 0;
 	data.input_file = NULL;
@@ -35,13 +35,24 @@ void				ft_ssl_flag_error(void)
 	ft_printf("\t\t-o, --output\toutput file (default: \"-\" for stdout)\n");
 }
 
+/* 
+ * This table corresponds in order to the e_commands enum in
+ * inc/ft_ssl.h
+*/
+static const char	*g_allowed_commands[FTSSL_COMMAND_COUNT] = {
+	"error", "base64", "des"
+};
+
 t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 {
 	t_flag_data flag_data;
 	int			i;
 
 	flag_data = init_flag_data();
-	flag_data.command = ft_strdup(argv[1]);
+	i = 1;
+	while (i < FTSSL_COMMAND_COUNT && ft_strcmp(argv[1], g_allowed_commands[i]) != 0)
+		i++;
+	flag_data.command = (i < FTSSL_COMMAND_COUNT) ? i : ERROR_SSLCOM;
 	i = 2;
 	while (i < argc)
 	{
@@ -73,7 +84,7 @@ t_flag_data 		ft_ssl_get_flags(int argc, char **argv)
 
 int					ft_ssl_check_flags(t_flag_data flag_data)
 {
-	if (!(flag_data.command))
+	if (flag_data.command == ERROR_SSLCOM)
 		return (0);
 	if (flag_data.mode == ERROR_MODE)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/14 21:42:05 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 11:18:36 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char *base64_encode_block(const char *input)
 	return (ft_strdup(output));
 }
 
-char *base64_encode(const char *input)
+char *ft_ssl_base64_encode(const char *input)
 {
 	char	*output;
 	int		len;
@@ -83,12 +83,55 @@ char *base64_encode(const char *input)
 	return (output);
 }
 
-/* static char *base64_decode_block(const char *input) */
-/* { */
+static int	find_in_table(char c)
+{
+	int i;
 
-/* } */
+	i = 0;
+	while (i < 64 && g_base64_table[i] != c)
+		i++;
+	return (i);
+}
 
-/* char *base64_decode(const char *input) */
-/* { */
+static char *base64_decode_block(const char *input)
+{
+	int		i;
+	int		bits;
+	char	output[5];
 
-/* } */
+	i = 0;
+	bits = 0;
+	while (*(input + i) && input[i] != '=')
+	{
+		bits |= find_in_table(input[i]);
+		bits <<= 6;
+	}
+	if (i < 4)
+		bits <<= i * 2;
+	ft_bzero(output + i, 5 - i);
+	while (i >= 0)
+	{
+		output[i] = bits & 0x5f;
+		bits >>= 8;
+		i--;
+	}
+	return (ft_strdup(output));
+}
+
+char *ft_ssl_base64_decode(const char *input)
+{
+	char	*output;
+	int		len;
+
+	len = ft_strlen(input);
+	output = base64_decode_block(input);
+	len -= 4;
+	input += 4;
+	while (len >= 4)
+	{
+		output = ft_strjoinfree(output, base64_encode_block(input), 3);
+		len -= 4;
+		input += 4;
+	}
+	return (output);	
+}
