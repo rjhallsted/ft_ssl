@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 19:53:45 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 21:03:52 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@ const static unsigned char g_b64e[64] = {
 	'w', 'x', 'y', 'z', '0', '1', '2', '3',
 	'4', '5', '6', '7', '8', '9', '+', '/' };
 
-static void base64_encode_block(const unsigned char *in, char *out, int len)
+static int base64_encode_block(const unsigned char *in, char *out, int len)
 {
 	out[0] = (unsigned char) g_b64e[in[0] >> 2];
 	out[1] = (unsigned char) g_b64e[((in[0] & 0x3) << 4) | (in[1] >> 4)];
 	out[2] = (unsigned char) (len > 1) ? g_b64e[((in[1] & 0xf) << 2) | (in[2] >> 6)] : '=';
 	out[3] = (unsigned char) (len > 2) ? g_b64e[in[2] & 0x3f] : '=';
+
+	return (4);
 }
 
 /*
@@ -71,10 +73,11 @@ static int	find_in_table(char c)
 	return (i);
 }
 
-static void base64_decode_block(const unsigned char *input, char *out)
+static int base64_decode_block(const unsigned char *input, char *out)
 {
 	unsigned char	inu[4];
-
+	int				ret;
+	
 	inu[0] = (unsigned char)find_in_table(input[0]);
 	inu[1] = (unsigned char)find_in_table(input[1]);
 	inu[2] = (unsigned char)find_in_table(input[2]);
@@ -87,7 +90,13 @@ static void base64_decode_block(const unsigned char *input, char *out)
 	out[1] = (unsigned char) (input[2] == '=') ? 0 : ((inu[1] & 0xf) << 4) | ((inu[2] >> 2) & 0xf);
 	out[2] = (unsigned char) (input[3] == '=') ? 0 : ((inu[2] & 0x3) << 6) | (inu[3] & 0x3f);
 
+	ret = 3;
+	if (input[3] == '=')
+		ret--;
+	if (input[2] == '=')
+		ret--;
 //	ft_printf("%hhu, %hhu, %hhu\n", out[0], out[1], out[2]);
+	return (ret);
 }
 
 /*
@@ -97,29 +106,23 @@ int	ft_ssl_base64_decode(const unsigned char *input, char *output, int len)
 {
 	char 	*start;
 	int		res_len;
-	size_t	e_cnt;
+	int		ret;
 	
 	start = output;
-	res_len = (len * 3) / 4;
- 	base64_decode_block(input, output);
-	len -= 4;
-	input += 4;
-	output += 3;
+//	ft_printf("len: %d\n", len);
+	res_len = (len / 4 * 3);
 	while (len >= 4 && !ft_strchr((char *)input, '='))
 	{
-		base64_decode_block(input, output);
+		ret = base64_decode_block(input, output);
 		len -= 4;
 		input += 4;
 		output += 3;
 	}
 	if (len > 0)
-	{
-		base64_decode_block(input, output);
-		e_cnt = ft_charcount((const char *)input, '=');
-		if (e_cnt == 2)
-			res_len += 1;
-		if (e_cnt == 1)
-			res_len += 2;
-	}
+		ret = base64_decode_block(input, output);
+//	ft_printf("ret: %d\n", ret);
+	if (ret < 3)
+		res_len = ret;
+//	ft_printf("res_len: %d\n", res_len);	
 	return (res_len);
 }

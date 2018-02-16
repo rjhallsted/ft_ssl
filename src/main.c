@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 19:11:16 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 20:55:44 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,23 @@
  * E.g. base64 accepts multiples of 3 (24 bits)
  * DES accepts 8 (64 bits)
  */
+
+static int	stop_condition(unsigned char *block, t_flag_data flags)
+{
+	static int stop_next_flag;
+
+	if (stop_next_flag)
+		return (1);
+	if (flags.command == B64_SSLCOM && flags.mode == DECRYPT_MODE)
+	{
+		if (ft_strchr((char *)block, '='))
+		{
+			stop_next_flag = 1;
+			return (0);
+		}
+	}
+	return (0);
+}
 
 static int	get_block(int fd, unsigned char **block, int block_size)
 {
@@ -69,7 +86,7 @@ static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 		blocksize = (flags.mode == DECRYPT_MODE) ? B64D_BLOCKSIZE : B64E_BLOCKSIZE;
 		filter = (flags.mode == DECRYPT_MODE) ? &ft_ssl_base64_decode : &ft_ssl_base64_encode;
 		//}
-	while ((len = get_block(in_fd, &block, blocksize)))
+		while ((len = get_block(in_fd, &block, blocksize)) && !stop_condition(block, flags))
 	{
 		output = ft_memalloc(len);
 		len = filter(block, output, len);
