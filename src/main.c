@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 16:09:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 19:11:16 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 	int 			blocksize;
 	unsigned char	*block;
 	char			*output;
-	char			*(*filter)(const unsigned char *, int);
+	int				(*filter)(const unsigned char *, char *, int);
 	int				len;
 
 	//if (flags.command = B64_SSLCOM)
@@ -69,13 +69,13 @@ static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 		blocksize = (flags.mode == DECRYPT_MODE) ? B64D_BLOCKSIZE : B64E_BLOCKSIZE;
 		filter = (flags.mode == DECRYPT_MODE) ? &ft_ssl_base64_decode : &ft_ssl_base64_encode;
 		//}
-	block = NULL;
 	while ((len = get_block(in_fd, &block, blocksize)))
 	{
-		output = filter(block, len);
+		output = ft_memalloc(len);
+		len = filter(block, output, len);
 		free(block);
 		block = NULL;
-		ft_printf_fd(out_fd, "%s", output);
+		write(out_fd, output, len);
 		free(output);
 	}
 	if (flags.command == B64_SSLCOM && flags.mode != DECRYPT_MODE)
