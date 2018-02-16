@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 15:49:39 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 16:20:22 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,34 +68,19 @@ static int	find_in_table(char c)
 
 static char *base64_decode_block(const unsigned char *input)
 {
-	int				i;
-	unsigned int	bits;
-	char			output[4];
-	int				len;
+	unsigned char	inu[4];
+	char			out[4];
 
-	i = 0;
-	bits = 0;
-	len = 0;
-	while (i < 4 && *(input + i) && input[i] != '=')
-	{
-		bits <<= 6;
-		len += 6;
-		bits |= find_in_table(input[i]);
-		i++;
-	}
-	if (i < 4)
-	{
-		bits <<= i * 2;
-		len += i * 2;
-	}
-	i = len / 8;
-	ft_bzero(output + i, 4 - i);
-	while (i > 0)
-	{
-		output[--i] = (unsigned char)(bits & 0xff);
-		bits >>= 8;
-	}
-	return (ft_strdup(output));
+	inu[0] = (unsigned char)find_in_table(input[0]);
+	inu[1] = (unsigned char)find_in_table(input[1]);
+	inu[2] = (unsigned char)find_in_table(input[2]);
+	inu[3] = (unsigned char)find_in_table(input[3]);
+
+	out[0] = (inu[0] << 2) | ((inu[1] >> 4) & 0x3);
+	out[1] = (input[2] == '=') ? 0 : ((inu[1] & 0xf) << 4) | ((inu[2] >> 2) & 0xf);
+	out[2] = (input[3] == '=') ? 0 : ((inu[2] & 0x3) << 6) | (inu[3] & 0x3f);
+	out[3] = '\0';
+	return (ft_strdup(out));
 }
 
 char *ft_ssl_base64_decode(const unsigned char *input, int len)
