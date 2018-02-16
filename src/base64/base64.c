@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 21:10:59 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 22:08:29 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,9 @@ int ft_ssl_base64_encode(const unsigned char *input, char *output, int len)
 	if (len % 3 > 0)
 		res_len++;
 	res_len *= 4;
-//	ft_printf("%c%c%c\n", input[0], input[1], input[2]);
-	base64_encode_block(input, output, len);
-//	ft_printf("%c%c%c%c\n", input[0], input[1], input[2], input[3]);
-	len -= 3;
-	input += 3;
-	output += 4;
-	while (len >= 3)
+	while (len > 0)
 	{
-//		ft_printf("%c%c%c\n", input[0], input[1], input[2]);
 		base64_encode_block(input, output, len);
-//		ft_printf("%c%c%c%c\n", input[0], input[1], input[2], input[3]);
 		len -= 3;
 		input += 3;
 		output += 4;
@@ -87,9 +79,6 @@ static int base64_decode_block(const unsigned char *input, char *out)
 	inu[2] = (unsigned char)find_in_table(input[2]);
 	inu[3] = (unsigned char)find_in_table(input[3]);
 
-//	ft_printf("\n\ninput: %s\n", input);
-//	ft_printf("%hhu, %hhu, %hhu, %hhu\n", inu[0], inu[1], inu[2], inu[3]);
-		
 	out[0] = (unsigned char) ((inu[0] << 2) & 0xff) | ((inu[1] >> 4) & 0x3);
 	out[1] = (unsigned char) (input[2] == '=') ? 0 : ((inu[1] & 0xf) << 4) | ((inu[2] >> 2) & 0xf);
 	out[2] = (unsigned char) (input[3] == '=') ? 0 : ((inu[2] & 0x3) << 6) | (inu[3] & 0x3f);
@@ -99,7 +88,6 @@ static int base64_decode_block(const unsigned char *input, char *out)
 		ret--;
 	if (input[2] == '=')
 		ret--;
-//	ft_printf("%hhu, %hhu, %hhu\n", out[0], out[1], out[2]);
 	return (ret);
 }
 
@@ -113,7 +101,6 @@ int	ft_ssl_base64_decode(const unsigned char *input, char *output, int len)
 	int		ret;
 	
 	start = output;
-//	ft_printf("len: %d\n", len);
 	res_len = (len / 4 * 3);
 	while (len >= 4 && !ft_strchr((char *)input, '='))
 	{
@@ -124,9 +111,7 @@ int	ft_ssl_base64_decode(const unsigned char *input, char *output, int len)
 	}
 	if (len > 0)
 		ret = base64_decode_block(input, output);
-//	ft_printf("ret: %d\n", ret);
 	if (ret < 3)
 		res_len = ret;
-//	ft_printf("res_len: %d\n", res_len);	
 	return (res_len);
 }
