@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 15:55:08 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 16:00:45 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 		ft_printf_fd(out_fd, "%s", output);
 		free(output);
 	}
-	ft_printf_fd(out_fd, "\n");
+	if (flags.command == B64_SSLCOM && flags.mode != DECRYPT_MODE)
+		ft_printf_fd(out_fd, "\n");
 }
 
 int			main(int argc, char **argv)
