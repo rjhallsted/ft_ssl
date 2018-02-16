@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 20:55:44 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 21:44:43 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
 	{
 		output = ft_memalloc(len);
 		len = filter(block, output, len);
+//		ft_printf("\n%d, %s\n", len, block);
 		free(block);
 		block = NULL;
 		write(out_fd, output, len);

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 19:10:38 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 21:05:20 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct	s_flag_data {
  */
 
 enum e_block_sizes {
-	B64E_BLOCKSIZE = 3,
+	B64E_BLOCKSIZE = 6,
 	B64D_BLOCKSIZE = 4,
 	DES_BLOCKSIZE = 64
 };

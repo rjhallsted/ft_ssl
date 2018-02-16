@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 21:03:52 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/02/15 21:10:59 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,20 @@ int ft_ssl_base64_encode(const unsigned char *input, char *output, int len)
 	if (len % 3 > 0)
 		res_len++;
 	res_len *= 4;
+//	ft_printf("%c%c%c\n", input[0], input[1], input[2]);
 	base64_encode_block(input, output, len);
+//	ft_printf("%c%c%c%c\n", input[0], input[1], input[2], input[3]);
 	len -= 3;
 	input += 3;
-	output += 3;
+	output += 4;
 	while (len >= 3)
 	{
+//		ft_printf("%c%c%c\n", input[0], input[1], input[2]);
 		base64_encode_block(input, output, len);
+//		ft_printf("%c%c%c%c\n", input[0], input[1], input[2], input[3]);
 		len -= 3;
 		input += 3;
-		output += 3;
+		output += 4;
 	}
 	return (res_len);
 }
