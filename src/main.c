@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 22:07:59 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/02 00:00:06 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@
  * DES accepts 8 (64 bits)
  */
 
-static int	stop_condition(unsigned char *block, t_flag_data flags)
+static int	stop_condition(unsigned char *block, ftssl_args_t args)
 {
 	static int stop_next_flag;
 
 	if (stop_next_flag)
 		return (1);
-	if (flags.command == B64_SSLCOM && flags.mode == DECRYPT_MODE)
+	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_DEC)
 	{
 		if (ft_strchr((char *)block, '='))
 		{
@@ -56,96 +56,79 @@ static int	get_block(int fd, unsigned char **block, int block_size)
 	return (prog);
 }
 
-static void file_open_error(char *filename, int permissions)
+const ftssl_command_t commandList[] = {
+	{"undefined", 0, ftssl_nocommand_error}
+	{FTSSL_B64_TXT, FTSSL_BCKSZ_B64, ftssl_base64}
+};
+
+static void	do_blocks(ftssl_args_t args, int commKey, int in_fd, int out_fd)
 {
-	char *message;
-	char *action;
+	unsigned char		*block;
+	char				*output;
+	int					len;
+	ftssl_command_t		command;
 
-	if (permissions & O_CREAT)
-		action = "create";
-	else
-		action = "open";
-	ft_printf_fd(STDERR_FILENO, "Unable to %s '%s': ", action, filename);
-	if (errno == EACCES)
-		message = "Permission denied";
-	else
-		message = "No such file or directory";
-	ft_printf_fd(STDERR_FILENO, "%s\n", message);
-}
-
-static void	do_blocks(t_flag_data flags, int in_fd, int out_fd)
-{
-	int 			blocksize;
-	unsigned char	*block;
-	char			*output;
-	int				(*filter)(const unsigned char *, char *, int);
-	int				len;
-
-	//if (flags.command = B64_SSLCOM)
-	//{
-		blocksize = (flags.mode == DECRYPT_MODE) ? B64D_BLOCKSIZE : B64E_BLOCKSIZE;
-		filter = (flags.mode == DECRYPT_MODE) ? &ft_ssl_base64_decode : &ft_ssl_base64_encode;
-		//}
-		while ((len = get_block(in_fd, &block, blocksize)) && !stop_condition(block, flags))
+	command = commandList[commKey];
+	while ((len = get_block(in_fd, &block, command.blocksize))
+		&& !stop_condition(block, args))
 	{
 		output = ft_memalloc((len + 1) * 4 / 3);
-		len = filter(block, output, len);
+		len = command.func(args, block, output, len);
 		free(block);
 		block = NULL;
 		write(out_fd, output, len);
 		free(output);
 	}
-	if (flags.command == B64_SSLCOM && flags.mode != DECRYPT_MODE)
+	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_ENC)
 		ft_printf_fd(out_fd, "\n");
+}
+
+static		find_commandKey(char *commandName)
+{
+	int i;
+
+	i = 1;
+	while (i < 2)
+	{
+		if (!ft_strcmp(commandList[i].name, commandName))
+			return (i);
+	}
+	return (0);
 }
 
 int			main(int argc, char **argv)
 {
-	int			input_fd;
-	int			output_fd;
-	t_flag_data	flag_data;
+	int				input_fd;
+	int				output_fd;
+	int				com_key;
+	ftssl_args_t	args;
 	
 	if (argc < 2)
 	{
-		ft_ssl_nocommand_error();
+		ftssl_nocommand_error();
 		return (0);
 	}
-	flag_data = ft_ssl_get_flags(argc, argv);
-	if (!(ft_ssl_check_flags(flag_data)))
+	args = ftssl_get_args(argc, argv);
+	if (!(com_key = find_commandKey(args.command)))
+		ftssl_invalid_command_error(args.command);
+	if (args.input_file && ft_strcmp(args.input_file, "-"))
 	{
-		if (flag_data.command == ERROR_SSLCOM)
-			ft_ssl_nocommand_error();
-		else
-			ft_ssl_b64_flag_error();
-		return (-1);
-	}
-	if (flag_data.has_input_file && ft_strcmp(flag_data.input_file, "-") != 0)
-	{
-		input_fd = open(flag_data.input_file, O_RDONLY);
-		if (input_fd == -1)
-		{
-			file_open_error(flag_data.input_file, O_RDONLY);
-			return (-1);
-		}
+		if ((input_fd = open(args.input_file, O_RDONLY)) == -1)
+			file_open_error(args.input_file, O_RDONLY);
 	}
 	else
-		input_fd = STDIN_FILENO;
-	if (flag_data.has_output_file && ft_strcmp(flag_data.output_file, "-") != 0)
+		input_fd = stdin;
+	if (args.output_file && ft_strcmp(args.output_file, "-"))
 	{
-		output_fd = open(flag_data.output_file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
-		if (output_fd == -1)
-		{
-			file_open_error(flag_data.output_file, O_WRONLY|O_CREAT|O_TRUNC);
-			close(input_fd);
-			return (-1);
-		}
+		if ((output_fd = open(args.output_file, O_RDONLY)) == -1)
+			file_open_error(args.output_file, O_RDONLY);
 	}
 	else
-		output_fd = STDOUT_FILENO;
-	do_blocks(flag_data, input_fd, output_fd);
-	if (input_fd != STDIN_FILENO)
+		output_fd = stdout;
+	do_blocks(args, com_key, input_fd, output_fd);
+	if (input_fd != stdin)
 		close(input_fd);
-	if (output_fd != STDOUT_FILENO)
+	if (output_fd != stdout)
 		close(output_fd);
 	return (0);
 }
