@@ -6,11 +6,12 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/02/15 22:08:29 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/02 12:22:55 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft/inc/libft.h"
+#include "../../inc/ft_ssl.h"
 
 /*
  * base64_encode_block accepts 3 octets and returns 4 encoded characters.
@@ -41,7 +42,7 @@ static int base64_encode_block(const unsigned char *in, char *out, int len)
 /*
  * Returns the number of characters expected in the encoded text
  */
-int ft_ssl_base64_encode(const unsigned char *input, char *output, int len)
+int ftssl_base64_encode(const unsigned char *input, char *output, int len)
 {
 	int	res_len;
 
@@ -73,7 +74,7 @@ static int base64_decode_block(const unsigned char *input, char *out)
 {
 	unsigned char	inu[4];
 	int				ret;
-	
+
 	inu[0] = (unsigned char)find_in_table(input[0]);
 	inu[1] = (unsigned char)find_in_table(input[1]);
 	inu[2] = (unsigned char)find_in_table(input[2]);
@@ -84,9 +85,7 @@ static int base64_decode_block(const unsigned char *input, char *out)
 	out[2] = (unsigned char) (input[3] == '=') ? 0 : ((inu[2] & 0x3) << 6) | (inu[3] & 0x3f);
 
 	ret = 3;
-	if (input[3] == '=')
-		ret--;
-	if (input[2] == '=')
+	while (input[ret] == '=' && ret > 1)
 		ret--;
 	return (ret);
 }
@@ -94,15 +93,15 @@ static int base64_decode_block(const unsigned char *input, char *out)
 /*
  * Returns the number of characters expected in the decoded text
  */
-int	ft_ssl_base64_decode(const unsigned char *input, char *output, int len)
+int	ftssl_base64_decode(const unsigned char *input, char *output, int len)
 {
 	char 	*start;
 	int		res_len;
 	int		ret;
 	
 	start = output;
-	res_len = (len / 4 * 3);
-	while (len >= 4 && !ft_strchr((char *)input, '='))
+	res_len = len * 3 / 4;
+	while (len >= 4 && !ft_memchr(input, '=', 4))
 	{
 		ret = base64_decode_block(input, output);
 		len -= 4;
@@ -112,6 +111,14 @@ int	ft_ssl_base64_decode(const unsigned char *input, char *output, int len)
 	if (len > 0)
 		ret = base64_decode_block(input, output);
 	if (ret < 3)
-		res_len = ret;
+		res_len -= (3 - ret);
 	return (res_len);
+}
+
+int	ftssl_base64(ftssl_args_t args, const unsigned char *input, char *output, int len)
+{
+	if (args.mode == FTSSL_MODE_DEC)
+		return (ftssl_base64_decode(input, output, len));
+	else
+		return (ftssl_base64_encode(input, output, len));
 }

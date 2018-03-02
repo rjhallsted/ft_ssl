@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/01 23:50:13 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/02 12:04:42 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static ftssl_args_t init_args(void)
 	args.input_file = NULL;
 	args.output_file = NULL;
 	args.key = NULL;
-	args.mode = FTSSL_ENCMODE;
+	args.mode = FTSSL_MODE_ENC;
 	args.base64_mode = FTSSL_B64OFF;
 	args.init_vector = 0;
 	return (args);
@@ -37,13 +37,12 @@ void ftssl_destroy_args(ftssl_args_t args)
 	if (args.output_file)
 		free(args.output_file);
 	if (args.key)
-		free(args.key)
+		free(args.key);
 }
 
 ftssl_args_t ftssl_get_args(int argc, char **argv)
 {
 	ftssl_args_t	args;
-	int				res;
 	ftssl_opthelp_t opt;
 	
 	args = init_args();
@@ -52,8 +51,8 @@ ftssl_args_t ftssl_get_args(int argc, char **argv)
 	args.command = ft_strdup(argv[1]);
 	if (ft_strcmp(argv[1], FTSSL_B64_TXT) == 0)
 		args.base64_mode = FTSSL_B64ON;
-	if (ft_findopt(argc, argv, 'e', NULL)
-		|| ft_findopt_long(argc, argv, "encode", NULL))
+	if (ft_findopt(argc, argv, 'd', NULL)
+		|| ft_findopt_long(argc, argv, "decode", NULL))
 		args.mode = FTSSL_MODE_DEC;
 	opt = ftssl_opthelp_init(argc, argv, 'i', "input");
 	args.input_file = ftssl_find_optvalue(opt, args.command);
