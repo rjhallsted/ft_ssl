@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 23:25:39 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/02 12:01:36 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/03 15:32:32 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char *ftssl_find_optvalue(ftssl_opthelp_t opt, char *command)
 	char	flagstr[50];
 
 	value = NULL;
-	res = ft_findopt(opt.argc, opt.argv, opt.flag, value);
+	res = ft_findopt(opt.argc, opt.argv, opt.flag, &value);
 	if (res && !value)
 	{
 		flagstr[0] = opt.flag;
@@ -47,7 +47,7 @@ char *ftssl_find_optvalue(ftssl_opthelp_t opt, char *command)
 		ftssl_flag_arg_error(command, flagstr);
 	}
 	if (!res)
-		res = ft_findopt_long(opt.argc, opt.argv, opt.label, value);
+		res = ft_findopt_long(opt.argc, opt.argv, opt.label, &value);
 	if (res && !value)
 	{
 		ft_memset(flagstr, '-', 2);
