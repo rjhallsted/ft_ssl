@@ -6,11 +6,11 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 13:45:12 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 19:26:55 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 14:36:01 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-extern const unsigned int initPerm[64] = {
+const unsigned int initPerm[64] = {
 	58, 50, 42, 34, 26, 18, 10, 2,
 	60, 52, 44, 36, 28, 20, 12, 4,
 	62, 54, 46, 38, 30, 22, 14, 6,
@@ -21,14 +21,14 @@ extern const unsigned int initPerm[64] = {
 	63, 55, 47, 39, 31, 23, 15, 7
 };
 
-extern const unsigned int keyPerm[56] = {
+const unsigned int keyPerm[56] = {
 	57, 49, 41, 33, 25, 17,  9,  1, 58, 50, 42, 34, 26, 18,
 	10,  2, 59, 51, 43, 35, 27, 19, 11,  3, 60, 52, 44, 36,
 	63, 55, 47, 39, 31, 23, 15,  7, 62, 54, 46, 38, 30, 22,
 	14,  6, 61, 53, 45, 37, 29, 21, 13,  5, 28, 20, 12,  4
 };
 
-extern const unsigned int compPerm[48] = {
+const unsigned int compPerm[48] = {
 	14, 17, 11, 24,  1,  5,
 	3,  28, 15,  6, 21, 10,
 	23, 19, 12,  4, 26,  8,
@@ -39,7 +39,7 @@ extern const unsigned int compPerm[48] = {
 	46, 42, 50, 36, 29, 32
 };
 
-extern const unsigned int expanPerm[48] = {
+const unsigned int expanPerm[48] = {
 	32,  1,  2,  3,  4,  5,
 	4,   5,  6,  7,  8,  9,
 	8,   9, 10, 11, 12, 13,
@@ -50,14 +50,14 @@ extern const unsigned int expanPerm[48] = {
 	28, 29, 30, 31, 32,  1
 };
 
-extern const unsigned int pboxPerm[32] = {
+const unsigned int pboxPerm[32] = {
 	16,  7, 20, 21, 29, 12, 28, 17,
 	1,  15, 23, 26,  5, 18, 31, 10,
 	2,   8, 24, 14, 32, 27,  3,  9,
 	19, 13, 30,  6, 22, 11,  4, 25
 };
 
-extern const unsigned int finalPerm[64] = {
+const unsigned int finalPerm[64] = {
 	40,  8, 48, 16, 56, 24, 64, 32,
 	39,  7, 47, 15, 55, 23, 63, 31,
 	38,  6, 46, 14, 54, 22, 62, 30,
@@ -68,11 +68,11 @@ extern const unsigned int finalPerm[64] = {
 	33,  1, 41,  9, 49, 17, 57, 25
 };
 
-extern const int keyShift[16] = {
+const int keyShift[16] = {
 	1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
-}
+};
 
-extern const unsigned int sbox[8][64] = {
+const unsigned int sbox[8][64] = {
 	{
 		14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7,
 		0,  15,  7,  4, 14,  2, 13,  1, 10,  6, 12, 11,  9,  5,  3,  8,
@@ -121,4 +121,4 @@ extern const unsigned int sbox[8][64] = {
 		7,  11,  4,  1,  9, 12, 14,  2,  0,  6, 10, 13, 15,  3,  5,  8,
 		2,   1, 14,  7,  4, 10,  8, 13, 15, 12,  9,  0,  3,  5,  6, 11
 	}
-}
+};

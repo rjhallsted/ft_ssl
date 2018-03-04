@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 18:49:42 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 14:18:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ static int	get_block(int fd, unsigned char **block, int block_size)
 
 const ftssl_command_t commandList[] = {
 	{"undefined", 0, NULL},
-	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64}
+	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64},
+	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb},
+	{FTSSL_DESECB_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb}
 };
 
 static void	do_blocks(ftssl_args_t args, int commKey, int in_fd, int out_fd)

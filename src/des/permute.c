@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:40:58 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 19:47:36 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 14:35:09 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ unsigned long ftssl_des_permute(unsigned long in, unsigned int *tab,
 	{
 		tmp = (in >> (tab_size - tab[i])) & 1;
 		tmp <<= tab[i] - 1;
-		out != tmp;
+		out |= tmp;
 	}
 	return (out);
 }
@@ -60,7 +60,7 @@ static unsigned long circle_shift_left(unsigned long val, int rotby)
 {
 	unsigned int	tmp;
 
-	tmp <<= rotby << (28 - rotby);
+	tmp = rotby << (28 - rotby);
 	tmp &= val;
 	tmp >>= 28 - rotby;
 	val <<= rotby;
@@ -86,7 +86,7 @@ unsigned long ftssl_des_key_transform(unsigned long *key, int round)
 	right = circle_shift_left(right, keyShift[round]);
 	*key = left << 28;
 	*key |= right;
-	return (ftssl_permute(*key, 56, compPerm, 48));
+	return (ftssl_des_permute(*key, (unsigned int *)compPerm, 48));
 }
 
 extern const unsigned int keyPerm[56];
@@ -96,15 +96,16 @@ unsigned long *ftssl_des_genkeys(unsigned long initKey, int reverse)
 	unsigned long *keys;
 	int i;
 
-	initKey = ft_permute(initKey, keyPerm, 56);
+	initKey = ftssl_des_permute(initKey, (unsigned int *)keyPerm, 56);
 	keys = ft_memalloc(sizeof(unsigned long) * 16);
 	i = 0;
 	while (i < 16)
 	{
 		if (reverse)
-			keys[15 - i] = ftssl_des_key_transform(&init_key, i++);
+			keys[15 - i] = ftssl_des_key_transform(&initKey, i);
 		else
-			keys[i] = ftssl_des_key_transform(&init_key, i++);
+			keys[i] = ftssl_des_key_transform(&initKey, i);
+		i++;
 	}
 	return (keys);
 }

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 18:41:32 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 14:05:52 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ static ftssl_args_t init_args(void)
 	args.command = NULL;
 	args.input_file = NULL;
 	args.output_file = NULL;
-	args.key = NULL;
+	args.keystr = NULL;
+	args.keyval = 0;
+	args.init_vector = 0;
 	args.mode = FTSSL_MODE_ENC;
 	args.base64_mode = FTSSL_B64OFF;
-	args.init_vector = 0;
 	return (args);
 }
 
@@ -36,8 +37,8 @@ void ftssl_destroy_args(ftssl_args_t args)
 		free(args.input_file);
 	if (args.output_file)
 		free(args.output_file);
-	if (args.key)
-		free(args.key);
+	if (args.keystr)
+		free(args.keystr);
 }
 
 ftssl_args_t ftssl_get_args(int argc, char **argv)

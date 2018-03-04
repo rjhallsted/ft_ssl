@@ -6,12 +6,13 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 19:03:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 14:15:55 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_H
 # define FT_SSL_H
+# include <string.h>
 
 /* 
  * FTSSL_BLCKSZ_B64 must be a mulitple of 12;
@@ -40,9 +41,9 @@ typedef struct			ftssl_args_s {
 	char				*output_file;
 	char				*keystr;
 	unsigned long		keyval;
+	unsigned long		init_vector;
 	int					mode;
 	int					base64_mode;
-	unsigned long		init_vector;
 }						ftssl_args_t;
 
 typedef					int ftssl_commandFunc_t(ftssl_args_t,
@@ -78,5 +79,14 @@ int				ftssl_base64(ftssl_args_t args, const unsigned char *input,
 							char *out, int len);
 int				ftssl_base64_encode(const unsigned char *input, char *out, int len);
 int				ftssl_base64_decode(const unsigned char *input, char *out, int len);
+
+int				ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
+							char *output, int len);
+unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input);
+unsigned long	ftssl_des_permute(unsigned long in, unsigned int *tab,
+							size_t tab_size);
+unsigned long	ftssl_des_sbox_sub(unsigned long in);
+unsigned long	ftssl_des_key_transform(unsigned long *key, int round);
+unsigned long	*ftssl_des_genkeys(unsigned long initKey, int reverse);
 
 #endif

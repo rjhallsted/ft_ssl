@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/03/01 23:33:04 by rhallste         ###   ########.fr        #
+#    Updated: 2018/03/04 14:17:31 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -17,12 +17,17 @@ CFLAGS		=	-Wall -Werror -Wextra #$(EXTRA_FLAGS)
 
 BASE64		=	base64/base64
 
+DES			=	$(addprefix des/,	\
+				des					\
+				permute				\
+				boxes				)
+
 FT_SSL		=	main 	\
 				args	\
 				error	\
 				opt
 
-FILES		=	$(BASE64) $(FT_SSL)
+FILES		=	$(FT_SSL) $(BASE64) $(DES)
 
 SRCS		=	$(addprefix src/, $(addsuffix .c, $(FILES)))
 OBJS		=	$(addprefix src/, $(addsuffix .o, $(FILES)))
