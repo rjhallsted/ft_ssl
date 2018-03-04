@@ -6,10 +6,11 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 19:30:00 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/03 19:47:20 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
@@ -41,28 +42,22 @@ extern const unsigned int initPerm[64];
 extern const unsigned int keyPerm[56];
 extern const unsigned int finalPerm[64];
 
-unsigned long	ftssl_des_encrypt(unsigned long key, unsigned long input);
+unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input);
 {
 	int i;
 	unsigned long left;
 	unsigned long right;
 
 	input = ftssl_des_permute(input, initPerm, 64);
-	key = ftssl_des_permute(key, keyPerm, 56);
 	left = (input >> 32) & 0xffffffff;
 	right = input & 0xffffffff;
 	i = 0;
 	while (i < 16)
-		des_round(&left, &right, key, i++);
+		des_round(&left, &right, key[i], i++);
 	input = left << 32;
 	input |= right;
 	input = ftssl_des_permute(input, finalPerm, 64);
 	return (input);
-}
-
-unsigned long	ftssl_des_decrypt(unsigned long key, unsigned long input)
-{
-
 }
 
 int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
@@ -72,12 +67,20 @@ int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 	unsigned long	input_val;
 	unsigned long	output_val;
 	char			output_str[9];
+	unsigned long	*keys;
 
 	input_val = (unsigned long)*input & 0xffffffffffffffff;
 	if (args.mode == FTSSL_MODE_DEC)
-		output_val = ftssl_des_decrypt(args.key, input_val);
+	{
+		keys = ftssl_des_genkeys(args.keyval, 1);
+		output_val = ftssl_des_decrypt(keys, input_val);
+	}
 	else
-		output_val = ftssl_des_encrypt(args.key, input_val);
+	{
+		keys = ftssl_des_genkeys(args.keyval, 0);
+		output_val = ftssl_des_encrypt(keys, input_val);
+	}
+	free(keys);
 	output_str = (char *)&output_val;
 	output_str[8] = '\0';
 	ft_strncpy(output, output_str, 9);

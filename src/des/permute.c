@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:40:58 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 18:57:49 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/03 19:47:36 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,3 +89,22 @@ unsigned long ftssl_des_key_transform(unsigned long *key, int round)
 	return (ftssl_permute(*key, 56, compPerm, 48));
 }
 
+extern const unsigned int keyPerm[56];
+
+unsigned long *ftssl_des_genkeys(unsigned long initKey, int reverse)
+{
+	unsigned long *keys;
+	int i;
+
+	initKey = ft_permute(initKey, keyPerm, 56);
+	keys = ft_memalloc(sizeof(unsigned long) * 16);
+	i = 0;
+	while (i < 16)
+	{
+		if (reverse)
+			keys[15 - i] = ftssl_des_key_transform(&init_key, i++);
+		else
+			keys[i] = ftssl_des_key_transform(&init_key, i++);
+	}
+	return (keys);
+}
