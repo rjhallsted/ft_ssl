@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 14:18:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 15:35:00 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,23 @@ static int	stop_condition(unsigned char *block, ftssl_args_t args)
 	return (0);
 }
 
-static int	get_block(int fd, unsigned char **block, int block_size)
+static int	get_block(int fd, unsigned char *block, int block_size)
 {
-	char	buffer[block_size + 1];
 	int		ret;
 	int		prog;
 
 	prog = 0;
-	ft_bzero(buffer, block_size + 1);
 	while (prog < block_size &&
-		   (ret = read(fd, buffer + prog, block_size - prog)))
+		   (ret = read(fd, block + prog, block_size - prog)))
 		prog += ret;
-	*block = (unsigned char *)ft_strnew(prog);
-	ft_memcpy(*block, buffer, prog + 1);
 	return (prog);
 }
 
 const ftssl_command_t commandList[] = {
-	{"undefined", 0, NULL},
-	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64},
-	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb},
-	{FTSSL_DESECB_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb}
+	{"undefined", 0, NULL, NULL},
+	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, NULL, ftssl_base64},
+	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_padblock_ecb, ftssl_des_ecb},
+	{FTSSL_DESECB_TXT, FTSSL_BLCKSZ_DES, ftssl_padblock_ecb, ftssl_des_ecb}
 };
 
 static void	do_blocks(ftssl_args_t args, int commKey, int in_fd, int out_fd)
@@ -64,18 +60,33 @@ static void	do_blocks(ftssl_args_t args, int commKey, int in_fd, int out_fd)
 	char				*output;
 	int					len;
 	ftssl_command_t		command;
+	int					padded;
 
 	command = commandList[commKey];
-	while ((len = get_block(in_fd, &block, command.blocksize))
+	block = ft_memalloc(command.blocksize);
+	output = ft_memalloc(command.blocksize);
+	padded = 0;
+	while ((len = get_block(in_fd, block, command.blocksize))
 		&& !stop_condition(block, args))
 	{
-		output = ft_memalloc(command.blocksize);
+		if (len < (int)command.blocksize && command.padFunc)
+		{
+			command.padFunc(block, len, command.blocksize);
+			padded = 1;
+		}
 		len = command.func(args, block, output, len);
-		free(block);
-		block = NULL;
 		write(out_fd, output, len);
-		free(output);
+		ft_bzero(block, command.blocksize);
+		ft_bzero(block, command.blocksize);
 	}
+	if (!padded && command.padFunc)
+	{
+		command.padFunc(block, 0, command.blocksize);
+		len = command.func(args, block, output, len);
+		write(out_fd, output, len);
+	}
+	free(block);
+	free(output);
 	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_ENC)
 		ft_printf_fd(out_fd, "\n");
 }

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 14:15:55 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 15:34:33 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ enum e_block_sizes {
 # define FTSSL_B64OFF 0
 # define FTSSL_B64ON 1
 
+# define FTSSL_PADOFF 0
+# define FTSSL_PADECB 1
+# define FTSSL_PADCBC 2
+
 # define FTSSL_ERR_TXT "undefined"
 # define FTSSL_B64_TXT "base64"
 # define FTSSL_DES_TXT "des"
@@ -46,12 +50,14 @@ typedef struct			ftssl_args_s {
 	int					base64_mode;
 }						ftssl_args_t;
 
+typedef					void ftssl_padFunc_t(unsigned char *, int, int);
 typedef					int ftssl_commandFunc_t(ftssl_args_t,
 								const unsigned char *, char *, int);
 
 typedef struct 			ftssl_command_s {
 	char				*name;
 	size_t				blocksize;
+	ftssl_padFunc_t		*padFunc;
 	ftssl_commandFunc_t	*func;
 }						ftssl_command_t;
 
@@ -69,6 +75,8 @@ ftssl_opthelp_t ftssl_opthelp_init(int argc, char **argv, char flag,
 								   char *label);
 void			ftssl_opthelp_destroy(ftssl_opthelp_t opt);
 char			*ftssl_find_optvalue(ftssl_opthelp_t opt, char *command);
+
+void			ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize);
 
 void			ftssl_flag_arg_error(const char *command, const char *option);
 void			ftssl_nocommand_error(void);
