@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 15:34:33 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 15:39:05 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  */
 
 enum e_block_sizes {
-	FTSSL_BLCKSZ_B64 = 48,
+	FTSSL_BLCKSZ_B64 = 12,
 	FTSSL_BLCKSZ_DES = 8
 };
 

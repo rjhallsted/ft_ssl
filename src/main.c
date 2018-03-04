@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 15:35:00 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 15:49:55 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	do_blocks(ftssl_args_t args, int commKey, int in_fd, int out_fd)
 			command.padFunc(block, len, command.blocksize);
 			padded = 1;
 		}
-		len = command.func(args, block, output, len);
+		len = command.func(args, block, output, len);		
 		write(out_fd, output, len);
 		ft_bzero(block, command.blocksize);
 		ft_bzero(block, command.blocksize);
@@ -130,8 +130,8 @@ int			main(int argc, char **argv)
 		input_fd = STDIN_FILENO;
 	if (args.output_file && ft_strcmp(args.output_file, "-"))
 	{
-		if ((output_fd = open(args.output_file, O_RDONLY)) == -1)
-			ftssl_file_open_error(args.output_file, O_RDONLY);
+		if ((output_fd = open(args.output_file, O_WRONLY | O_CREAT)) == -1)
+			ftssl_file_open_error(args.output_file, O_WRONLY | O_CREAT);
 	}
 	else
 		output_fd = STDOUT_FILENO;
