@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/02 11:56:15 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/03 19:03:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,11 @@ typedef struct			ftssl_args_s {
 	char				*command;
 	char				*input_file;
 	char				*output_file;
-	char				*key;
+	char				*keystr;
+	unsigned long		keyval;
 	int					mode;
 	int					base64_mode;
-	int					init_vector;
+	unsigned long		init_vector;
 }						ftssl_args_t;
 
 typedef					int ftssl_commandFunc_t(ftssl_args_t,

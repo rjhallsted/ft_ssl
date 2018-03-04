@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 15:33:38 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/03 18:41:32 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ ftssl_args_t ftssl_get_args(int argc, char **argv)
 	args.output_file = ftssl_find_optvalue(opt, args.command);
 	ftssl_opthelp_destroy(opt);
 	opt = ftssl_opthelp_init(argc, argv, 'k', "key");
-	args.key = ftssl_find_optvalue(opt, args.command);
+	args.keystr = ftssl_find_optvalue(opt, args.command);
 	ftssl_opthelp_destroy(opt);
+	if (ft_findopt(argc, argv, 'a', NULL)
+		|| ft_findopt_long(argc, argv, "base64", NULL))
+		args.base64_mode = FTSSL_B64ON;
 	return (args);
 }

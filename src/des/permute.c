@@ -6,14 +6,14 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:40:58 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/03 18:22:47 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/03 18:57:49 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
-unsigned long ftssl_permute(unsigned long in, unsigned int *tab,
+unsigned long ftssl_des_permute(unsigned long in, unsigned int *tab,
 							size_t tab_size)
 {
 	unsigned long	out;
@@ -33,7 +33,7 @@ unsigned long ftssl_permute(unsigned long in, unsigned int *tab,
 
 extern const unsigned int sbox[8][64];
 
-unsigned long ftssl_sbox_sub(unsigned long in)
+unsigned long ftssl_des_sbox_sub(unsigned long in)
 {
 	int i;
 	int row;
