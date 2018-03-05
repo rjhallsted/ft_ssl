@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 19:42:21 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 21:40:48 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct			ftssl_args_s {
 
 typedef					void ftssl_padFunc_t(unsigned char *, int, int);
 typedef					int ftssl_commandFunc_t(ftssl_args_t,
-								const unsigned char *, char *, int);
+								const unsigned char *, unsigned char *, int);
 
 typedef struct 			ftssl_command_s {
 	char				*name;
@@ -86,15 +86,15 @@ void			ftssl_file_open_error(const char *filename, int permissions);
 void			ftssl_invalid_hexkey_error(void);
 
 int				ftssl_base64(ftssl_args_t args, const unsigned char *input,
-							char *out, int len);
-int				ftssl_base64_encode(const unsigned char *input, char *out, int len);
-int				ftssl_base64_decode(const unsigned char *input, char *out, int len);
+							unsigned char *out, int len);
+int				ftssl_base64_encode(const unsigned char *input, unsigned char *out, int len);
+int				ftssl_base64_decode(const unsigned char *input, unsigned char *out, int len);
 
 int				ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
-							char *output, int len);
+							unsigned char *output, int len);
 unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input);
-unsigned long	ftssl_des_permute(unsigned long in, unsigned int *tab,
-							size_t tab_size);
+unsigned long	ftssl_des_permute(unsigned long in, size_t in_size,
+							unsigned int *tab, size_t tab_size);
 unsigned long	ftssl_des_sbox_sub(unsigned long in);
 unsigned long	ftssl_des_key_transform(unsigned long *key, int round);
 unsigned long	*ftssl_des_genkeys(unsigned long initKey, int reverse);

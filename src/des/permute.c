@@ -6,15 +6,15 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:40:58 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 19:46:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 22:54:22 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
-unsigned long ftssl_des_permute(unsigned long in, unsigned int *tab,
-							size_t tab_size)
+unsigned long ftssl_des_permute(unsigned long in, size_t in_size,
+								unsigned int *tab, size_t tab_size)
 {
 	unsigned long	out;
 	unsigned long	tmp;
@@ -24,8 +24,8 @@ unsigned long ftssl_des_permute(unsigned long in, unsigned int *tab,
 	i = 0;
 	while (i < tab_size)
 	{
-		tmp = (in >> (tab_size - tab[i])) & 1;
-		tmp <<= tab[i] - 1;
+		tmp = (in >> (in_size - tab[i])) & 1;
+		tmp <<= (tab_size - 1) - i;
 		out |= tmp;
 		i++;
 	}
@@ -59,13 +59,16 @@ unsigned long ftssl_des_sbox_sub(unsigned long in)
 
 static unsigned long circle_shift_left(unsigned long val, int rotby)
 {
-	unsigned int	tmp;
+	unsigned long	tmp;
+	int				mask;
 
-	tmp = rotby << (28 - rotby);
+	mask = (rotby == 2) ? 0b11: 0b1;
+	tmp = mask << (28 - rotby);
 	tmp &= val;
 	tmp >>= 28 - rotby;
 	val <<= rotby;
-	val &= tmp;
+	val &= 0xfffffff - mask;
+	val |= tmp;
 	return (val);	
 }
 
@@ -87,7 +90,7 @@ unsigned long ftssl_des_key_transform(unsigned long *key, int round)
 	right = circle_shift_left(right, keyShift[round]);
 	*key = left << 28;
 	*key |= right;
-	return (ftssl_des_permute(*key, (unsigned int *)compPerm, 48));
+	return (ftssl_des_permute(*key, 56, (unsigned int *)compPerm, 48));
 }
 
 extern const unsigned int keyPerm[56];
@@ -97,7 +100,7 @@ unsigned long *ftssl_des_genkeys(unsigned long initKey, int reverse)
 	unsigned long *keys;
 	int i;
 
-	initKey = ftssl_des_permute(initKey, (unsigned int *)keyPerm, 56);
+	initKey = ftssl_des_permute(initKey, 64, (unsigned int *)keyPerm, 56);
 	keys = ft_memalloc(sizeof(unsigned long) * 16);
 	i = 0;
 	while (i < 16)

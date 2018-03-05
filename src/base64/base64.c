@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 18:41:52 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 20:57:28 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ const static unsigned char g_b64e[64] = {
 	'w', 'x', 'y', 'z', '0', '1', '2', '3',
 	'4', '5', '6', '7', '8', '9', '+', '/' };
 
-static int base64_encode_block(const unsigned char *in, char *out, int len)
+static int base64_encode_block(const unsigned char *in, unsigned char *out, int len)
 {
 	out[0] = (unsigned char) g_b64e[in[0] >> 2];
 	out[1] = (unsigned char) g_b64e[((in[0] & 0x3) << 4) | (in[1] >> 4)];
@@ -42,7 +42,7 @@ static int base64_encode_block(const unsigned char *in, char *out, int len)
 /*
  * Returns the number of characters expected in the encoded text
  */
-int ftssl_base64_encode(const unsigned char *input, char *output, int len)
+int ftssl_base64_encode(const unsigned char *input, unsigned char *output, int len)
 {
 	int	res_len;
 
@@ -70,7 +70,7 @@ static int	find_in_table(char c)
 	return (i);
 }
 
-static int base64_decode_block(const unsigned char *input, char *out)
+static int base64_decode_block(const unsigned char *input, unsigned char *out)
 {
 	unsigned char	inu[4];
 	int				ret;
@@ -93,11 +93,11 @@ static int base64_decode_block(const unsigned char *input, char *out)
 /*
  * Returns the number of characters expected in the decoded text
  */
-int	ftssl_base64_decode(const unsigned char *input, char *output, int len)
+int	ftssl_base64_decode(const unsigned char *input, unsigned char *output, int len)
 {
-	char 	*start;
-	int		res_len;
-	int		ret;
+	unsigned char	*start;
+	int				res_len;
+	int				ret;
 	
 	start = output;
 	res_len = len * 3 / 4;
@@ -119,7 +119,7 @@ int	ftssl_base64_decode(const unsigned char *input, char *output, int len)
 	return (res_len);
 }
 
-int	ftssl_base64(ftssl_args_t args, const unsigned char *input, char *output, int len)
+int	ftssl_base64(ftssl_args_t args, const unsigned char *input, unsigned char *output, int len)
 {
 	if (args.mode == FTSSL_MODE_DEC)
 		return (ftssl_base64_decode(input, output, len));
