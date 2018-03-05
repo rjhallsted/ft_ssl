@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:40:58 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 22:54:22 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/05 15:53:15 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,15 @@ unsigned long ftssl_des_sbox_sub(unsigned long in)
 static unsigned long circle_shift_left(unsigned long val, int rotby)
 {
 	unsigned long	tmp;
-	int				mask;
+	unsigned long	mask;
 
 	mask = (rotby == 2) ? 0b11: 0b1;
 	tmp = mask << (28 - rotby);
 	tmp &= val;
 	tmp >>= 28 - rotby;
+	mask = (rotby == 2) ? 0x3ffffff : 0x7ffffff;
+	val &= mask;
 	val <<= rotby;
-	val &= 0xfffffff - mask;
 	val |= tmp;
 	return (val);	
 }
@@ -84,8 +85,8 @@ unsigned long ftssl_des_key_transform(unsigned long *key, int round)
 	unsigned long	left;
 	unsigned long	right;
 
-	left = (*key >> 28) & 0xfffffff;
-	right = *key & 0xfffffff;
+	left = (*key >> 28) & 0xfffffffL;
+	right = *key & 0xfffffffL;
 	left = circle_shift_left(left, keyShift[round]);
 	right = circle_shift_left(right, keyShift[round]);
 	*key = left << 28;
@@ -95,20 +96,20 @@ unsigned long ftssl_des_key_transform(unsigned long *key, int round)
 
 extern const unsigned int keyPerm[56];
 
-unsigned long *ftssl_des_genkeys(unsigned long initKey, int reverse)
+unsigned long *ftssl_des_genkeys(unsigned long key, int reverse)
 {
 	unsigned long *keys;
 	int i;
 
-	initKey = ftssl_des_permute(initKey, 64, (unsigned int *)keyPerm, 56);
+	key = ftssl_des_permute(key, 64, (unsigned int *)keyPerm, 56);
 	keys = ft_memalloc(sizeof(unsigned long) * 16);
 	i = 0;
 	while (i < 16)
 	{
 		if (reverse)
-			keys[15 - i] = ftssl_des_key_transform(&initKey, i);
+			keys[15 - i] = ftssl_des_key_transform(&key, i);
 		else
-			keys[i] = ftssl_des_key_transform(&initKey, i);
+			keys[i] = ftssl_des_key_transform(&key, i);
 		i++;
 	}
 	return (keys);
