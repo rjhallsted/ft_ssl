@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 21:01:06 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 22:58:00 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ static void prep_args(ftssl_args_t *args)
 	}
 }
 
-/*static int	b64_wrap(ftssl_args_t *args, unsigned char **input,
-					int in_len, char **output)
+static int	b64_wrap(ftssl_args_t *args, unsigned char **input,
+					int in_len, unsigned char **output)
 {
 	char	*tmp;
 	int		ret;
@@ -116,7 +116,7 @@ static void prep_args(ftssl_args_t *args)
 	args->command = tmp;
 	args->mode = (args->mode == FTSSL_MODE_DEC) ? FTSSL_MODE_ENC : FTSSL_MODE_DEC;
 	return (ret);
-}*/
+}
 
 static void	do_work(ftssl_args_t args, int input_fd, int output_fd)
 {
@@ -135,17 +135,17 @@ static void	do_work(ftssl_args_t args, int input_fd, int output_fd)
 		prog += ret;
 	}
 	prep_args(&args);
-//	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_DEC)
-//		prog = b64_wrap(&args, &input, prog, &output);
+	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_DEC)
+		prog = b64_wrap(&args, &input, prog, &output);
 	ret = do_func(args, input, prog, &output);
 	free(input);
-/*	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_ENC)
+	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_ENC)
 	{
 		input = output;
 		ret = b64_wrap(&args, &input, ret, &output);
 		output = input;
 	}
-*/	write(output_fd, output, ret);
+	write(output_fd, output, ret);
 	free(output);
 }
 
