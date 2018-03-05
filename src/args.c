@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 15:07:47 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 20:06:10 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ ftssl_args_t ftssl_get_args(int argc, char **argv)
 	if (argc < 2)
 		args.command = ft_strdup(FTSSL_ERR_TXT);
 	args.command = ft_strdup(argv[1]);
-	if (ft_strcmp(argv[1], FTSSL_B64_TXT) == 0)
-		args.base64_mode = FTSSL_B64ON;
 	if (ft_findopt(argc, argv, 'd', NULL)
 		|| ft_findopt_long(argc, argv, "decode", NULL))
 		args.mode = FTSSL_MODE_DEC;

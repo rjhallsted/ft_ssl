@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:40:58 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 14:35:09 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 19:46:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ unsigned long ftssl_des_permute(unsigned long in, unsigned int *tab,
 		tmp = (in >> (tab_size - tab[i])) & 1;
 		tmp <<= tab[i] - 1;
 		out |= tmp;
+		i++;
 	}
 	return (out);
 }

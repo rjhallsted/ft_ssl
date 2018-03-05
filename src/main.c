@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 19:41:47 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 20:28:14 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static int	find_commandKey(char *commandName)
 	{
 		if (!ft_strcmp(commandList[i].name, commandName))
 			return (i);
+		i++;
 	}
 	return (0);
 }
@@ -92,10 +93,29 @@ static void prep_args(ftssl_args_t *args)
 		if (args->keystr == NULL)
 			args->keystr = getpass("enter des key in hex: ");
 		padlen = 16 - ft_strlen(args->keystr);
-		padding = ft_xstring('x', padlen);
+		padding = ft_xstring('0', padlen);
 		args->keystr = ft_strjoinfree(args->keystr, padding, 3);
 		args->keyval = key_strtoul(args->keystr);
 	}
+}
+
+static int	b64_wrap(ftssl_args_t *args, unsigned char **input,
+					int in_len, char **output)
+{
+	char	*tmp;
+	int		ret;
+	
+	tmp = ft_strdup(args->command);
+	free(args->command);
+	args->command = ft_strdup(FTSSL_B64_TXT);
+	args->mode = (args->mode == FTSSL_MODE_DEC) ? FTSSL_MODE_ENC : FTSSL_MODE_DEC;
+	ret = do_func(*args, *input, in_len, output);
+	free(*input);
+	*input = (unsigned char *)*output;
+	free(args->command);
+	args->command = tmp;
+	args->mode = (args->mode == FTSSL_MODE_DEC) ? FTSSL_MODE_ENC : FTSSL_MODE_DEC;
+	return (ret);
 }
 
 static void	do_work(ftssl_args_t args, int input_fd, int output_fd)
@@ -115,10 +135,17 @@ static void	do_work(ftssl_args_t args, int input_fd, int output_fd)
 		prog += ret;
 	}
 	prep_args(&args);
-	//base64 decode here
+	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_ENC)
+		prog = b64_wrap(&args, &input, prog, &output);
 	ret = do_func(args, input, prog, &output);
-	//base64 encode here
+	free(input);
+	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_DEC)
+	{
+		ret = b64_wrap(&args, &input, ret, &output);
+		output = (char *)input;
+	}
 	write(output_fd, output, ret);
+	free(output);
 }
 
 int			main(int argc, char **argv)
