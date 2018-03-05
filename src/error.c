@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 14:12:25 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/02 11:59:02 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 19:37:55 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,3 +73,8 @@ void ftssl_file_open_error(const char *filename, int permissions)
 	exit(EXIT_FAILURE);
 }
 
+void ftssl_invalid_hexkey_error(void)
+{
+	ft_printf_fd(STDERR_FILENO, "non-hex digit\ninvalid hex key value\n");
+	exit(EXIT_FAILURE);
+}

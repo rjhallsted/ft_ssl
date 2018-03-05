@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 15:49:55 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 19:41:47 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,73 +23,12 @@
  * DES accepts 8 (64 bits)
  */
 
-static int	stop_condition(unsigned char *block, ftssl_args_t args)
-{
-	static int stop_next_flag;
-
-	if (stop_next_flag)
-		return (1);
-	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_DEC
-			&&ft_strchr((char *)block, '='))
-		stop_next_flag = 1;
-	return (0);
-}
-
-static int	get_block(int fd, unsigned char *block, int block_size)
-{
-	int		ret;
-	int		prog;
-
-	prog = 0;
-	while (prog < block_size &&
-		   (ret = read(fd, block + prog, block_size - prog)))
-		prog += ret;
-	return (prog);
-}
-
 const ftssl_command_t commandList[] = {
-	{"undefined", 0, NULL, NULL},
-	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, NULL, ftssl_base64},
-	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_padblock_ecb, ftssl_des_ecb},
-	{FTSSL_DESECB_TXT, FTSSL_BLCKSZ_DES, ftssl_padblock_ecb, ftssl_des_ecb}
+	{"undefined", 0, NULL, FTSSL_KEYNO},
+	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64, FTSSL_KEYNO},
+	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb, FTSSL_KEYYES},
+	{FTSSL_DESECB_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb, FTSSL_KEYYES}
 };
-
-static void	do_blocks(ftssl_args_t args, int commKey, int in_fd, int out_fd)
-{
-	unsigned char		*block;
-	char				*output;
-	int					len;
-	ftssl_command_t		command;
-	int					padded;
-
-	command = commandList[commKey];
-	block = ft_memalloc(command.blocksize);
-	output = ft_memalloc(command.blocksize);
-	padded = 0;
-	while ((len = get_block(in_fd, block, command.blocksize))
-		&& !stop_condition(block, args))
-	{
-		if (len < (int)command.blocksize && command.padFunc)
-		{
-			command.padFunc(block, len, command.blocksize);
-			padded = 1;
-		}
-		len = command.func(args, block, output, len);		
-		write(out_fd, output, len);
-		ft_bzero(block, command.blocksize);
-		ft_bzero(block, command.blocksize);
-	}
-	if (!padded && command.padFunc)
-	{
-		command.padFunc(block, 0, command.blocksize);
-		len = command.func(args, block, output, len);
-		write(out_fd, output, len);
-	}
-	free(block);
-	free(output);
-	if (args.base64_mode == FTSSL_B64ON && args.mode == FTSSL_MODE_ENC)
-		ft_printf_fd(out_fd, "\n");
-}
 
 static int	find_commandKey(char *commandName)
 {
@@ -104,6 +43,82 @@ static int	find_commandKey(char *commandName)
 			return (i);
 	}
 	return (0);
+}
+
+static int do_func(ftssl_args_t args, unsigned char *in, size_t in_size,
+						char **output)
+{
+	ftssl_command_t command;
+	int				len;
+
+	command = commandList[find_commandKey(args.command)];
+	len = ((in_size / command.blocksize) + 1) * command.blocksize;
+	*output = ft_memalloc(len);
+	len = command.func(args, in, *output, in_size);
+	return (len);
+}
+
+static unsigned long key_strtoul(char *keystr)
+{
+	unsigned long	keyval;
+	int				i;
+	char			*pos;
+	char			*hexkeys;
+
+	hexkeys = "0123456789abcdef";
+	ft_strtolow(keystr);
+	i = 0;
+	keyval = 0;
+	while (i < 16)
+	{
+		keyval <<= 4;
+		if (!(pos = ft_strchr(hexkeys, keystr[i])))
+			ftssl_invalid_hexkey_error();
+		keyval |= (pos - hexkeys);
+		i++;
+	}
+	return (keyval);
+}
+
+static void prep_args(ftssl_args_t *args)
+{
+	ftssl_command_t	command;
+	int				padlen;
+	char			*padding;
+	
+	command = commandList[find_commandKey(args->command)];
+	if (command.need_key)
+	{
+		if (args->keystr == NULL)
+			args->keystr = getpass("enter des key in hex: ");
+		padlen = 16 - ft_strlen(args->keystr);
+		padding = ft_xstring('x', padlen);
+		args->keystr = ft_strjoinfree(args->keystr, padding, 3);
+		args->keyval = key_strtoul(args->keystr);
+	}
+}
+
+static void	do_work(ftssl_args_t args, int input_fd, int output_fd)
+{
+	char			buffer[FTSSL_BUFFSIZE];
+	unsigned char	*input;
+	char 			*output;
+	int				ret;
+	int				prog;
+
+	prog = 0;
+	input = NULL;
+	while ((ret = read(input_fd, buffer, FTSSL_BUFFSIZE)) > 0)
+	{
+		input = ft_memrealloc(input, prog + ret, prog);
+		ft_memcpy(input + prog, buffer, ret);
+		prog += ret;
+	}
+	prep_args(&args);
+	//base64 decode here
+	ret = do_func(args, input, prog, &output);
+	//base64 encode here
+	write(output_fd, output, ret);
 }
 
 int			main(int argc, char **argv)
@@ -135,7 +150,7 @@ int			main(int argc, char **argv)
 	}
 	else
 		output_fd = STDOUT_FILENO;
-	do_blocks(args, com_key, input_fd, output_fd);
+	do_work(args, input_fd, output_fd);
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
 	if (output_fd != STDOUT_FILENO)

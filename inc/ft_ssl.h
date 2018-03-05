@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 15:39:05 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 19:42:21 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 /* 
  * FTSSL_BLCKSZ_B64 must be a mulitple of 12;
  */
+
+# define FTSSL_BUFFSIZE 1000
 
 enum e_block_sizes {
 	FTSSL_BLCKSZ_B64 = 12,
@@ -29,9 +31,8 @@ enum e_block_sizes {
 # define FTSSL_B64OFF 0
 # define FTSSL_B64ON 1
 
-# define FTSSL_PADOFF 0
-# define FTSSL_PADECB 1
-# define FTSSL_PADCBC 2
+# define FTSSL_KEYNO 0
+# define FTSSL_KEYYES 1
 
 # define FTSSL_ERR_TXT "undefined"
 # define FTSSL_B64_TXT "base64"
@@ -57,8 +58,8 @@ typedef					int ftssl_commandFunc_t(ftssl_args_t,
 typedef struct 			ftssl_command_s {
 	char				*name;
 	size_t				blocksize;
-	ftssl_padFunc_t		*padFunc;
 	ftssl_commandFunc_t	*func;
+	int					need_key;
 }						ftssl_command_t;
 
 typedef struct			ftssl_opthelp_s {
@@ -76,12 +77,13 @@ ftssl_opthelp_t ftssl_opthelp_init(int argc, char **argv, char flag,
 void			ftssl_opthelp_destroy(ftssl_opthelp_t opt);
 char			*ftssl_find_optvalue(ftssl_opthelp_t opt, char *command);
 
-void			ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize);
+unsigned char	*ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize);
 
 void			ftssl_flag_arg_error(const char *command, const char *option);
 void			ftssl_nocommand_error(void);
 void			ftssl_invalid_command_error(const char *command);
 void			ftssl_file_open_error(const char *filename, int permissions);
+void			ftssl_invalid_hexkey_error(void);
 
 int				ftssl_base64(ftssl_args_t args, const unsigned char *input,
 							char *out, int len);

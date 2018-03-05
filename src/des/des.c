@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 14:28:25 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 19:43:25 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,21 +61,36 @@ int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 					char *output, int len)
 {
 	int				reslen;
+	int				i;
 	unsigned long	input_val;
 	unsigned long	output_val;
 	unsigned long	*keys;
+	unsigned char	*tmp;
 
-	if (len == 0)
-		return (0);
-	input_val = (unsigned long)*input & 0xffffffffffffffff;
 	if (args.mode == FTSSL_MODE_DEC)
 		keys = ftssl_des_genkeys(args.keyval, 1);
 	else
 		keys = ftssl_des_genkeys(args.keyval, 0);
-	output_val = ftssl_des_algo(keys, input_val);
+	i = 0;
+	reslen = 0;
+	while (i <= len)
+	{
+		if (len - i < FTSSL_BLCKSZ_DES)
+		{
+			tmp = ftssl_padblock_ecb((unsigned char *)(input + i), (len - i), FTSSL_BLCKSZ_DES);
+			input_val = (unsigned long)*tmp & 0xffffffffffffffff;
+			free(tmp);
+		}
+		else
+			input_val = (unsigned long)*(input + i) & 0xffffffffffffffff;
+		output_val = ftssl_des_algo(keys, input_val);
+		ft_memcpy(output + i, &output_val, 8);
+		i += FTSSL_BLCKSZ_DES;
+		reslen += FTSSL_BLCKSZ_DES;
+	}
+	if (args.mode == FTSSL_MODE_DEC)
+		reslen -= *(output - 1);
 	free(keys);
-	ft_memcpy(output, &output_val, 8);
-	reslen = 8;
 	return (reslen);
 }
 

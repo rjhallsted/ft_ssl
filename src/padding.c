@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/04 15:00:32 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 15:33:44 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/04 16:45:12 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 #include "../inc/ft_ssl.h"
 #include "../inc/libft/inc/libft.h"
 
-void ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize)
+unsigned char *ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize)
 {
-	size_t diff;
+	size_t			diff;
+	unsigned char	*padded;
 
 	diff = fullsize - cursize;
-	ft_bzero((block + cursize), diff - 1);
-	block[fullsize - 1] = diff;
+	padded = ft_memalloc(fullsize);
+	ft_memcpy(padded, block, cursize);
+	padded[fullsize - 1] = diff;
+	return (padded);
 }
