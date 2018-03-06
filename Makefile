@@ -6,14 +6,14 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/03/04 15:34:00 by rhallste         ###   ########.fr        #
+#    Updated: 2018/03/05 20:43:30 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME		= 	ft_ssl
 CC			=	gcc
-EXTRA_FLAGS =	-Weverything -Wno-cast-qual
-CFLAGS		=	-Wall -Werror -Wextra #$(EXTRA_FLAGS)
+EXTRA_FLAGS =	-Weverything -Wno-cast-qual -g
+CFLAGS		=	-Wall -Werror -Wextra -g -fsanitize=address #$(EXTRA_FLAGS)
 
 BASE64		=	base64/base64
 

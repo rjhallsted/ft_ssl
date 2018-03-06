@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/05 15:52:59 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/05 21:40:27 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input)
 	unsigned long right;
 
 	input = ftssl_des_permute(input, 64, (unsigned int *)initPerm, 64);
+	ft_printf("ip: %lx\n", input);
 	left = (input >> 32) & 0xffffffff;
 	right = input & 0xffffffff;
 	i = 0;
@@ -83,7 +84,15 @@ int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 		/* 	free(tmp); */
 		/* } */
 		/* else */
-		ft_memcpy(&input_val, input + i, FTSSL_BLCKSZ_DES);
+//		ft_printf("in: %s\n", ft_ultoa_base(input + i, 2));
+		for (int j = 0; j < 8; j++)
+		{
+			ft_printf("%hx (%p)\n", input[i + j], input + i + j);
+		}
+//		ft_memcpy(&input_val, input + i, FTSSL_BLCKSZ_DES);
+//		ft_printf("%p\n", input + i);
+		input_val = *(unsigned long *)(input + i);
+		ft_printf("input: %lx\n", input_val);
 		output_val = ftssl_des_algo(keys, input_val);
 		ft_memcpy(output + i, &output_val, FTSSL_BLCKSZ_DES);
 		i += FTSSL_BLCKSZ_DES;
