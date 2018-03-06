@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/05 21:40:27 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/05 22:04:59 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input)
 	return (input);
 }
 
+/*
+** The calls to ft_reverse_bytes are to account for little-endianess
+*/
+
 int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 					unsigned char *output, int len)
 {
@@ -84,17 +88,13 @@ int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 		/* 	free(tmp); */
 		/* } */
 		/* else */
-//		ft_printf("in: %s\n", ft_ultoa_base(input + i, 2));
-		for (int j = 0; j < 8; j++)
-		{
-			ft_printf("%hx (%p)\n", input[i + j], input + i + j);
-		}
-//		ft_memcpy(&input_val, input + i, FTSSL_BLCKSZ_DES);
-//		ft_printf("%p\n", input + i);
+		ft_reverse_bytes((void *)(input + i), 8);
+		
 		input_val = *(unsigned long *)(input + i);
 		ft_printf("input: %lx\n", input_val);
 		output_val = ftssl_des_algo(keys, input_val);
 		ft_memcpy(output + i, &output_val, FTSSL_BLCKSZ_DES);
+		ft_reverse_bytes((void *)(output + i), 8);
 		i += FTSSL_BLCKSZ_DES;
 		reslen += FTSSL_BLCKSZ_DES;
 	}
