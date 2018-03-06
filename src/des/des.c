@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/05 22:54:18 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/05 23:48:01 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,28 @@
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
-static void swap_ul(unsigned long *a, unsigned long *b)
-{
-	*a ^= *b;
-	*b ^= *a;
-	*a ^= *b;
-}
+/* static void swap_ul(unsigned long *a, unsigned long *b) */
+/* { */
+/* 	*a ^= *b; */
+/* 	*b ^= *a; */
+/* 	*a ^= *b; */
+/* } */
+
+/*
+** Note that rounds are generally indexed from 0
+*/
 
 extern const unsigned int expanPerm[48];
 extern const unsigned int pboxPerm[32];
 
 static void des_round(unsigned long *left, unsigned long *right,
-					  unsigned long key)
+					  unsigned long key, int round)
 {
+	unsigned long tmp;
+
+	tmp = *left;
+	if (round > 0)
+		*left = *right;
 	*right = ftssl_des_permute(*right, 32, (unsigned int *)expanPerm, 48);
 //	ft_printf("exp: %lx\n", *right);
 	*right ^= key;
@@ -35,9 +44,9 @@ static void des_round(unsigned long *left, unsigned long *right,
 //	ft_printf("sbox: %lx\n", *right);
 	*right = ftssl_des_permute(*right, 32, (unsigned int *)pboxPerm, 32);
 //	ft_printf("pbox: %lx\n", *right);
-	*right ^= *left;
+	*right ^= tmp;
 //	ft_printf("xord: %lx\n", *right);
-	swap_ul(left, right);
+//	swap_ul(left, right);
 }
 
 extern const unsigned int initPerm[64];
@@ -54,16 +63,16 @@ unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input)
 	input = ftssl_des_permute(input, 64, (unsigned int *)initPerm, 64);
 	left = (input >> 32) & 0xffffffff;
 	right = input & 0xffffffff;
-//	ft_printf("block\n");
-//	ft_printf("\t%lx\n", left);
-//	ft_printf("\t%lx\n", right);
+	ft_printf("block\n");
+	ft_printf("\t%lx\n", left);
+	ft_printf("\t%lx\n", right);
 	i = 0;
 	while (i < 16)
 	{
-		des_round(&left, &right, keys[i]);
-//		ft_printf("block %d\n", i);
-//		ft_printf("\t%lx\n", left);
-//		ft_printf("\t%lx\n", right);
+		des_round(&left, &right, keys[i], i);
+		ft_printf("block %d\n", i);
+		ft_printf("\t%lx\n", left);
+		ft_printf("\t%lx\n", right);
 		i++;
 	}
 	input = left << 32;
