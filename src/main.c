@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/05 22:36:14 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 17:15:47 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,11 @@ static int	b64_wrap(ftssl_args_t *args, unsigned char **input,
 	tmp = ft_strdup(args->command);
 	free(args->command);
 	args->command = ft_strdup(FTSSL_B64_TXT);
-	args->mode = (args->mode == FTSSL_MODE_DEC) ? FTSSL_MODE_ENC : FTSSL_MODE_DEC;
 	ret = do_func(*args, *input, in_len, output);
 	free(*input);
 	*input = *output;
 	free(args->command);
 	args->command = tmp;
-	args->mode = (args->mode == FTSSL_MODE_DEC) ? FTSSL_MODE_ENC : FTSSL_MODE_DEC;
 	return (ret);
 }
 
