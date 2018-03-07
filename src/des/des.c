@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 17:49:04 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 19:30:07 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 	unsigned long	output_val;
 	unsigned long	*keys;
 	unsigned char	*tmp;
+	int				checklen;
 
 	if (args.mode == FTSSL_MODE_DEC)
 		keys = ftssl_des_genkeys(args.keyval, 1);
@@ -78,9 +79,10 @@ int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 		keys = ftssl_des_genkeys(args.keyval, 0);
 	i = 0;
 	reslen = 0;
-	while (i <= len)
+	checklen = (args.mode == FTSSL_MODE_DEC) ? len - 1 : len;
+	while (i <= checklen)
 	{
-		if (len - i < FTSSL_BLCKSZ_DES)
+		if (len - i < FTSSL_BLCKSZ_DES && args.mode == FTSSL_MODE_ENC)
 		{
 			tmp = ftssl_padblock_ecb((unsigned char *)(input + i), (len - i), FTSSL_BLCKSZ_DES);
 			ft_reverse_bytes((void *)tmp, 8);
@@ -98,8 +100,8 @@ int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
 		i += FTSSL_BLCKSZ_DES;
 		reslen += FTSSL_BLCKSZ_DES;
 	}
-//	if (args.mode == FTSSL_MODE_DEC)
-//		reslen -= *(output - 1);
+	if (args.mode == FTSSL_MODE_DEC)
+		reslen -= *(output + i - 1);
 	free(keys);
 	return (reslen);
 }
