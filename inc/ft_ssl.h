@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 20:56:19 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 21:54:34 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,6 @@ int						ftssl_base64_decode(const unsigned char *input,
 int						ftssl_des_ecb(t_ftssl_args args,
 										const unsigned char *input,
 										unsigned char *output, int len);
-unsigned long			ftssl_des_algo(unsigned long keys[16],
-										unsigned long input);
 unsigned long			ftssl_des_permute(unsigned long in, size_t in_size,
 										unsigned int *tab, size_t tab_size);
 unsigned long			ftssl_des_sbox_sub(unsigned long in);
