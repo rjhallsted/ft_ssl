@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 21:54:34 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 23:36:21 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ enum					e_block_sizes {
 # define FTSSL_KEYNO 0
 # define FTSSL_KEYYES 1
 
+# define FTSSL_IVNO 0
+# define FTSSL_IVYES 1
+
 # define FTSSL_ERR_TXT "undefined"
 # define FTSSL_B64_TXT "base64"
 # define FTSSL_DES_TXT "des"
@@ -45,6 +48,7 @@ typedef struct			s_ftssl_args {
 	char				*input_file;
 	char				*output_file;
 	char				*keystr;
+	char				*iv_str;
 	unsigned long		keyval;
 	unsigned long		init_vector;
 	int					mode;
@@ -62,6 +66,7 @@ typedef struct			s_ftssl_command {
 	size_t				blocksize;
 	t_ftssl_comm_func	*func;
 	int					need_key;
+	int					need_iv;
 }						t_ftssl_command;
 
 typedef struct			s_ftssl_opthelp {
@@ -103,6 +108,9 @@ int						ftssl_base64_decode(const unsigned char *input,
 											unsigned char *out, int len);
 
 int						ftssl_des_ecb(t_ftssl_args args,
+										const unsigned char *input,
+										unsigned char *output, int len);
+int						ftssl_des_cbc(t_ftssl_args args,
 										const unsigned char *input,
 										unsigned char *output, int len);
 unsigned long			ftssl_des_permute(unsigned long in, size_t in_size,

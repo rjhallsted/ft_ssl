@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 20:15:34 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 22:44:48 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static t_ftssl_args	init_args(void)
 	args.input_file = NULL;
 	args.output_file = NULL;
 	args.keystr = NULL;
+	args.iv_str = NULL;
 	args.keyval = 0;
 	args.init_vector = 0;
 	args.mode = FTSSL_MODE_ENC;
@@ -39,6 +40,8 @@ void				ftssl_destroy_args(t_ftssl_args args)
 		free(args.output_file);
 	if (args.keystr)
 		free(args.keystr);
+	if (args.iv_str)
+		free(args.iv_str);
 }
 
 t_ftssl_args		ftssl_get_args(int argc, char **argv)
@@ -48,7 +51,7 @@ t_ftssl_args		ftssl_get_args(int argc, char **argv)
 
 	args = init_args();
 	if (argc < 2)
-		args.command = ft_strdup(FTSSL_ERR_TXT);
+		ftssl_nocommand_error();
 	args.command = ft_strdup(argv[1]);
 	if (ft_findopt(argc, argv, 'd', NULL)
 		|| ft_findopt_long(argc, argv, "decode", NULL))
@@ -61,6 +64,9 @@ t_ftssl_args		ftssl_get_args(int argc, char **argv)
 	ftssl_opthelp_destroy(opt);
 	opt = ftssl_opthelp_init(argc, argv, 'k', "key");
 	args.keystr = ftssl_find_optvalue(opt, args.command);
+	ftssl_opthelp_destroy(opt);
+	opt = ftssl_opthelp_init(argc, argv, 'v', "init-vector");
+	args.iv_str = ftssl_find_optvalue(opt, args.command);
 	ftssl_opthelp_destroy(opt);
 	if (ft_findopt(argc, argv, 'a', NULL)
 		|| ft_findopt_long(argc, argv, "base64", NULL))
