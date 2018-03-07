@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 23:46:19 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 23:50:04 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,15 +93,13 @@ int						ftssl_des_ecb(t_ftssl_args args,
 	unsigned long	input_val;
 	unsigned long	output_val;
 	unsigned long	*keys;
-	int				checklen;
 
 	if (args.mode == FTSSL_MODE_DEC)
 		keys = ftssl_des_genkeys(args.keyval, 1);
 	else
 		keys = ftssl_des_genkeys(args.keyval, 0);
 	reslen = 0;
-	checklen = (args.mode == FTSSL_MODE_DEC) ? len - 1 : len;
-	while (reslen <= checklen)
+	while (reslen <= ((args.mode == FTSSL_MODE_DEC) ? len - 1 : len))
 	{
 		input_val = get_inputval(args, input, len, reslen);
 		output_val = ftssl_des_algo(keys, input_val);
@@ -123,7 +121,6 @@ int						ftssl_des_cbc(t_ftssl_args args,
 	unsigned long			input_val;
 	unsigned long			output_val;
 	unsigned long			*keys;
-	int						checklen;
 	unsigned long			last_block;
 	
 	if (args.mode == FTSSL_MODE_DEC)
@@ -132,8 +129,7 @@ int						ftssl_des_cbc(t_ftssl_args args,
 		keys = ftssl_des_genkeys(args.keyval, 0);
 	last_block = args.init_vector;
 	reslen = 0;
-	checklen = (args.mode == FTSSL_MODE_DEC) ? len - 1 : len;
-	while (reslen <= checklen)
+	while (reslen <= ((args.mode == FTSSL_MODE_DEC) ? len - 1 : len))
 	{
 		input_val = get_inputval(args, input, len, reslen);
 		if (args.mode == FTSSL_MODE_ENC)
