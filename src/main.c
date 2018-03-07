@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 17:15:47 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 19:12:54 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ int			main(int argc, char **argv)
 		input_fd = STDIN_FILENO;
 	if (args.output_file && ft_strcmp(args.output_file, "-"))
 	{
-		if ((output_fd = open(args.output_file, O_WRONLY | O_CREAT)) == -1)
+		if ((output_fd = open(args.output_file, O_WRONLY | O_CREAT, 0644)) == -1)
 			ftssl_file_open_error(args.output_file, O_WRONLY | O_CREAT);
 	}
 	else

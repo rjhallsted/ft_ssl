@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 20:57:28 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 19:14:13 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ int ftssl_base64_encode(const unsigned char *input, unsigned char *output, int l
 		input += 3;
 		output += 4;
 	}
-	return (res_len);
+	*output = '\n';
+	return (res_len + 1);
 }
 
 static int	find_in_table(char c)
@@ -115,7 +116,6 @@ int	ftssl_base64_decode(const unsigned char *input, unsigned char *output, int l
 	}
 	if (ret < 3)
 		res_len -= (3 - ret);
-	*output = '\n';
 	return (res_len);
 }
 
