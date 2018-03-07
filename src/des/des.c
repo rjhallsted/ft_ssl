@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 23:50:04 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 23:58:28 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ extern const unsigned int g_init_perm[64];
 extern const unsigned int g_final_perm[64];
 
 static unsigned long	ftssl_des_algo(unsigned long keys[16],
-									   unsigned long input)
+										unsigned long input)
 {
 	int						i;
 	unsigned long			left;
@@ -90,20 +90,17 @@ int						ftssl_des_ecb(t_ftssl_args args,
 								unsigned char *output, int len)
 {
 	int				reslen;
-	unsigned long	input_val;
-	unsigned long	output_val;
+	unsigned long	in_val;
+	unsigned long	out_val;
 	unsigned long	*keys;
 
-	if (args.mode == FTSSL_MODE_DEC)
-		keys = ftssl_des_genkeys(args.keyval, 1);
-	else
-		keys = ftssl_des_genkeys(args.keyval, 0);
+	keys = ftssl_des_genkeys(args.keyval, (args.mode == FTSSL_MODE_DEC));
 	reslen = 0;
 	while (reslen <= ((args.mode == FTSSL_MODE_DEC) ? len - 1 : len))
 	{
-		input_val = get_inputval(args, input, len, reslen);
-		output_val = ftssl_des_algo(keys, input_val);
-		ft_memcpy(output + reslen, &output_val, FTSSL_BLCKSZ_DES);
+		in_val = get_inputval(args, input, len, reslen);
+		out_val = ftssl_des_algo(keys, in_val);
+		ft_memcpy(output + reslen, &out_val, FTSSL_BLCKSZ_DES);
 		ft_reverse_bytes((void *)(output + reslen), 8);
 		reslen += FTSSL_BLCKSZ_DES;
 	}
@@ -118,31 +115,22 @@ int						ftssl_des_cbc(t_ftssl_args args,
 								unsigned char *output, int len)
 {
 	int						reslen;
-	unsigned long			input_val;
-	unsigned long			output_val;
+	unsigned long			in_val;
+	unsigned long			out_val;
 	unsigned long			*keys;
-	unsigned long			last_block;
-	
-	if (args.mode == FTSSL_MODE_DEC)
-		keys = ftssl_des_genkeys(args.keyval, 1);
-	else
-		keys = ftssl_des_genkeys(args.keyval, 0);
-	last_block = args.init_vector;
+
+	keys = ftssl_des_genkeys(args.keyval, (args.mode == FTSSL_MODE_DEC));
 	reslen = 0;
 	while (reslen <= ((args.mode == FTSSL_MODE_DEC) ? len - 1 : len))
 	{
-		input_val = get_inputval(args, input, len, reslen);
+		in_val = get_inputval(args, input, len, reslen);
 		if (args.mode == FTSSL_MODE_ENC)
-			input_val ^= last_block;
-		output_val = ftssl_des_algo(keys, input_val);
-		if (args.mode == FTSSL_MODE_ENC)
-			last_block = output_val;
-		else
-		{
-			output_val ^= last_block;
-			last_block = input_val;
-		}
-		ft_memcpy(output + reslen, &output_val, FTSSL_BLCKSZ_DES);
+			in_val ^= args.init_vector;
+		out_val = ftssl_des_algo(keys, in_val);
+		if (args.mode == FTSSL_MODE_DEC)
+			out_val ^= args.init_vector;
+		args.init_vector = (args.mode == FTSSL_MODE_ENC) ? out_val : in_val;
+		ft_memcpy(output + reslen, &out_val, FTSSL_BLCKSZ_DES);
 		ft_reverse_bytes((void *)(output + reslen), 8);
 		reslen += FTSSL_BLCKSZ_DES;
 	}
