@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 20:06:10 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:02:51 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "../inc/ft_ssl.h"
 #include "../inc/libft/inc/libft.h"
 
-static ftssl_args_t init_args(void)
+static t_ftssl_args init_args(void)
 {
-	ftssl_args_t	args;
+	t_ftssl_args	args;
 
 	args.command = NULL;
 	args.input_file = NULL;
@@ -29,7 +29,7 @@ static ftssl_args_t init_args(void)
 	return (args);
 }
 
-void ftssl_destroy_args(ftssl_args_t args)
+void ftssl_destroy_args(t_ftssl_args args)
 {
 	if (args.command)
 		free(args.command);
@@ -41,10 +41,10 @@ void ftssl_destroy_args(ftssl_args_t args)
 		free(args.keystr);
 }
 
-ftssl_args_t ftssl_get_args(int argc, char **argv)
+t_ftssl_args ftssl_get_args(int argc, char **argv)
 {
-	ftssl_args_t	args;
-	ftssl_opthelp_t opt;
+	t_ftssl_args	args;
+	t_ftssl_opthelp opt;
 	
 	args = init_args();
 	if (argc < 2)

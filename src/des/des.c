@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 19:30:07 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:04:37 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input)
 ** The calls to ft_reverse_bytes are to account for little-endianess
 */
 
-int ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
+int ftssl_des_ecb(t_ftssl_args args, const unsigned char *input,
 					unsigned char *output, int len)
 {
 	int				reslen;

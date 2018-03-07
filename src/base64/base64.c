@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 19:14:13 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:04:18 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	ftssl_base64_decode(const unsigned char *input, unsigned char *output, int l
 	return (res_len);
 }
 
-int	ftssl_base64(ftssl_args_t args, const unsigned char *input, unsigned char *output, int len)
+int	ftssl_base64(t_ftssl_args args, const unsigned char *input, unsigned char *output, int len)
 {
 	if (args.mode == FTSSL_MODE_DEC)
 		return (ftssl_base64_decode(input, output, len));

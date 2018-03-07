@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 21:40:48 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:01:12 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define FT_SSL_H
 # include <string.h>
 
-/* 
- * FTSSL_BLCKSZ_B64 must be a mulitple of 12;
- */
+/*
+**FTSSL_BLCKSZ_B64 must be a mulitple of 12
+*/
 
 # define FTSSL_BUFFSIZE 1000
 
-enum e_block_sizes {
+enum					e_block_sizes {
 	FTSSL_BLCKSZ_B64 = 12,
 	FTSSL_BLCKSZ_DES = 8
 };
@@ -40,7 +40,7 @@ enum e_block_sizes {
 # define FTSSL_DESECB_TXT "des-ecb"
 # define FTSSL_DESCBC_TXT "des-cbc"
 
-typedef struct			ftssl_args_s {
+typedef struct			s_ftssl_args {
 	char				*command;
 	char				*input_file;
 	char				*output_file;
@@ -49,54 +49,54 @@ typedef struct			ftssl_args_s {
 	unsigned long		init_vector;
 	int					mode;
 	int					base64_mode;
-}						ftssl_args_t;
+}						t_ftssl_args;
 
-typedef					void ftssl_padFunc_t(unsigned char *, int, int);
-typedef					int ftssl_commandFunc_t(ftssl_args_t,
-								const unsigned char *, unsigned char *, int);
+typedef					void ftssl_padFunc_t(unsigned char *input, int cursize, int fullsize);
+typedef					int ftssl_commandFunc_t(t_ftssl_args args,
+								const unsigned char *input, unsigned char *output, int len);
 
-typedef struct 			ftssl_command_s {
+typedef struct 			s_ftssl_command {
 	char				*name;
 	size_t				blocksize;
 	ftssl_commandFunc_t	*func;
 	int					need_key;
-}						ftssl_command_t;
+}						t_ftssl_command;
 
-typedef struct			ftssl_opthelp_s {
+typedef struct			s_ftssl_opthelp {
 	int					argc;
 	char				**argv;
 	char				flag;
 	char				*label;
-}						ftssl_opthelp_t;
+}						t_ftssl_opthelp;
 
-ftssl_args_t	ftssl_get_args(int argc, char **argv);
-void			ftssl_destroy_args(ftssl_args_t args);
+t_ftssl_args			ftssl_get_args(int argc, char **argv);
+void					ftssl_destroy_args(t_ftssl_args args);
 
-ftssl_opthelp_t ftssl_opthelp_init(int argc, char **argv, char flag,
+t_ftssl_opthelp 		ftssl_opthelp_init(int argc, char **argv, char flag,
 								   char *label);
-void			ftssl_opthelp_destroy(ftssl_opthelp_t opt);
-char			*ftssl_find_optvalue(ftssl_opthelp_t opt, char *command);
+void					ftssl_opthelp_destroy(t_ftssl_opthelp opt);
+char					*ftssl_find_optvalue(t_ftssl_opthelp opt, char *command);
 
-unsigned char	*ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize);
+unsigned char			*ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize);
 
-void			ftssl_flag_arg_error(const char *command, const char *option);
-void			ftssl_nocommand_error(void);
-void			ftssl_invalid_command_error(const char *command);
-void			ftssl_file_open_error(const char *filename, int permissions);
-void			ftssl_invalid_hexkey_error(void);
+void					ftssl_flag_arg_error(const char *command, const char *option);
+void					ftssl_nocommand_error(void);
+void					ftssl_invalid_command_error(const char *command);
+void					ftssl_file_open_error(const char *filename, int permissions);
+void					ftssl_invalid_hexkey_error(void);
 
-int				ftssl_base64(ftssl_args_t args, const unsigned char *input,
+int						ftssl_base64(t_ftssl_args args, const unsigned char *input,
 							unsigned char *out, int len);
-int				ftssl_base64_encode(const unsigned char *input, unsigned char *out, int len);
-int				ftssl_base64_decode(const unsigned char *input, unsigned char *out, int len);
+int						ftssl_base64_encode(const unsigned char *input, unsigned char *out, int len);
+int						ftssl_base64_decode(const unsigned char *input, unsigned char *out, int len);
 
-int				ftssl_des_ecb(ftssl_args_t args, const unsigned char *input,
+int						ftssl_des_ecb(t_ftssl_args args, const unsigned char *input,
 							unsigned char *output, int len);
-unsigned long	ftssl_des_algo(unsigned long keys[16], unsigned long input);
-unsigned long	ftssl_des_permute(unsigned long in, size_t in_size,
+unsigned long			ftssl_des_algo(unsigned long keys[16], unsigned long input);
+unsigned long			ftssl_des_permute(unsigned long in, size_t in_size,
 							unsigned int *tab, size_t tab_size);
-unsigned long	ftssl_des_sbox_sub(unsigned long in);
-unsigned long	ftssl_des_key_transform(unsigned long *key, int round);
-unsigned long	*ftssl_des_genkeys(unsigned long initKey, int reverse);
+unsigned long			ftssl_des_sbox_sub(unsigned long in);
+unsigned long			ftssl_des_key_transform(unsigned long *key, int round);
+unsigned long			*ftssl_des_genkeys(unsigned long initKey, int reverse);
 
 #endif

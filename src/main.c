@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 19:12:54 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:01:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * DES accepts 8 (64 bits)
  */
 
-const ftssl_command_t commandList[] = {
+const t_ftssl_command commandList[] = {
 	{"undefined", 0, NULL, FTSSL_KEYNO},
 	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64, FTSSL_KEYNO},
 	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb, FTSSL_KEYYES},
@@ -36,7 +36,7 @@ static int	find_commandKey(char *commandName)
 	int command_count;
 
 	i = 1;
-	command_count = sizeof(commandList) / sizeof(ftssl_command_t);
+	command_count = sizeof(commandList) / sizeof(t_ftssl_command);
 	while (i < command_count)
 	{
 		if (!ft_strcmp(commandList[i].name, commandName))
@@ -46,10 +46,10 @@ static int	find_commandKey(char *commandName)
 	return (0);
 }
 
-static int do_func(ftssl_args_t args, unsigned char *in, size_t in_size,
+static int do_func(t_ftssl_args args, unsigned char *in, size_t in_size,
 						unsigned char **output)
 {
-	ftssl_command_t command;
+	t_ftssl_command command;
 	int				len;
 
 	command = commandList[find_commandKey(args.command)];
@@ -81,9 +81,9 @@ static unsigned long key_strtoul(char *keystr)
 	return (keyval);
 }
 
-static void prep_args(ftssl_args_t *args)
+static void prep_args(t_ftssl_args *args)
 {
-	ftssl_command_t	command;
+	t_ftssl_command	command;
 	int				padlen;
 	char			*padding;
 	
@@ -99,7 +99,7 @@ static void prep_args(ftssl_args_t *args)
 	}
 }
 
-static int	b64_wrap(ftssl_args_t *args, unsigned char **input,
+static int	b64_wrap(t_ftssl_args *args, unsigned char **input,
 					int in_len, unsigned char **output)
 {
 	char	*tmp;
@@ -116,7 +116,7 @@ static int	b64_wrap(ftssl_args_t *args, unsigned char **input,
 	return (ret);
 }
 
-static void	do_work(ftssl_args_t args, int input_fd, int output_fd)
+static void	do_work(t_ftssl_args args, int input_fd, int output_fd)
 {
 	char			buffer[FTSSL_BUFFSIZE];
 	unsigned char	*input;
@@ -152,7 +152,7 @@ int			main(int argc, char **argv)
 	int				input_fd;
 	int				output_fd;
 	int				com_key;
-	ftssl_args_t	args;
+	t_ftssl_args	args;
 	
 	if (argc < 2)
 	{
