@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 23:36:53 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 23:46:19 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,22 +124,28 @@ int						ftssl_des_cbc(t_ftssl_args args,
 	unsigned long			output_val;
 	unsigned long			*keys;
 	int						checklen;
+	unsigned long			last_block;
 	
 	if (args.mode == FTSSL_MODE_DEC)
 		keys = ftssl_des_genkeys(args.keyval, 1);
 	else
-	{
 		keys = ftssl_des_genkeys(args.keyval, 0);
-		output_val = args.init_vector;
-	}
+	last_block = args.init_vector;
 	reslen = 0;
 	checklen = (args.mode == FTSSL_MODE_DEC) ? len - 1 : len;
 	while (reslen <= checklen)
 	{
 		input_val = get_inputval(args, input, len, reslen);
 		if (args.mode == FTSSL_MODE_ENC)
-			input_val ^= output_val;
+			input_val ^= last_block;
 		output_val = ftssl_des_algo(keys, input_val);
+		if (args.mode == FTSSL_MODE_ENC)
+			last_block = output_val;
+		else
+		{
+			output_val ^= last_block;
+			last_block = input_val;
+		}
 		ft_memcpy(output + reslen, &output_val, FTSSL_BLCKSZ_DES);
 		ft_reverse_bytes((void *)(output + reslen), 8);
 		reslen += FTSSL_BLCKSZ_DES;
