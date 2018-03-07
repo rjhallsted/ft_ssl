@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/04 15:00:32 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 17:40:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 21:14:08 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include "../inc/ft_ssl.h"
 #include "../inc/libft/inc/libft.h"
 
-unsigned char *ftssl_padblock_ecb(unsigned char *block, int cursize, int fullsize)
+unsigned char	*ftssl_padblock_ecb(unsigned char *block, int cursize,
+									int fullsize)
 {
 	int				diff;
 	unsigned char	*padded;

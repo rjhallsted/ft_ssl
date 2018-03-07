@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 23:25:39 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 20:03:36 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 21:13:29 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include "../inc/libft/inc/libft.h"
 #include "../inc/ft_ssl.h"
 
-t_ftssl_opthelp ftssl_opthelp_init(int argc, char **argv, char flag,
-						  char *label)
+t_ftssl_opthelp	ftssl_opthelp_init(int argc, char **argv, char flag,
+									char *label)
 {
 	t_ftssl_opthelp opt;
 
@@ -26,13 +26,13 @@ t_ftssl_opthelp ftssl_opthelp_init(int argc, char **argv, char flag,
 	return (opt);
 }
 
-void ftssl_opthelp_destroy(t_ftssl_opthelp opt)
+void			ftssl_opthelp_destroy(t_ftssl_opthelp opt)
 {
 	if (opt.label)
 		free(opt.label);
 }
 
-char *ftssl_find_optvalue(t_ftssl_opthelp opt, char *command)
+char			*ftssl_find_optvalue(t_ftssl_opthelp opt, char *command)
 {
 	int		res;
 	char	*value;

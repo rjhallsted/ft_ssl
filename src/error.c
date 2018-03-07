@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 14:12:25 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/04 19:37:55 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:29:36 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,39 @@
 #include "../inc/ft_ssl.h"
 #include "../inc/libft/inc/libft.h"
 
-static void ftssl_b64_usage(void)
+void		ftssl_flag_arg_error(const char *command, const char *option)
 {
-	int e = STDERR_FILENO;
-	
-	ft_printf_fd(e, "Usage:\t./ft_ssl base64 [-ed] [-i in_file] [-o out_file]\n");
-	ft_printf_fd(e, "\t\t-e, --encode\tencodes input\n");	
-	ft_printf_fd(e, "\t\t-d, --decode\tdecodes input\n");
-	ft_printf_fd(e, "\t\t-i, --input\tinput file (default: \"-\" for stdin)\n");
-	ft_printf_fd(e, "\t\t-o, --output\toutput file (default: \"-\" for stdout)\n");
-}
+	int e;
 
-void ftssl_flag_arg_error(const char *command, const char *option)
-{
-	ft_printf_fd(STDERR_FILENO, "%s: option '%s' requires an argument\n", command, option);
+	e = STDERR_FILENO;
+	ft_printf_fd(e, "%s: option '%s' requires an argument\n", command, option);
 	if (command == FTSSL_B64_TXT)
-		ftssl_b64_usage();
+	{
+		ft_printf_fd(e, "Usage:\t./ft_ssl base64 [-ed] [-i in_file]");
+		ft_printf_fd(e, "[-o out_file]\n");
+		ft_printf_fd(e, "\t\t-e, --encode\tencodes input\n");
+		ft_printf_fd(e, "\t\t-d, --decode\tdecodes input\n");
+		ft_printf_fd(e, "\t\t-i, --input\tinput file (default: \"-\" ");
+		ft_printf_fd(e, "for stdin)\n");
+		ft_printf_fd(e, "\t\t-o, --output\toutput file (default: \"-\" ");
+		ft_printf_fd(e, "for stdout)\n");
+	}
 	exit(EXIT_FAILURE);
 }
 
-void ftssl_nocommand_error(void)
+void		ftssl_nocommand_error(void)
 {
-	ft_printf_fd(STDERR_FILENO, "usage: ft_ssl command [command opts] [command args]\n");
+	ft_printf_fd(STDERR_FILENO, "usage: ft_ssl command [command opts] ");
+	ft_printf_fd(STDERR_FILENO, "[command args]\n");
 	exit(EXIT_FAILURE);
 }
 
-void ftssl_invalid_command_error(const char *command)
+void		ftssl_invalid_command_error(const char *command)
 {
-	ft_printf_fd(STDERR_FILENO, "ftssl: Error: '%s' is an invalid command.\n\n", command);
+	char *error_str;
+
+	error_str = "ftssl: Error: '%s' is an invalid command.\n\n";
+	ft_printf_fd(STDERR_FILENO, error_str, command);
 	ft_printf_fd(STDERR_FILENO, "Standard commands:\n\n");
 	ft_printf_fd(STDERR_FILENO, "Message Digest commands:\n\n");
 	ft_printf_fd(STDERR_FILENO, "Cipher commands:\n");
@@ -55,7 +60,7 @@ void ftssl_invalid_command_error(const char *command)
 	exit(EXIT_FAILURE);
 }
 
-void ftssl_file_open_error(const char *filename, int permissions)
+void		ftssl_file_open_error(const char *filename, int permissions)
 {
 	char *message;
 	char *action;
@@ -73,7 +78,7 @@ void ftssl_file_open_error(const char *filename, int permissions)
 	exit(EXIT_FAILURE);
 }
 
-void ftssl_invalid_hexkey_error(void)
+void		ftssl_invalid_hexkey_error(void)
 {
 	ft_printf_fd(STDERR_FILENO, "non-hex digit\ninvalid hex key value\n");
 	exit(EXIT_FAILURE);

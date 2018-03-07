@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 20:14:07 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:56:19 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,9 @@ t_ftssl_opthelp			ftssl_opthelp_init(int argc, char **argv, char flag,
 void					ftssl_opthelp_destroy(t_ftssl_opthelp opt);
 char					*ftssl_find_optvalue(t_ftssl_opthelp opt,
 											char *command);
+
+int						ftssl_find_comm_key(char *command_name);
+void					ftssl_prep_args(t_ftssl_args *args);
 
 unsigned char			*ftssl_padblock_ecb(unsigned char *block,
 											int cursize, int fullsize);

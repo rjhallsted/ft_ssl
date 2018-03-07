@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 20:02:51 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/06 20:15:34 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../inc/ft_ssl.h"
 #include "../inc/libft/inc/libft.h"
 
-static t_ftssl_args init_args(void)
+static t_ftssl_args	init_args(void)
 {
 	t_ftssl_args	args;
 
@@ -29,7 +29,7 @@ static t_ftssl_args init_args(void)
 	return (args);
 }
 
-void ftssl_destroy_args(t_ftssl_args args)
+void				ftssl_destroy_args(t_ftssl_args args)
 {
 	if (args.command)
 		free(args.command);
@@ -41,11 +41,11 @@ void ftssl_destroy_args(t_ftssl_args args)
 		free(args.keystr);
 }
 
-t_ftssl_args ftssl_get_args(int argc, char **argv)
+t_ftssl_args		ftssl_get_args(int argc, char **argv)
 {
 	t_ftssl_args	args;
 	t_ftssl_opthelp opt;
-	
+
 	args = init_args();
 	if (argc < 2)
 		args.command = ft_strdup(FTSSL_ERR_TXT);
