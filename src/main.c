@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 22:38:47 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:08:11 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@
 const t_ftssl_command g_command_list[] = {
 	{"undefined", 0, NULL, FTSSL_KEYNO, FTSSL_IVNO},
 	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64, FTSSL_KEYNO,
-			FTSSL_IVNO},
+		FTSSL_IVNO},
 	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb, FTSSL_KEYYES,
-			FTSSL_IVNO},
+		FTSSL_IVNO},
 	{FTSSL_DESECB_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb, FTSSL_KEYYES,
-			FTSSL_IVNO},
+		FTSSL_IVNO},
 	{FTSSL_DESCBC_TXT, FTSSL_BLCKSZ_DES, ftssl_des_cbc, FTSSL_KEYYES,
-			FTSSL_IVYES}
+		FTSSL_IVYES}
 };
 
 int						ftssl_find_comm_key(char *command_name)
@@ -83,7 +83,7 @@ static int				b64_wrap(t_ftssl_args *args, unsigned char **input,
 
 static void				do_work(t_ftssl_args args, int input_fd, int output_fd)
 {
-	char			buffer[FTSSL_BUFFSIZE];
+	char			buffer[FTSSL_BUFFSIZE + 1];
 	unsigned char	*input;
 	unsigned char	*output;
 	int				ret;

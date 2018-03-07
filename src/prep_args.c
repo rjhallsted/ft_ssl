@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 20:49:34 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 23:08:37 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:07:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,15 @@ void					ftssl_prep_args(t_ftssl_args *args)
 	if (command.need_key)
 	{
 		if (args->keystr == NULL)
-			args->keystr = ft_prompt("enter des key in hex: ");
+			args->keystr = getpass("enter des key in hex: ");
 		args->keystr = pad_input(args->keystr);
 		args->keyval = hextoul(args->keystr);
 	}
 	if (command.need_iv)
 	{
-		if (args->keystr == NULL)
-			args->iv_str = ft_prompt("enter initial vector: ");
-		args->iv_str = pad_input(args->iv_str);	
+		if (args->iv_str == NULL)
+			args->iv_str = getpass("enter initial vector: ");
+		args->iv_str = pad_input(args->iv_str);
 		args->init_vector = hextoul(args->iv_str);
 	}
 }

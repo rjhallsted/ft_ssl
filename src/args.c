@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 22:44:48 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:11:09 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,27 @@ void				ftssl_destroy_args(t_ftssl_args args)
 		free(args.iv_str);
 }
 
+static void			set_args_with_val(t_ftssl_args *args, int argc, char **argv)
+{
+	t_ftssl_opthelp opt;
+
+	opt = ftssl_opthelp_init(argc, argv, 'i', "input");
+	args->input_file = ftssl_find_optvalue(opt, args->command);
+	ftssl_opthelp_destroy(opt);
+	opt = ftssl_opthelp_init(argc, argv, 'o', "output");
+	args->output_file = ftssl_find_optvalue(opt, args->command);
+	ftssl_opthelp_destroy(opt);
+	opt = ftssl_opthelp_init(argc, argv, 'k', "key");
+	args->keystr = ftssl_find_optvalue(opt, args->command);
+	ftssl_opthelp_destroy(opt);
+	opt = ftssl_opthelp_init(argc, argv, 'v', "init-vector");
+	args->iv_str = ftssl_find_optvalue(opt, args->command);
+	ftssl_opthelp_destroy(opt);
+}
+
 t_ftssl_args		ftssl_get_args(int argc, char **argv)
 {
 	t_ftssl_args	args;
-	t_ftssl_opthelp opt;
 
 	args = init_args();
 	if (argc < 2)
@@ -56,20 +73,9 @@ t_ftssl_args		ftssl_get_args(int argc, char **argv)
 	if (ft_findopt(argc, argv, 'd', NULL)
 		|| ft_findopt_long(argc, argv, "decode", NULL))
 		args.mode = FTSSL_MODE_DEC;
-	opt = ftssl_opthelp_init(argc, argv, 'i', "input");
-	args.input_file = ftssl_find_optvalue(opt, args.command);
-	ftssl_opthelp_destroy(opt);
-	opt = ftssl_opthelp_init(argc, argv, 'o', "output");
-	args.output_file = ftssl_find_optvalue(opt, args.command);
-	ftssl_opthelp_destroy(opt);
-	opt = ftssl_opthelp_init(argc, argv, 'k', "key");
-	args.keystr = ftssl_find_optvalue(opt, args.command);
-	ftssl_opthelp_destroy(opt);
-	opt = ftssl_opthelp_init(argc, argv, 'v', "init-vector");
-	args.iv_str = ftssl_find_optvalue(opt, args.command);
-	ftssl_opthelp_destroy(opt);
 	if (ft_findopt(argc, argv, 'a', NULL)
 		|| ft_findopt_long(argc, argv, "base64", NULL))
 		args.base64_mode = FTSSL_B64ON;
+	set_args_with_val(&args, argc, argv);
 	return (args);
 }
