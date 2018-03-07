@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 23:58:28 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:24:39 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int						ftssl_des_ecb(t_ftssl_args args,
 
 	keys = ftssl_des_genkeys(args.keyval, (args.mode == FTSSL_MODE_DEC));
 	reslen = 0;
-	while (reslen <= ((args.mode == FTSSL_MODE_DEC) ? len - 1 : len))
+	while (reslen < len)
 	{
 		in_val = get_inputval(args, input, len, reslen);
 		out_val = ftssl_des_algo(keys, in_val);
@@ -104,7 +104,7 @@ int						ftssl_des_ecb(t_ftssl_args args,
 		ft_reverse_bytes((void *)(output + reslen), 8);
 		reslen += FTSSL_BLCKSZ_DES;
 	}
-	if (args.mode == FTSSL_MODE_DEC)
+	if (args.mode == FTSSL_MODE_DEC && len % 8 != 0)
 		reslen -= *(output + reslen - 1);
 	free(keys);
 	return (reslen);
@@ -121,7 +121,7 @@ int						ftssl_des_cbc(t_ftssl_args args,
 
 	keys = ftssl_des_genkeys(args.keyval, (args.mode == FTSSL_MODE_DEC));
 	reslen = 0;
-	while (reslen <= ((args.mode == FTSSL_MODE_DEC) ? len - 1 : len))
+	while (reslen < len)
 	{
 		in_val = get_inputval(args, input, len, reslen);
 		if (args.mode == FTSSL_MODE_ENC)
@@ -134,7 +134,7 @@ int						ftssl_des_cbc(t_ftssl_args args,
 		ft_reverse_bytes((void *)(output + reslen), 8);
 		reslen += FTSSL_BLCKSZ_DES;
 	}
-	if (args.mode == FTSSL_MODE_DEC)
+	if (args.mode == FTSSL_MODE_DEC && len % 8 != 0)
 		reslen -= *(output + reslen - 1);
 	free(keys);
 	return (reslen);
