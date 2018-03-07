@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 14:12:25 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 20:29:36 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:55:09 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ void		ftssl_invalid_command_error(const char *command)
 	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DES_TXT);
 	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DESECB_TXT);
 	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DESCBC_TXT);
+	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DES3_TXT);
+	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DES3ECB_TXT);
+	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DES3CBC_TXT);
 	exit(EXIT_FAILURE);
 }
 

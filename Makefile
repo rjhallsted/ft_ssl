@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/03/07 00:56:29 by rhallste         ###   ########.fr        #
+#    Updated: 2018/03/07 02:55:44 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -19,6 +19,7 @@ BASE64		=	base64/base64
 
 DES			=	$(addprefix des/,	\
 				des					\
+				des3				\
 				permute				\
 				boxes				)
 

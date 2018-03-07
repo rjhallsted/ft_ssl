@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/07 02:08:11 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 03:13:53 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,21 @@
 */
 
 const t_ftssl_command g_command_list[] = {
-	{"undefined", 0, NULL, FTSSL_KEYNO, FTSSL_IVNO},
+	{"undefined", 0, NULL, FTSSL_KEYNO, FTSSL_IVNO, 0},
 	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64, FTSSL_KEYNO,
-		FTSSL_IVNO},
+		FTSSL_IVNO, 0},
 	{FTSSL_DES_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb, FTSSL_KEYYES,
-		FTSSL_IVNO},
+		FTSSL_IVNO, 1},
 	{FTSSL_DESECB_TXT, FTSSL_BLCKSZ_DES, ftssl_des_ecb, FTSSL_KEYYES,
-		FTSSL_IVNO},
+		FTSSL_IVNO, 1},
 	{FTSSL_DESCBC_TXT, FTSSL_BLCKSZ_DES, ftssl_des_cbc, FTSSL_KEYYES,
-		FTSSL_IVYES}
+		FTSSL_IVYES, 1},
+	{FTSSL_DES3_TXT, FTSSL_BLCKSZ_DES, ftssl_des3_ecb, FTSSL_KEYYES,
+		FTSSL_IVNO, 3},
+	{FTSSL_DES3ECB_TXT, FTSSL_BLCKSZ_DES, ftssl_des3_ecb, FTSSL_KEYYES,
+		FTSSL_IVNO, 3},
+	{FTSSL_DES3CBC_TXT, FTSSL_BLCKSZ_DES, ftssl_des3_cbc, FTSSL_KEYYES,
+		FTSSL_IVYES, 3}
 };
 
 int						ftssl_find_comm_key(char *command_name)

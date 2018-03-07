@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/07 02:11:09 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:57:31 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static t_ftssl_args	init_args(void)
 	args.keystr = NULL;
 	args.iv_str = NULL;
 	args.keyval = 0;
+	args.keyval2 = 0;
+	args.keyval3 = 0;
 	args.init_vector = 0;
 	args.mode = FTSSL_MODE_ENC;
 	args.base64_mode = FTSSL_B64OFF;

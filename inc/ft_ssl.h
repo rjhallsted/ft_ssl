@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 23:36:21 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:57:34 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ enum					e_block_sizes {
 # define FTSSL_DES_TXT "des"
 # define FTSSL_DESECB_TXT "des-ecb"
 # define FTSSL_DESCBC_TXT "des-cbc"
+# define FTSSL_DES3_TXT "des3"
+# define FTSSL_DES3ECB_TXT "des3-ecb"
+# define FTSSL_DES3CBC_TXT "des3-cbc"
 
 typedef struct			s_ftssl_args {
 	char				*command;
@@ -50,6 +53,8 @@ typedef struct			s_ftssl_args {
 	char				*keystr;
 	char				*iv_str;
 	unsigned long		keyval;
+	unsigned long		keyval2;
+	unsigned long		keyval3;
 	unsigned long		init_vector;
 	int					mode;
 	int					base64_mode;
@@ -67,6 +72,7 @@ typedef struct			s_ftssl_command {
 	t_ftssl_comm_func	*func;
 	int					need_key;
 	int					need_iv;
+	int					keys_needed;
 }						t_ftssl_command;
 
 typedef struct			s_ftssl_opthelp {
@@ -118,5 +124,13 @@ unsigned long			ftssl_des_permute(unsigned long in, size_t in_size,
 unsigned long			ftssl_des_sbox_sub(unsigned long in);
 unsigned long			ftssl_des_key_transform(unsigned long *key, int round);
 unsigned long			*ftssl_des_genkeys(unsigned long init_key, int reverse);
+
+int						ftssl_des3_ecb(t_ftssl_args args,
+										const unsigned char *input,
+										unsigned char *output, int len);
+int						ftssl_des3_cbc(t_ftssl_args args,
+										const unsigned char *input,
+										unsigned char *output, int len);
+
 
 #endif

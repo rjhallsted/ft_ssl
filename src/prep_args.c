@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 20:49:34 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/07 02:07:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/07 02:58:09 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ static unsigned long	hextoul(char *keystr)
 	return (keyval);
 }
 
-static char				*pad_input(char *input)
+static char				*pad_input(char *input, int len)
 {
 	int		padlen;
 	char	*padding;
 
-	padlen = 16 - ft_strlen(input);
+	padlen = len - ft_strlen(input);
 	if (padlen > 0)
 	{
 		padding = ft_xstring('0', padlen);
@@ -64,14 +64,18 @@ void					ftssl_prep_args(t_ftssl_args *args)
 	{
 		if (args->keystr == NULL)
 			args->keystr = getpass("enter des key in hex: ");
-		args->keystr = pad_input(args->keystr);
+		args->keystr = pad_input(args->keystr, 16 * command.keys_needed);
 		args->keyval = hextoul(args->keystr);
+		if (command.keys_needed > 1)
+			args->keyval2 = hextoul(args->keystr + 16);
+		if (command.keys_needed > 2)
+			args->keyval3 = hextoul(args->keystr + 32);
 	}
 	if (command.need_iv)
 	{
 		if (args->iv_str == NULL)
 			args->iv_str = getpass("enter initial vector: ");
-		args->iv_str = pad_input(args->iv_str);
+		args->iv_str = pad_input(args->iv_str, 16);
 		args->init_vector = hextoul(args->iv_str);
 	}
 }
