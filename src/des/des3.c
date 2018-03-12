@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 02:37:48 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/07 03:13:30 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 16:48:17 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
+#include <unistd.h>
 int	ftssl_des3_ecb(t_ftssl_args args, const unsigned char *input,
 				   unsigned char *output, int len)
 {
