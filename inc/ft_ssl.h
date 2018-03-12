@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 19:07:57 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 20:56:03 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,10 @@ unsigned long			ftssl_des_sbox_sub(unsigned long in);
 unsigned long			ftssl_des_key_transform(unsigned long *key, int round);
 unsigned long			*ftssl_des_genkeys(unsigned long init_key, int reverse);
 unsigned long			ftssl_get_inputval(t_ftssl_args args,
-										   const unsigned char *input, int len,
-										   int offset);
-unsigned long			ftssl_des_algo(unsigned long keys[16], unsigned long input);
-										   
+											const unsigned char *input, int len,
+											int offset);
+unsigned long			ftssl_des_algo(unsigned long keys[16],
+											unsigned long input);
 
 int						ftssl_des3_ecb(t_ftssl_args args,
 										const unsigned char *input,
@@ -136,6 +136,5 @@ int						ftssl_des3_ecb(t_ftssl_args args,
 int						ftssl_des3_cbc(t_ftssl_args args,
 										const unsigned char *input,
 										unsigned char *output, int len);
-
 
 #endif

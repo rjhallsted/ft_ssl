@@ -6,7 +6,7 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 18:44:11 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 20:41:24 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ int			ftssl_base64_encode(const unsigned char *in,
 	int	res_len;
 
 	res_len = (len / 3);
-	if (len % 3 > 0)
-		res_len++;
+	res_len += (len % 3 > 0) ? 1 : 0;
 	res_len *= 4;
 	while (len > 0)
 	{

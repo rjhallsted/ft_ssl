@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 19:07:36 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 20:54:11 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static unsigned long	des_feistel(unsigned long block, unsigned long key)
 extern const unsigned int g_init_perm[64];
 extern const unsigned int g_final_perm[64];
 
-unsigned long	ftssl_des_algo(unsigned long keys[16],
+unsigned long			ftssl_des_algo(unsigned long keys[16],
 										unsigned long input)
 {
 	int						i;
@@ -62,7 +62,7 @@ unsigned long	ftssl_des_algo(unsigned long keys[16],
 ** The calls to ft_reverse_bytes are to account for little-endianess
 */
 
-unsigned long	ftssl_get_inputval(t_ftssl_args args,
+unsigned long			ftssl_get_inputval(t_ftssl_args args,
 								const unsigned char *input,
 								int len, int offset)
 {

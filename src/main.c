@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 19:16:22 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 20:40:06 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ static int				do_func(t_ftssl_args args, unsigned char *in,
 
 	command = g_command_list[ftssl_find_comm_key(args.command)];
 	len = ((in_size / command.blocksize) + 1) * command.blocksize;
-	if (ft_strcmp(args.command, FTSSL_B64_TXT) == 0 && args.mode == FTSSL_MODE_ENC)
+	if (ft_strcmp(args.command, FTSSL_B64_TXT) == 0
+		&& args.mode == FTSSL_MODE_ENC)
 		len = len * 4 / 3;
 	*output = ft_memalloc(len);
 	len = command.func(args, in, *output, in_size);
 	return (len);
 }
 
-#include <stdio.h>
 static int				b64_wrap(t_ftssl_args *args, unsigned char **input,
 					int in_len, unsigned char **output)
 {
@@ -120,9 +120,10 @@ static void				do_work(t_ftssl_args args, int input_fd, int output_fd)
 
 int						main(int argc, char **argv)
 {
-	int				input_fd;
-	int				output_fd;
+	int				in_fd;
+	int				out_fd;
 	int				com_key;
+	int				perms;
 	t_ftssl_args	args;
 
 	if (argc < 2)
@@ -130,19 +131,18 @@ int						main(int argc, char **argv)
 	args = ftssl_get_args(argc, argv);
 	if (!(com_key = ftssl_find_comm_key(args.command)))
 		ftssl_invalid_command_error(args.command);
-	input_fd = (args.input_file
+	in_fd = (args.input_file
 		&& ft_strcmp(args.input_file, "-")) ? -5 : STDIN_FILENO;
-	if (input_fd == -5 && (input_fd = open(args.input_file, O_RDONLY)) == -1)
+	if (in_fd == -5 && (in_fd = open(args.input_file, O_RDONLY)) == -1)
 		ftssl_file_open_error(args.input_file, O_RDONLY);
-	output_fd = (args.output_file
-		&& ft_strcmp(args.output_file, "-")) ? -5 : STDOUT_FILENO;
-	if (output_fd == -5
-		&& (output_fd = open(args.output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644)) == -1)
-		ftssl_file_open_error(args.output_file, O_WRONLY | O_CREAT | O_TRUNC);
-	do_work(args, input_fd, output_fd);
-	if (input_fd != STDIN_FILENO)
-		close(input_fd);
-	if (output_fd != STDOUT_FILENO)
-		close(output_fd);
+	out_fd = (args.output_file && ft_strcmp(args.output_file, "-")) ? -5 : 1;
+	perms = O_WRONLY | O_CREAT | O_TRUNC;
+	if (out_fd == -5 && (out_fd = open(args.output_file, perms, 0644)) == -1)
+		ftssl_file_open_error(args.output_file, perms);
+	do_work(args, in_fd, out_fd);
+	if (in_fd != STDIN_FILENO)
+		close(in_fd);
+	if (out_fd != STDOUT_FILENO)
+		close(out_fd);
 	return (0);
 }
