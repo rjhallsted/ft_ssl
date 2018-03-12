@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 18:44:01 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 19:16:22 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ const t_ftssl_command g_command_list[] = {
 		FTSSL_IVNO, 1},
 	{FTSSL_DESCBC_TXT, FTSSL_BLCKSZ_DES, ftssl_des_cbc, FTSSL_KEYYES,
 		FTSSL_IVYES, 1},
-	{FTSSL_DES3_TXT, FTSSL_BLCKSZ_DES, ftssl_des3_ecb, FTSSL_KEYYES,
-		FTSSL_IVNO, 3},
+	{FTSSL_DES3_TXT, FTSSL_BLCKSZ_DES, ftssl_des3_cbc, FTSSL_KEYYES,
+		FTSSL_IVYES, 3},
 	{FTSSL_DES3ECB_TXT, FTSSL_BLCKSZ_DES, ftssl_des3_ecb, FTSSL_KEYYES,
 		FTSSL_IVNO, 3},
 	{FTSSL_DES3CBC_TXT, FTSSL_BLCKSZ_DES, ftssl_des3_cbc, FTSSL_KEYYES,

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:36:46 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 17:49:20 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 19:07:36 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static unsigned long	des_feistel(unsigned long block, unsigned long key)
 extern const unsigned int g_init_perm[64];
 extern const unsigned int g_final_perm[64];
 
-static unsigned long	ftssl_des_algo(unsigned long keys[16],
+unsigned long	ftssl_des_algo(unsigned long keys[16],
 										unsigned long input)
 {
 	int						i;
@@ -62,25 +62,25 @@ static unsigned long	ftssl_des_algo(unsigned long keys[16],
 ** The calls to ft_reverse_bytes are to account for little-endianess
 */
 
-static unsigned long	get_inputval(t_ftssl_args args,
+unsigned long	ftssl_get_inputval(t_ftssl_args args,
 								const unsigned char *input,
-								int len, int i)
+								int len, int offset)
 {
 	unsigned char *tmp;
 	unsigned long input_val;
 
-	if (len - i < FTSSL_BLCKSZ_DES && args.mode == FTSSL_MODE_ENC)
+	if (len - offset < FTSSL_BLCKSZ_DES && args.mode == FTSSL_MODE_ENC)
 	{
-		tmp = ftssl_padblock_ecb((unsigned char *)(input + i),
-								(len - i), FTSSL_BLCKSZ_DES);
+		tmp = ftssl_padblock_ecb((unsigned char *)(input + offset),
+								(len - offset), FTSSL_BLCKSZ_DES);
 		ft_reverse_bytes((void *)tmp, 8);
 		input_val = *(unsigned long *)tmp;
 		free(tmp);
 	}
 	else
 	{
-		ft_reverse_bytes((void *)(input + i), 8);
-		input_val = *(unsigned long *)(input + i);
+		ft_reverse_bytes((void *)(input + offset), 8);
+		input_val = *(unsigned long *)(input + offset);
 	}
 	return (input_val);
 }
@@ -98,7 +98,7 @@ int						ftssl_des_ecb(t_ftssl_args args,
 	reslen = 0;
 	while (reslen < len)
 	{
-		in_val = get_inputval(args, input, len, reslen);
+		in_val = ftssl_get_inputval(args, input, len, reslen);
 		out_val = ftssl_des_algo(keys, in_val);
 		ft_memcpy(output + reslen, &out_val, FTSSL_BLCKSZ_DES);
 		ft_reverse_bytes((void *)(output + reslen), 8);
@@ -123,7 +123,7 @@ int						ftssl_des_cbc(t_ftssl_args args,
 	reslen = 0;
 	while (reslen < len)
 	{
-		in_val = get_inputval(args, input, len, reslen);
+		in_val = ftssl_get_inputval(args, input, len, reslen);
 		if (args.mode == FTSSL_MODE_ENC)
 			in_val ^= args.init_vector;
 		out_val = ftssl_des_algo(keys, in_val);
