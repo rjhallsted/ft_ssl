@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 02:37:48 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 20:53:26 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/03/11 21:03:47 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,18 @@ static unsigned long	**get_keys(t_ftssl_args args)
 	unsigned long **keys;
 
 	keys = ft_memalloc(sizeof(unsigned long *) * 3);
-	keys[0] = ftssl_des_genkeys(args.keyval, (args.mode == FTSSL_MODE_DEC));
-	keys[1] = ftssl_des_genkeys(args.keyval2, (args.mode != FTSSL_MODE_DEC));
-	keys[2] = ftssl_des_genkeys(args.keyval3, (args.mode == FTSSL_MODE_DEC));
+	if (args.mode == FTSSL_MODE_ENC)
+	{
+		keys[0] = ftssl_des_genkeys(args.keyval, 0);
+		keys[1] = ftssl_des_genkeys(args.keyval2, 1);
+		keys[2] = ftssl_des_genkeys(args.keyval3, 0);
+	}
+	else
+	{
+		keys[0] = ftssl_des_genkeys(args.keyval3, 1);
+		keys[1] = ftssl_des_genkeys(args.keyval2, 0);
+		keys[2] = ftssl_des_genkeys(args.keyval, 1);
+	}
 	return (keys);
 }
 
