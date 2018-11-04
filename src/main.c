@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/03 21:59:10 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/03 23:14:33 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,11 +156,6 @@ void						ftssl_des_family_wrapper(char *command_name, int argc, char **argv)
 	if (out_fd != STDOUT_FILENO)
 		close(out_fd);
 }
-
-/* void						ftssl_md5_wrapper(char *command_name, int argc, char **argv) */
-/* { */
-
-/* } */
 
 static t_ftssl_comm_wrap	*get_wrapper_func(char *command_name)
 {

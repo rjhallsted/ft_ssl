@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/03/11 18:10:53 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/03 23:17:13 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -23,11 +23,12 @@ DES			=	$(addprefix des/,	\
 				permute				\
 				boxes				)
 
-FT_SSL		=	main 		\
-				args		\
-				error		\
-				opt			\
-				padding		\
+FT_SSL		=	main 			\
+				args			\
+				error			\
+				file_management \
+				opt				\
+				padding			\
 				prep_args
 
 FILES		=	$(FT_SSL) $(BASE64) $(DES)

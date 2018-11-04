@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/03 21:56:43 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/03 23:25:32 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct			s_ftssl_md5_args {
 	int					reverse_output;
 	int					string_mode;
 	char				*input_string;
-	int					input_fd;
+	int					*input_fds;
 }						t_ftssl_md5_args;
 
 typedef void			t_ftssl_comm_wrap(char *command_name, int argc, char **argv);
@@ -103,6 +103,10 @@ typedef struct			s_ftssl_opthelp {
 	char				flag;
 	char				*label;
 }						t_ftssl_opthelp;
+
+/* File management */
+
+int						ftssl_open_file(const char *filepath);
 
 /* Args */
 
