@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 20:40:06 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/03 21:06:13 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static void				do_work(t_ftssl_args args, int input_fd, int output_fd)
 	free(output);
 }
 
-int						main(int argc, char **argv)
+void					old_main(int argc, char **argv)
 {
 	int				in_fd;
 	int				out_fd;
@@ -126,8 +126,6 @@ int						main(int argc, char **argv)
 	int				perms;
 	t_ftssl_args	args;
 
-	if (argc < 2)
-		ftssl_nocommand_error();
 	args = ftssl_get_args(argc, argv);
 	if (!(com_key = ftssl_find_comm_key(args.command)))
 		ftssl_invalid_command_error(args.command);
@@ -144,5 +142,12 @@ int						main(int argc, char **argv)
 		close(in_fd);
 	if (out_fd != STDOUT_FILENO)
 		close(out_fd);
+}
+
+int							main(int argc, char **argv)
+{
+	if (argc < 2)
+		ftssl_nocommand_error();
+	old_main(argc, argv);
 	return (0);
 }
