@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/06 20:49:34 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/07 02:58:09 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/03 21:59:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /*
 ** g_command_list is defined in main.c
 */
-extern const t_ftssl_command g_command_list[];
+extern const t_ftssl_des_command g_command_list[];
 
 static unsigned long	hextoul(char *keystr)
 {
@@ -57,7 +57,7 @@ static char				*pad_input(char *input, int len)
 
 void					ftssl_prep_args(t_ftssl_args *args)
 {
-	t_ftssl_command	command;
+	t_ftssl_des_command	command;
 
 	command = g_command_list[ftssl_find_comm_key(args->command)];
 	if (command.need_key)

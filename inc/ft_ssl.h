@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/03 21:15:10 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/03 21:56:43 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,16 @@ typedef struct			s_ftssl_md5_args {
 	int					input_fd;
 }						t_ftssl_md5_args;
 
+typedef void			t_ftssl_comm_wrap(char *command_name, int argc, char **argv);
 
+typedef struct			s_ftssl_command {
+	char				*name;
+	t_ftssl_comm_wrap	*wrapper_func;
+}						t_ftssl_command;
+
+void					ftssl_md5_wrapper(char *command_name, int argc, char **argv);
+void					ftssl_des_family_wrapper(char *command_nam, int argc, char **argv);
+	
 /* DES/Encryption-related stuff */
 
 typedef struct			s_ftssl_args {
@@ -76,18 +85,17 @@ typedef struct			s_ftssl_args {
 
 typedef void			t_ftssl_pad_func(unsigned char *input,
 										int cursize, int fullsize);
-typedef	int				t_ftssl_comm_func(t_ftssl_args args,
-										const unsigned char *input,
+typedef	int				t_ftssl_comm_func(t_ftssl_args args, const unsigned char *input,
 										unsigned char *output, int len);
 
-typedef struct			s_ftssl_command {
+typedef struct			s_ftssl_des_command {
 	char				*name;
 	size_t				blocksize;
 	t_ftssl_comm_func	*func;
 	int					need_key;
 	int					need_iv;
 	int					keys_needed;
-}						t_ftssl_command;
+}						t_ftssl_des_command;
 
 typedef struct			s_ftssl_opthelp {
 	int					argc;

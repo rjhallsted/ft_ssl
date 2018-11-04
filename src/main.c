@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/03 21:06:13 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/03 21:59:10 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,26 @@
 #include "../inc/ft_ssl.h"
 #include "../inc/libft/inc/libft.h"
 
+
+const t_ftssl_command g_command_list[] = {
+	{FTSSL_MD5_TXT, NULL},
+	{FTSSL_B64_TXT, ftssl_des_family_wrapper},
+	{FTSSL_DES_TXT, ftssl_des_family_wrapper},
+	{FTSSL_DESECB_TXT, ftssl_des_family_wrapper},
+	{FTSSL_DESCBC_TXT, ftssl_des_family_wrapper},
+	{FTSSL_DES3_TXT, ftssl_des_family_wrapper},
+	{FTSSL_DES3ECB_TXT, ftssl_des_family_wrapper},
+	{FTSSL_DES3CBC_TXT, ftssl_des_family_wrapper}
+};
+
+
 /*
 ** block_size is size in bytes of amount to pass each function
 ** E.g. base64 accepts multiples of 3 (24 bits)
 ** DES accepts 8 (64 bits)
 */
 
-const t_ftssl_command g_command_list[] = {
+const t_ftssl_des_command g_des_command_list[] = {
 	{"undefined", 0, NULL, FTSSL_KEYNO, FTSSL_IVNO, 0},
 	{FTSSL_B64_TXT, FTSSL_BLCKSZ_B64, ftssl_base64, FTSSL_KEYNO,
 		FTSSL_IVNO, 0},
@@ -47,10 +60,10 @@ int						ftssl_find_comm_key(char *command_name)
 	int command_count;
 
 	i = 1;
-	command_count = sizeof(g_command_list) / sizeof(t_ftssl_command);
+	command_count = sizeof(g_des_command_list) / sizeof(t_ftssl_des_command);
 	while (i < command_count)
 	{
-		if (!ft_strcmp(g_command_list[i].name, command_name))
+		if (!ft_strcmp(g_des_command_list[i].name, command_name))
 			return (i);
 		i++;
 	}
@@ -60,10 +73,10 @@ int						ftssl_find_comm_key(char *command_name)
 static int				do_func(t_ftssl_args args, unsigned char *in,
 								size_t in_size, unsigned char **output)
 {
-	t_ftssl_command command;
+	t_ftssl_des_command command;
 	int				len;
 
-	command = g_command_list[ftssl_find_comm_key(args.command)];
+	command = g_des_command_list[ftssl_find_comm_key(args.command)];
 	len = ((in_size / command.blocksize) + 1) * command.blocksize;
 	if (ft_strcmp(args.command, FTSSL_B64_TXT) == 0
 		&& args.mode == FTSSL_MODE_ENC)
@@ -118,7 +131,7 @@ static void				do_work(t_ftssl_args args, int input_fd, int output_fd)
 	free(output);
 }
 
-void					old_main(int argc, char **argv)
+void						ftssl_des_family_wrapper(char *command_name, int argc, char **argv)
 {
 	int				in_fd;
 	int				out_fd;
@@ -127,8 +140,8 @@ void					old_main(int argc, char **argv)
 	t_ftssl_args	args;
 
 	args = ftssl_get_args(argc, argv);
-	if (!(com_key = ftssl_find_comm_key(args.command)))
-		ftssl_invalid_command_error(args.command);
+	if (!(com_key = ftssl_find_comm_key(command_name)))
+		ftssl_invalid_command_error(command_name);
 	in_fd = (args.input_file
 		&& ft_strcmp(args.input_file, "-")) ? -5 : STDIN_FILENO;
 	if (in_fd == -5 && (in_fd = open(args.input_file, O_RDONLY)) == -1)
@@ -144,10 +157,38 @@ void					old_main(int argc, char **argv)
 		close(out_fd);
 }
 
+/* void						ftssl_md5_wrapper(char *command_name, int argc, char **argv) */
+/* { */
+
+/* } */
+
+static t_ftssl_comm_wrap	*get_wrapper_func(char *command_name)
+{
+	int	i;
+	int	command_count;
+
+	i = 0;
+	command_count = sizeof(g_command_list) / sizeof(t_ftssl_command);
+	while (i < command_count)
+	{
+		if (!ft_strcmp(command_name, g_command_list[i].name))
+			return (g_command_list[i].wrapper_func);
+		i++;
+	}
+	return (NULL);
+}
+
 int							main(int argc, char **argv)
 {
+	t_ftssl_comm_wrap *command;
+	
 	if (argc < 2)
 		ftssl_nocommand_error();
-	old_main(argc, argv);
+	command = get_wrapper_func(argv[1]);
+	if (command == NULL) {
+		ftssl_invalid_command_error(argv[1]);
+		return (-1);
+	} else
+		command(argv[1], argc, argv);
 	return (0);
 }
