@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/04 20:49:32 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/04 21:13:51 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 
 const t_ftssl_command g_command_list[] = {
-	{FTSSL_MD5_TXT, NULL},
+	{FTSSL_MD5_TXT, ftssl_md5_wrapper},
 	{FTSSL_B64_TXT, ftssl_des_family_wrapper},
 	{FTSSL_DES_TXT, ftssl_des_family_wrapper},
 	{FTSSL_DESECB_TXT, ftssl_des_family_wrapper},
@@ -187,4 +187,3 @@ int							main(int argc, char **argv)
 		command(argv[1], argc, argv);
 	return (0);
 }
-OB
