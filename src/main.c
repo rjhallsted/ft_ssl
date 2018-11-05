@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/03 23:14:33 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/04 20:49:32 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,3 +187,4 @@ int							main(int argc, char **argv)
 		command(argv[1], argc, argv);
 	return (0);
 }
+OB
