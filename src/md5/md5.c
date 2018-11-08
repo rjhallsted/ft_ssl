@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/04 21:23:48 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/07 18:47:32 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 
 	args->input_fds = NULL;
 	args->input_fd_count = 0;
+	args->has_file_errors = 0;
 	i = 2;
 	while (i < argc)
 	{
@@ -53,11 +54,13 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 			args->input_fds = ft_memrealloc(args->input_fds, sizeof(int) * (args->input_fd_count + 1), sizeof(args->input_fds));
 			args->input_fds[args->input_fd_count] = fd;
 			args->input_fd_count++;
-		} else
-			ft_printf_fd(STDERR_FILENO, "%s\n", "md5: it: No such file or directory");
+		} else {
+			ft_printf_fd(STDERR_FILENO, "%s%s%s\n", "md5: ", argv[i], ": No such file or directory");
+			args->has_file_errors = 1;
+		}
 		i++;
 	}
-	if (args->input_fd_count == 0) {
+	if (args->input_fd_count == 0 && !args->string_mode && !args->has_file_errors) {
 		args->input_fds = ft_memalloc(sizeof(int));
 		args->input_fds[0] = STDIN_FILENO;
 		args->input_fd_count = 1;
@@ -67,12 +70,20 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 
 void						ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 {
-	t_ftssl_md5_args *args;
-
+	t_ftssl_md5_args	*args;
+	char				*input;
+	int					i;
+	
 	args = get_args(argc, argv);
 	command_name = NULL;
-	for (int i = 0; i < args->input_fd_count; i++)
-		ft_printf("%s\n", args->input_fds[i]);
-	//do algo
-	//print output
+	i = 0;
+	while (i < args->input_fd_count) {
+		ft_printf("%d\n", args->input_fds[i]);
+		input = ft_get_file_contents(args->input_fds[i]);
+		ft_printf("%s\n", input);
+		free(input);
+		//do algo
+		//output
+		i++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/04 21:15:03 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/07 18:36:16 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct			s_ftssl_md5_args {
 	char				*input_string;
 	int					*input_fds;
 	int					input_fd_count;
+	int					has_file_errors;
 }						t_ftssl_md5_args;
 
 typedef void			t_ftssl_comm_wrap(char *command_name, int argc, char **argv);
@@ -65,9 +66,11 @@ typedef struct			s_ftssl_command {
 	t_ftssl_comm_wrap	*wrapper_func;
 }						t_ftssl_command;
 
+/* wrappers */
+
 void					ftssl_md5_wrapper(char *command_name, int argc, char **argv);
 void					ftssl_des_family_wrapper(char *command_name, int argc, char **argv);
-	
+
 /* DES/Encryption-related stuff */
 
 typedef struct			s_ftssl_args {
