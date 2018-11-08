@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 14:12:25 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/04 20:44:50 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/07 18:00:41 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ void		ftssl_invalid_command_error(const char *command)
 
 	error_str = "ftssl: Error: '%s' is an invalid command.\n\n";
 	ft_printf_fd(STDERR_FILENO, error_str, command);
-	ft_printf_fd(STDERR_FILENO, "Standard commands:\n\n");
-	ft_printf_fd(STDERR_FILENO, "Message Digest commands:\n\n");
-	ft_printf_fd(STDERR_FILENO, "Cipher commands:\n");
+	ft_printf_fd(STDERR_FILENO, "Standard commands:\n");
+	ft_printf_fd(STDERR_FILENO, "\nMessage Digest commands:\n");
 	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_MD5_TXT);
+	ft_printf_fd(STDERR_FILENO, "\nCipher commands:\n");
 	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_B64_TXT);
 	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DES_TXT);
 	ft_printf_fd(STDERR_FILENO, "%s\n", FTSSL_DESECB_TXT);
