@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/07 18:36:16 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/08 22:39:22 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct			s_ftssl_md5_args {
 	int					reverse_output;
 	int					string_mode;
 	char				*input_string;
+	char				**input_filenames;
 	int					*input_fds;
 	int					input_fd_count;
 	int					has_file_errors;
