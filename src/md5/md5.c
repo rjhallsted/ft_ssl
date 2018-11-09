@@ -6,13 +6,14 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/07 18:47:32 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/08 20:51:09 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdint.h>
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
@@ -68,20 +69,45 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 	return (args);
 }
 
+static size_t				pad_input(unsigned char *input, unsigned char **padded)
+{
+	size_t	len;
+	int64_t len_bits;
+	size_t	pad_len;
+
+	/* pad to 64 bits short of a multiple of 512 bits. (8 and 64 bytes, respectively) */
+	len = ft_strlen((char *)input);
+	pad_len = 0;
+	while ((len + pad_len) % 64 != 56)
+		pad_len++;
+	ft_printf("%zd\n", len);
+	*padded = ft_memrealloc(input, len + pad_len + 8, len);
+	if (pad_len > 0) {
+		(*padded)[len] = (unsigned char)128; //add 1 bit followed by 0's (big endian style)
+		ft_bzero(*padded + len + 1, pad_len - 1);
+	} else
+		*padded = input;
+	len_bits = ((long long)len * 8);
+	ft_reverse_bytes(&len_bits, 8);
+	ft_memcpy(*padded + len + pad_len, &len_bits, 8);
+	return (len + pad_len + 8);
+}
+
 void						ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 {
 	t_ftssl_md5_args	*args;
-	char				*input;
+	unsigned char		*input;
+	size_t				len;
 	int					i;
 	
 	args = get_args(argc, argv);
 	command_name = NULL;
+	//handle strings here
 	i = 0;
 	while (i < args->input_fd_count) {
-		ft_printf("%d\n", args->input_fds[i]);
-		input = ft_get_file_contents(args->input_fds[i]);
-		ft_printf("%s\n", input);
-		free(input);
+		input = (unsigned char *)ft_get_file_contents(args->input_fds[i]);
+		len = pad_input(input, &input);
+		ft_printmemory_binary(input, len);
 		//do algo
 		//output
 		i++;

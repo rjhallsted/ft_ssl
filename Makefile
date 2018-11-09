@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/04 21:17:30 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/08 20:07:28 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -45,7 +45,7 @@ all: $(NAME)
 $(OBJS): $(SRCS)
 
 $(LIBFT):
-	@make -C inc/libft
+	@make -C inc/libft all
 
 $(NAME): $(OBJS) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
