@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/08 22:43:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 11:42:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,50 @@ static int					is_flag(const char *input)
 	return (0);
 }
 
+static t_ftssl_md5_args		*init_args()
+{
+	t_ftssl_md5_args	*args;
+	
+	args = ft_memalloc(sizeof(t_ftssl_md5_args));
+	args->print_input = 0;
+	args->quiet_mode = 0;
+	args->reverse_output = 0;
+	args->string_mode = 0;
+	args->input_string = NULL;
+	args->input_fds = NULL;
+	args->input_filenames = NULL;
+	args->input_fd_count = 0;
+	args->has_file_errors = 0;
+	return (args);
+}
+
 static t_ftssl_md5_args		*get_args(int argc, char **argv)
 {
 	t_ftssl_md5_args	*args;
 	int					i;
 	int					fd;
-	
-	args = ft_memalloc(sizeof(t_ftssl_md5_args));
-	args->print_input = ft_findopt(argc, argv, 'p', NULL);
-	args->quiet_mode = ft_findopt(argc, argv, 'q', NULL);
-	args->reverse_output = ft_findopt(argc, argv, 'r', NULL);
-	args->string_mode = ft_findopt(argc, argv, 's', &(args->input_string));
 
-	args->input_fds = NULL;
-	args->input_filenames = NULL;
-	args->input_fd_count = 0;
-	args->has_file_errors = 0;
+	args = init_args();
 	i = 2;
+	while (i < argc && is_flag(argv[i])) {
+		if (ft_strchr(argv[2], 'p'))
+			args->print_input = 1;
+		if (ft_strchr(argv[2], 'q'))
+			args->quiet_mode = 1;
+		if (ft_strchr(argv[2], 'r'))
+			args->reverse_output = 1;
+		if (ft_strchr(argv[2], 's')) {
+			args->string_mode = 1;
+			if (++i < argc)
+				args->input_string = ft_strdup(argv[i]);
+			else
+				ft_printf_fd(STDERR_FILENO, "md5: option requires an argument -- s\n");
+		}
+		i++;
+	}
 	while (i < argc)
 	{
-		if (!is_flag(argv[i]) && (fd = open(argv[i], O_RDONLY)) > 0) {
+ 		if ((fd = open(argv[i], O_RDONLY)) > 0) {
 			args->input_fds = ft_memrealloc(args->input_fds, sizeof(int) * (args->input_fd_count + 1), sizeof(args->input_fds));
 			args->input_fds[args->input_fd_count] = fd;
 			args->input_filenames = ft_memrealloc(args->input_filenames, sizeof(char *) * (args->input_fd_count + 1), sizeof(args->input_filenames));
@@ -67,6 +91,7 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 	if (args->input_fd_count == 0 && !args->string_mode && !args->has_file_errors) {
 		args->input_fds = ft_memalloc(sizeof(int));
 		args->input_fds[0] = STDIN_FILENO;
+		args->input_filenames = NULL;
 		args->input_fd_count = 1;
 	}
 	return (args);
@@ -83,15 +108,12 @@ static size_t				pad_input(unsigned char *input, unsigned char **padded)
 	pad_len = 0;
 	while ((len + pad_len) % 64 != 56)
 		pad_len++;
-	ft_printf("%zd\n", len);
 	*padded = ft_memrealloc(input, len + pad_len + 8, len);
 	if (pad_len > 0) {
 		(*padded)[len] = (unsigned char)128; //add 1 bit followed by 0's (big endian style)
 		ft_bzero(*padded + len + 1, pad_len - 1);
-	} else
-		*padded = input;
+	}
 	len_bits = ((long long)len * 8);
-	ft_reverse_bytes(&len_bits, 8);
 	ft_memcpy(*padded + len + pad_len, &len_bits, 8);
 	return (len + pad_len + 8);
 }
@@ -138,11 +160,27 @@ static const unsigned int		r2_shift[] = {
 };
 
 static const unsigned int		r3_shift[] = {
-	4, 11, 116, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23
+	4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23
 };
 
 static const unsigned int		r4_shift[] = {
 	6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
+};
+
+static const unsigned int		r1_mindex[] = {
+	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+};
+
+static const unsigned int		r2_mindex[] = {
+	1, 6, 11, 0, 5, 10, 15, 4, 9, 14, 3, 8, 13, 2, 7, 12
+};
+
+static const unsigned int		r3_mindex[] = {
+	5, 8, 11, 14, 1, 4, 7, 10, 13, 0, 3, 6, 9, 12, 15, 2
+};
+
+static const unsigned int		r4_mindex[] = {
+	0, 7, 14, 5, 12, 3, 10, 1, 8, 15, 6, 13, 4, 11, 2, 9
 };
 
 static unsigned int				shift(unsigned int value, unsigned int shiftby)
@@ -153,7 +191,7 @@ static unsigned int				shift(unsigned int value, unsigned int shiftby)
 
 	mask = 1;
 	i = 1;
-	while (i < (32 - shiftby))
+	while (i < shiftby)
 	{
 		mask = mask << 1;
 		mask |= 1;
@@ -166,97 +204,108 @@ static unsigned int				shift(unsigned int value, unsigned int shiftby)
 
 static void						rotate_order(unsigned int *order)
 {
-	unsigned int	tmp;
+	order[3] ^= order[2];
+	order[2] ^= order[3];
+	order[3] ^= order[2];	
 
-	tmp = order[3];
-	order[1] = order[0];
-	order[2] = order[1];
-	order[3] = order[2];
-	order[0] = tmp;
+	order[2] ^= order[1];
+	order[1] ^= order[2];
+	order[2] ^= order[1];
+
+	order[1] ^= order[0];
+	order[0] ^= order[1];
+	order[1] ^= order[0];
 }
 
-static void						round1_func(unsigned int *c, unsigned int *in, unsigned int *o, int i)
+static void						round1_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
 {
-	c[o[0]] = c[o[1]] + shift(c[o[0]] + ((c[o[1]] & c[o[2]]) | ((~c[o[1]]) & c[o[3]])) + in[i] + r1_const[i], r1_shift[i]);
+	c[o[0]] = c[o[1]] + shift(c[o[0]] + ((c[o[1]] & c[o[2]]) | ((~c[o[1]]) & c[o[3]])) + in + r1_const[i], r1_shift[i]);
 }
 
-static void						round2_func(unsigned int *c, unsigned int *in, unsigned int *o, int i)
+static void						round2_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
 {
-	c[o[0]] = c[o[1]] + shift(c[o[0]] + ((c[o[1]] & c[o[2]]) | (c[o[2]] & (~c[o[3]]))) + in[i] + r2_const[i], r2_shift[i]);
+	c[o[0]] = c[o[1]] + shift(c[o[0]] + ((c[o[1]] & c[o[2]]) | (c[o[2]] & (~c[o[3]]))) + in + r2_const[i], r2_shift[i]);
 }
 
-static void						round3_func(unsigned int *c, unsigned int *in, unsigned int *o, int i)
+static void						round3_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
 {
-	c[o[0]] = c[o[1]] + shift(c[o[0]] + (c[o[1]] ^ c[o[2]] ^ c[o[3]]) + in[i] + r3_const[i], r3_shift[i]);
+	c[o[0]] = c[o[1]] + shift(c[o[0]] + (c[o[1]] ^ c[o[2]] ^ c[o[3]]) + in + r3_const[i], r3_shift[i]);
 }
 
-static void						round4_func(unsigned int *c, unsigned int *in, unsigned int *o, int i)
+static void						round4_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
 {
-	c[o[0]] = c[o[1]] + shift(c[o[0]] + (c[o[2]] ^ (c[o[1]] | (~c[o[3]]))) + in[i] + r4_const[i], r4_shift[i]);
+	c[o[0]] = c[o[1]] + shift(c[o[0]] + (c[o[2]] ^ (c[o[1]] | (~c[o[3]]))) + in + r4_const[i], r4_shift[i]);
 }
 
 
-static void						rounds(unsigned int *c, unsigned int *in, unsigned int *order)
+static void						rounds(unsigned long long *c, unsigned int *in, unsigned int *order)
 {
 	int				i;
-	
+		
 	i = 0;
 	while (i < 16)
 	{
-		round1_func(c, in, order, i);
+		round1_func(c, in[r1_mindex[i]], order, i);
+		ft_printf("1 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
+	ft_printf("-----------\n");
 	i = 0;
 	while (i < 16)
 	{
-		round2_func(c, in, order, i);
+		round2_func(c, in[r2_mindex[i]], order, i);
+		ft_printf("2 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
+	ft_printf("-----------\n");
 	i = 0;
 	while (i < 16)
 	{
-		round3_func(c, in, order, i);
+		round3_func(c, in[r3_mindex[i]], order, i);
+		ft_printf("3 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
+	ft_printf("-----------\n");
 	i = 0;
 	while (i < 16)
 	{
-		round4_func(c, in, order, i);
+		round4_func(c, in[r4_mindex[i]], order, i);
+		ft_printf("4 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
 }
 
-static void						init_arrays(unsigned int **chain, unsigned int **chain_tmp, unsigned int **order)
+static void						init_arrays(unsigned long long **chain, unsigned long long **chain_tmp, unsigned int **order)
 {
-	*chain = ft_memalloc(sizeof(unsigned int) * 4);
-	*chain[0] = 0x01234567; //A
-	*chain[1] = 0x89abcdef; //B
-	*chain[2] = 0xfedcba98; //C
-	*chain[3] = 0x76543210; //D
-	*chain_tmp = ft_memalloc(sizeof(unsigned int) * 4);
-	*chain_tmp[0] = *chain[0];
-	*chain_tmp[1] = *chain[1];
-	*chain_tmp[2] = *chain[2];
-	*chain_tmp[3] = *chain[3];
+	*chain = ft_memalloc(sizeof(unsigned long long) * 4);
+	(*chain)[0] = 0x67452301; //A
+	(*chain)[1] = 0xefcdab89; //B
+	(*chain)[2] = 0x98badcfe; //C
+	(*chain)[3] = 0x10325476; //D
+	*chain_tmp = ft_memalloc(sizeof(unsigned long long) * 4);
+	(*chain_tmp)[0] = (*chain)[0];
+	(*chain_tmp)[1] = (*chain)[1];
+	(*chain_tmp)[2] = (*chain)[2];
+	(*chain_tmp)[3] = (*chain)[3];
 	*order = ft_memalloc(sizeof(unsigned int) * 4);
-	*order[0] = 0;
-	*order[1] = 1;
-	*order[2] = 2;
-	*order[3] = 3;
+	(*order)[0] = 0;
+	(*order)[1] = 1;
+	(*order)[2] = 2;
+	(*order)[3] = 3;
 }
 
 static unsigned char			*md5_algorithm(unsigned char *input, size_t input_len)
 {
-	unsigned int	*chain;
-	unsigned int	*chain_tmp;
-	unsigned int	*order;
-	size_t			i;
-	unsigned char	*output;
-	unsigned char	*tmp;
+	unsigned long long	*chain;
+	unsigned long long	*chain_tmp;
+	unsigned int		*order;
+	size_t				i;
+	unsigned char		*output;
+	unsigned char		*tmp;
 	
 	init_arrays(&chain, &chain_tmp, &order);
 	i = 0;
@@ -280,28 +329,45 @@ static unsigned char			*md5_algorithm(unsigned char *input, size_t input_len)
 		free(tmp);
 		i++;
 	}
+	unsigned int val = 2562383102;
+	ft_printmemory_binary(&val, sizeof(unsigned int));
+	val = 2562383086;
+	ft_printmemory_binary(&val, sizeof(unsigned int));
 	return (output);
+}
+
+static void					do_md5(char *filename, unsigned char *input)
+{
+	unsigned char		*output;
+	unsigned char		*padded;
+	size_t				len;
+
+	len = pad_input(input, &padded);
+	output = md5_algorithm(padded, len);
+	free(padded);
+	if (filename)
+		ft_printf("MD5 (%s\n) = ", filename);
+	ft_printf("%s\n", output);
+	free(output);
 }
 
 void						ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 {
 	t_ftssl_md5_args	*args;
 	unsigned char		*input;
-	unsigned char		*output;
-	size_t				len;
 	int					i;
 	
 	args = get_args(argc, argv);
 	command_name = NULL;
-	//handle strings here
+	if (args->string_mode && args->input_string)
+		do_md5(NULL, (unsigned char *)args->input_string);
 	i = 0;
 	while (i < args->input_fd_count) {
 		input = (unsigned char *)ft_get_file_contents(args->input_fds[i]);
-		len = pad_input(input, &input);
-		output = md5_algorithm(input, len);
-		free(input);
-		ft_printf("MD5 (%s) = %s\n", args->input_filenames[i], output);
-		free(output);
+		if (args->input_filenames)
+			do_md5(args->input_filenames[i], input);
+		else
+			do_md5(NULL, input);
 		i++;
 	}
 	//free args
