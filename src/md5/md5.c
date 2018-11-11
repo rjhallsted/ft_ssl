@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 15:03:52 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 15:27:02 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ static t_ftssl_md5_args		*init_args()
 	args->input_fds = NULL;
 	args->input_filenames = NULL;
 	args->input_fd_count = 0;
-	args->has_file_errors = 0;
+	args->read_stdin = 0;
+	args->error_indices = NULL;
+	args->error_count = 0;
 	return (args);
 }
 
@@ -83,17 +85,14 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 			args->input_filenames[args->input_fd_count] = ft_strdup(argv[i]);
 			args->input_fd_count++;
 		} else {
-			ft_printf_fd(STDERR_FILENO, "%s%s%s\n", "md5: ", argv[i], ": No such file or directory");
-			args->has_file_errors = 1;
+			args->error_indices = ft_memrealloc(args->error_indices, sizeof(int) * (args->error_count + 1), sizeof(int) * args->error_count);
+			args->error_indices[args->error_count] = i;
+			args->error_count++;
 		}
 		i++;
 	}
-	if ((args->input_fd_count == 0 && !args->string_mode && !args->has_file_errors) || args->print_input) {
-		args->input_fds = ft_memalloc(sizeof(int));
-		args->input_fds[0] = STDIN_FILENO;
-		args->input_filenames = NULL;
-		args->input_fd_count = 1;
-	}
+	if ((args->input_fd_count == 0 && !args->string_mode && !args->error_count) || args->print_input)
+		args->read_stdin = 1;
 	return (args);
 }
 
@@ -323,8 +322,10 @@ static void					do_md5(t_ftssl_md5_args *args, char *filename, unsigned char *in
 	unsigned char		*padded;
 	size_t				len;
 
-	if (args->print_input)
+	if (args->print_input) {
 		ft_printf("%s", (char *)input);
+		args->print_input = 0;
+	}
 	len = pad_input(input, &padded);
 	output = md5_algorithm(padded, len);
 	free(padded);
@@ -346,11 +347,9 @@ void						ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 	
 	args = get_args(argc, argv);
 	command_name = NULL;
-	i = 0;
-	if (args->input_fd_count > 0 && args->input_fds[0] == STDIN_FILENO) {
-		input = (unsigned char *)ft_get_file_contents(args->input_fds[0]);
+	if (args->read_stdin) {
+		input = (unsigned char *)ft_get_file_contents(STDIN_FILENO);
 		do_md5(args, NULL, input);
-		i = 1;
 	}
 	if (args->string_mode && args->input_string) {
 		str_name = ft_strjoin("\"", args->input_string);
@@ -358,12 +357,18 @@ void						ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 		do_md5(args, str_name, (unsigned char *)args->input_string);
 		free(str_name);
 	}
+	i = 0;
 	while (i < args->input_fd_count) {
 		input = (unsigned char *)ft_get_file_contents(args->input_fds[i]);
 		if (args->input_filenames)
 			do_md5(args, args->input_filenames[i], input);
 		else
 			do_md5(args, NULL, input);
+		i++;
+	}
+	i = 0;
+	while (i < args->error_count) {
+		ft_printf_fd(STDERR_FILENO, "ft_ssl: md5: %s%s\n", argv[args->error_indices[i]], ": No such file or directory");
 		i++;
 	}
 	//free args
