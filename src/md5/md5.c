@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 13:43:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 14:29:15 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,34 +236,27 @@ static void						rounds(unsigned int *c, unsigned int *in, unsigned int *order)
 	while (i < 16)
 	{
 		round1_func(c, in[r1_mindex[i]], order, i);
-		ft_printf("1 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
-	ft_printf("-----------\n");
 	i = 0;
 	while (i < 16)
 	{
 		round2_func(c, in[r2_mindex[i]], order, i);
-		ft_printf("2 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
-	ft_printf("-----------\n");
 	i = 0;
 	while (i < 16)
 	{
 		round3_func(c, in[r3_mindex[i]], order, i);
-		ft_printf("3 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
-	ft_printf("-----------\n");
 	i = 0;
 	while (i < 16)
 	{
 		round4_func(c, in[r4_mindex[i]], order, i);
-		ft_printf("4 -> %u\n", c[order[0]]);
 		rotate_order(order);
 		i++;
 	}
@@ -320,24 +313,22 @@ static unsigned char			*md5_algorithm(unsigned char *input, size_t input_len)
 		free(tmp);
 		i++;
 	}
-	unsigned int val = 59359177;
-	ft_printmemory_binary(&val, sizeof(unsigned int));
-	val = 260718522;
-	ft_printmemory_binary(&val, sizeof(unsigned int));
 	return (output);
 }
 
-static void					do_md5(char *filename, unsigned char *input)
+static void					do_md5(t_ftssl_md5_args *args, char *filename, unsigned char *input)
 {
 	unsigned char		*output;
 	unsigned char		*padded;
 	size_t				len;
 
+	if (args->print_input)
+		ft_printf("%s", (char *)input);
 	len = pad_input(input, &padded);
 	output = md5_algorithm(padded, len);
 	free(padded);
 	if (filename)
-		ft_printf("MD5 (%s\n) = ", filename);
+		ft_printf("MD5 (%s) = ", filename);
 	ft_printf("%s\n", output);
 	free(output);
 }
@@ -346,19 +337,24 @@ void						ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 {
 	t_ftssl_md5_args	*args;
 	unsigned char		*input;
+	char				*str_name;
 	int					i;
 	
 	args = get_args(argc, argv);
 	command_name = NULL;
-	if (args->string_mode && args->input_string)
-		do_md5(NULL, (unsigned char *)args->input_string);
+	if (args->string_mode && args->input_string) {
+		str_name = ft_strjoin("\"", args->input_string);
+		str_name = ft_strjoinfree(str_name, "\"", 1);
+		do_md5(args, str_name, (unsigned char *)args->input_string);
+		free(str_name);
+	}
 	i = 0;
 	while (i < args->input_fd_count) {
 		input = (unsigned char *)ft_get_file_contents(args->input_fds[i]);
 		if (args->input_filenames)
-			do_md5(args->input_filenames[i], input);
+			do_md5(args, args->input_filenames[i], input);
 		else
-			do_md5(NULL, input);
+			do_md5(args, NULL, input);
 		i++;
 	}
 	//free args
