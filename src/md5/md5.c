@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 11:42:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 13:43:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,18 +186,8 @@ static const unsigned int		r4_mindex[] = {
 static unsigned int				shift(unsigned int value, unsigned int shiftby)
 {
 	unsigned int	shifted_off;
-	unsigned int	mask;
-	unsigned int	i;
 
-	mask = 1;
-	i = 1;
-	while (i < shiftby)
-	{
-		mask = mask << 1;
-		mask |= 1;
-		i++;
-	}
-	shifted_off = (value >> (32 - shiftby)) & mask;
+	shifted_off = (value >> (32 - shiftby));
 	value = (value << shiftby) | shifted_off;
 	return (value);
 }
@@ -217,28 +207,28 @@ static void						rotate_order(unsigned int *order)
 	order[1] ^= order[0];
 }
 
-static void						round1_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
+static void						round1_func(unsigned int *c, unsigned int in, unsigned int *o, int i)
 {
 	c[o[0]] = c[o[1]] + shift(c[o[0]] + ((c[o[1]] & c[o[2]]) | ((~c[o[1]]) & c[o[3]])) + in + r1_const[i], r1_shift[i]);
 }
 
-static void						round2_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
+static void						round2_func(unsigned int *c, unsigned int in, unsigned int *o, int i)
 {
-	c[o[0]] = c[o[1]] + shift(c[o[0]] + ((c[o[1]] & c[o[2]]) | (c[o[2]] & (~c[o[3]]))) + in + r2_const[i], r2_shift[i]);
+	c[o[0]] = c[o[1]] + shift(c[o[0]] + ((c[o[1]] & c[o[3]]) | (c[o[2]] & (~c[o[3]]))) + in + r2_const[i], r2_shift[i]);
 }
 
-static void						round3_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
+static void						round3_func(unsigned int *c, unsigned int in, unsigned int *o, int i)
 {
 	c[o[0]] = c[o[1]] + shift(c[o[0]] + (c[o[1]] ^ c[o[2]] ^ c[o[3]]) + in + r3_const[i], r3_shift[i]);
 }
 
-static void						round4_func(unsigned long long *c, unsigned int in, unsigned int *o, int i)
+static void						round4_func(unsigned int *c, unsigned int in, unsigned int *o, int i)
 {
 	c[o[0]] = c[o[1]] + shift(c[o[0]] + (c[o[2]] ^ (c[o[1]] | (~c[o[3]]))) + in + r4_const[i], r4_shift[i]);
 }
 
 
-static void						rounds(unsigned long long *c, unsigned int *in, unsigned int *order)
+static void						rounds(unsigned int *c, unsigned int *in, unsigned int *order)
 {
 	int				i;
 		
@@ -279,14 +269,14 @@ static void						rounds(unsigned long long *c, unsigned int *in, unsigned int *o
 	}
 }
 
-static void						init_arrays(unsigned long long **chain, unsigned long long **chain_tmp, unsigned int **order)
+static void						init_arrays(unsigned int **chain, unsigned int **chain_tmp, unsigned int **order)
 {
-	*chain = ft_memalloc(sizeof(unsigned long long) * 4);
+	*chain = ft_memalloc(sizeof(unsigned int) * 4);
 	(*chain)[0] = 0x67452301; //A
 	(*chain)[1] = 0xefcdab89; //B
 	(*chain)[2] = 0x98badcfe; //C
 	(*chain)[3] = 0x10325476; //D
-	*chain_tmp = ft_memalloc(sizeof(unsigned long long) * 4);
+	*chain_tmp = ft_memalloc(sizeof(unsigned int) * 4);
 	(*chain_tmp)[0] = (*chain)[0];
 	(*chain_tmp)[1] = (*chain)[1];
 	(*chain_tmp)[2] = (*chain)[2];
@@ -300,12 +290,12 @@ static void						init_arrays(unsigned long long **chain, unsigned long long **ch
 
 static unsigned char			*md5_algorithm(unsigned char *input, size_t input_len)
 {
-	unsigned long long	*chain;
-	unsigned long long	*chain_tmp;
-	unsigned int		*order;
-	size_t				i;
-	unsigned char		*output;
-	unsigned char		*tmp;
+	unsigned int	*chain;
+	unsigned int	*chain_tmp;
+	unsigned int	*order;
+	size_t			i;
+	unsigned char	*output;
+	unsigned char	*tmp;
 	
 	init_arrays(&chain, &chain_tmp, &order);
 	i = 0;
@@ -324,14 +314,15 @@ static unsigned char			*md5_algorithm(unsigned char *input, size_t input_len)
 	i = 0;
 	while (i < 4)
 	{
+		ft_reverse_bytes(chain + i, sizeof(unsigned int));
 		tmp = (unsigned char *)ft_uitoa_base(chain[i], 16);
 		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
 		free(tmp);
 		i++;
 	}
-	unsigned int val = 2562383102;
+	unsigned int val = 59359177;
 	ft_printmemory_binary(&val, sizeof(unsigned int));
-	val = 2562383086;
+	val = 260718522;
 	ft_printmemory_binary(&val, sizeof(unsigned int));
 	return (output);
 }
