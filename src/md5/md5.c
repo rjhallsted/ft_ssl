@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 14:29:15 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 14:59:39 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 	args = init_args();
 	i = 2;
 	while (i < argc && is_flag(argv[i])) {
-		if (ft_strchr(argv[2], 'p'))
+		if (ft_strchr(argv[i], 'p'))
 			args->print_input = 1;
-		if (ft_strchr(argv[2], 'q'))
+		if (ft_strchr(argv[i], 'q'))
 			args->quiet_mode = 1;
-		if (ft_strchr(argv[2], 'r'))
+		if (ft_strchr(argv[i], 'r'))
 			args->reverse_output = 1;
-		if (ft_strchr(argv[2], 's')) {
+		if (ft_strchr(argv[i], 's')) {
 			args->string_mode = 1;
 			if (++i < argc)
 				args->input_string = ft_strdup(argv[i]);
@@ -88,7 +88,7 @@ static t_ftssl_md5_args		*get_args(int argc, char **argv)
 		}
 		i++;
 	}
-	if (args->input_fd_count == 0 && !args->string_mode && !args->has_file_errors) {
+	if ((args->input_fd_count == 0 && !args->string_mode && !args->has_file_errors) || args->print_input) {
 		args->input_fds = ft_memalloc(sizeof(int));
 		args->input_fds[0] = STDIN_FILENO;
 		args->input_filenames = NULL;
@@ -309,6 +309,7 @@ static unsigned char			*md5_algorithm(unsigned char *input, size_t input_len)
 	{
 		ft_reverse_bytes(chain + i, sizeof(unsigned int));
 		tmp = (unsigned char *)ft_uitoa_base(chain[i], 16);
+		tmp = (unsigned char *)ft_strjoinfree(ft_xstring('0', 8 - ft_strlen((char *)tmp)), (char *)tmp, 3);
 		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
 		free(tmp);
 		i++;
@@ -327,7 +328,7 @@ static void					do_md5(t_ftssl_md5_args *args, char *filename, unsigned char *in
 	len = pad_input(input, &padded);
 	output = md5_algorithm(padded, len);
 	free(padded);
-	if (filename)
+	if (filename && !args->quiet_mode)
 		ft_printf("MD5 (%s) = ", filename);
 	ft_printf("%s\n", output);
 	free(output);
@@ -342,13 +343,18 @@ void						ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 	
 	args = get_args(argc, argv);
 	command_name = NULL;
+	i = 0;
+	if (args->input_fd_count > 0 && args->input_fds[0] == STDIN_FILENO) {
+		input = (unsigned char *)ft_get_file_contents(args->input_fds[0]);
+		do_md5(args, NULL, input);
+		i = 1;
+	}
 	if (args->string_mode && args->input_string) {
 		str_name = ft_strjoin("\"", args->input_string);
 		str_name = ft_strjoinfree(str_name, "\"", 1);
 		do_md5(args, str_name, (unsigned char *)args->input_string);
 		free(str_name);
 	}
-	i = 0;
 	while (i < args->input_fd_count) {
 		input = (unsigned char *)ft_get_file_contents(args->input_fds[i]);
 		if (args->input_filenames)
