@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 17:14:34 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 17:17:26 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,19 +276,19 @@ static void						rounds(unsigned int *c, unsigned int *in,
 		round1_func(c, in[g_r1mindex[i]], order, i);
 		rotate_order(order);
 	}
-	while (++i < 32)
+	while (++i < 33)
 	{
-		round2_func(c, in[g_r2mindex[i - 16]], order, i - 16);
+		round2_func(c, in[g_r2mindex[i - 17]], order, i - 17);
 		rotate_order(order);
 	}
-	while (++i < 48)
+	while (++i < 50)
 	{
-		round3_func(c, in[g_r3mindex[i - 32]], order, i - 32);
+		round3_func(c, in[g_r3mindex[i - 34]], order, i - 34);
 		rotate_order(order);
 	}
-	while (++i < 64)
+	while (++i < 67)
 	{
-		round4_func(c, in[g_r4mindex[i - 48]], order, i - 48);
+		round4_func(c, in[g_r4mindex[i - 51]], order, i - 51);
 		rotate_order(order);
 	}
 }
