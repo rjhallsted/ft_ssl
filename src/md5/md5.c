@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 17:17:26 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 17:26:54 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,12 +115,10 @@ static t_ftssl_md5_args		*init_args(void)
 
 static void					free_args(t_ftssl_md5_args *args)
 {
-	if (args->input_string)
-		free(args->input_string);
 	if (args->fds)
 		free(args->fds);
 	if (args->filenames)
-		ft_free_2d_array((void ***)&(args->filenames), sizeof(args->filenames));
+		ft_free_2d_array((void ***)&(args->filenames), args->fd_count);
 	if (args->error_indices)
 		free(args->error_indices);
 	free(args);
