@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 16:11:09 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 19:32:38 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,16 @@ void					ftssl_md5_wrapper(char *command_name, int argc,
 										char **argv);
 void					ftssl_des_family_wrapper(char *command_name,
 												int argc, char **argv);
+
+void					ftssl_md5_free_args(t_ftssl_md5_args *args);
+t_ftssl_md5_args		*ftssl_md5_get_args(int argc, char **argv);
+
+void					ftssl_md5_rounds(unsigned int *c, unsigned int *in,
+										unsigned int *order);
+
+void					ftssl_md5_outer(t_ftssl_md5_args *args);
+size_t					ftssl_md5_pad_input(unsigned char *input,
+											unsigned char **padded);
 
 /*
 **DES/Encryption-related stuff

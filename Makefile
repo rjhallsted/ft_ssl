@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/11 15:54:51 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/11 19:32:07 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -25,7 +25,10 @@ DES			=	$(addprefix des/,	\
 				wrapper				)
 
 MD5			=	$(addprefix md5/,	\
-				md5					)
+				md5					\
+				args				\
+				rounds				\
+				util				)
 
 FT_SSL		=	main 			\
 				args			\
