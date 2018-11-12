@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:35:22 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 17:37:45 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 20:18:20 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,12 @@ static int					is_flag(const char *input)
 	return (0);
 }
 
-static t_ftssl_md5_args		*init_args(void)
+static t_ftssl_md5_args		*init_args(char *command)
 {
 	t_ftssl_md5_args	*args;
 
 	args = ft_memalloc(sizeof(t_ftssl_md5_args));
+	args->command = ft_strtolow(ft_strdup(command));
 	args->print_input = 0;
 	args->quiet_mode = 0;
 	args->reverse_output = 0;
@@ -55,6 +56,7 @@ static t_ftssl_md5_args		*init_args(void)
 
 void						ftssl_md5_free_args(t_ftssl_md5_args *args)
 {
+	free(args->command);
 	if (args->fds)
 		free(args->fds);
 	if (args->filenames)
@@ -98,7 +100,7 @@ t_ftssl_md5_args			*ftssl_md5_get_args(int argc, char **argv)
 	t_ftssl_md5_args	*args;
 	int					i;
 
-	args = init_args();
+	args = init_args(argv[1]);
 	i = 1;
 	while (++i < argc && is_flag(argv[i]))
 	{
@@ -115,7 +117,8 @@ t_ftssl_md5_args			*ftssl_md5_get_args(int argc, char **argv)
 				args->input_string = ft_strdup(argv[i]);
 			else
 				ft_printf_fd(STDERR_FILENO,
-					"md5: option requires an argument -- s\n");
+					"%s: option requires an argument -- s\n",
+					args->command);
 		}
 	}
 	args_handle_files(args, argc, argv, i - 1);

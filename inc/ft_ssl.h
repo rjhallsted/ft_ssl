@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 19:32:38 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 20:15:49 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ enum					e_block_sizes {
 */
 
 typedef struct			s_ftssl_md5_args {
+	char				*command;
 	int					print_input;
 	int					quiet_mode;
 	int					reverse_output;

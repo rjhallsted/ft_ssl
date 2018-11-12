@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 19:27:56 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 19:33:15 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 20:14:27 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ void	ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 	int					i;
 
 	args = ftssl_md5_get_args(argc, argv);
-	command_name = NULL;
 	ftssl_md5_outer(args);
 	i = -1;
 	while (++i < args->error_count)
-		ft_printf_fd(STDERR_FILENO, "ft_ssl: md5: %s%s\n",
-			argv[args->error_indices[i]], ": No such file or directory");
+		ft_printf_fd(STDERR_FILENO,
+			"ft_ssl: %s: %s: No such file or directory\n",
+			ft_strtolow(command_name), argv[args->error_indices[i]]);
 	ftssl_md5_free_args(args);
 }
