@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 15:22:27 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/11 16:11:09 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,34 +47,44 @@ enum					e_block_sizes {
 # define FTSSL_DES3CBC_TXT "des3-cbc"
 # define FTSSL_MD5_TXT "md5"
 
-/* MD5/Hashing-related stuff */
+/*
+**MD5/Hashing-related stuff
+*/
+
 typedef struct			s_ftssl_md5_args {
 	int					print_input;
 	int					quiet_mode;
 	int					reverse_output;
 	int					string_mode;
 	char				*input_string;
-	char				**input_filenames;
-	int					*input_fds;
-	int					input_fd_count;	
+	char				**filenames;
+	int					*fds;
+	int					fd_count;
 	int					read_stdin;
 	int					*error_indices;
 	int					error_count;
 }						t_ftssl_md5_args;
 
-typedef void			t_ftssl_comm_wrap(char *command_name, int argc, char **argv);
+typedef void			t_ftssl_comm_wrap(char *command_name, int argc,
+										char **argv);
 
 typedef struct			s_ftssl_command {
 	char				*name;
 	t_ftssl_comm_wrap	*wrapper_func;
 }						t_ftssl_command;
 
-/* wrappers */
+/*
+**wrappers
+*/
 
-void					ftssl_md5_wrapper(char *command_name, int argc, char **argv);
-void					ftssl_des_family_wrapper(char *command_name, int argc, char **argv);
+void					ftssl_md5_wrapper(char *command_name, int argc,
+										char **argv);
+void					ftssl_des_family_wrapper(char *command_name,
+												int argc, char **argv);
 
-/* DES/Encryption-related stuff */
+/*
+**DES/Encryption-related stuff
+*/
 
 typedef struct			s_ftssl_args {
 	char				*command;
@@ -92,8 +102,9 @@ typedef struct			s_ftssl_args {
 
 typedef void			t_ftssl_pad_func(unsigned char *input,
 										int cursize, int fullsize);
-typedef	int				t_ftssl_comm_func(t_ftssl_args args, const unsigned char *input,
-										unsigned char *output, int len);
+typedef	int				t_ftssl_comm_func(t_ftssl_args args,
+									const unsigned char *input,
+									unsigned char *output, int len);
 
 typedef struct			s_ftssl_des_command {
 	char				*name;
@@ -111,7 +122,9 @@ typedef struct			s_ftssl_opthelp {
 	char				*label;
 }						t_ftssl_opthelp;
 
-/* Args */
+/*
+**Args
+*/
 
 t_ftssl_args			ftssl_get_args(int argc, char **argv);
 void					ftssl_destroy_args(t_ftssl_args args);
@@ -125,11 +138,15 @@ char					*ftssl_find_optvalue(t_ftssl_opthelp opt,
 int						ftssl_find_comm_key(char *command_name);
 void					ftssl_prep_args(t_ftssl_args *args);
 
-/* padding? */
+/*
+**padding?
+*/
 
 unsigned char			*ftssl_padblock_ecb(unsigned char *block,
 											int cursize, int fullsize);
-/* error handling */
+/*
+**error handling
+*/
 
 void					ftssl_flag_arg_error(const char *command,
 											const char *option);
@@ -139,7 +156,9 @@ void					ftssl_file_open_error(const char *filename,
 											int permissions);
 void					ftssl_invalid_hexkey_error(void);
 
-/* base64 */
+/*
+**base64
+*/
 
 int						ftssl_base64(t_ftssl_args args,
 									const unsigned char *input,
@@ -148,7 +167,9 @@ int						ftssl_base64_encode(const unsigned char *input,
 											unsigned char *out, int len);
 int						ftssl_base64_decode(const unsigned char *input,
 											unsigned char *out, int len);
-/* DES */
+/*
+**DES
+*/
 
 int						ftssl_des_ecb(t_ftssl_args args,
 										const unsigned char *input,
@@ -166,7 +187,9 @@ unsigned long			ftssl_get_inputval(t_ftssl_args args,
 											int offset);
 unsigned long			ftssl_des_algo(unsigned long keys[16],
 											unsigned long input);
-/* Triple-DES */
+/*
+**Triple-DES
+*/
 
 int						ftssl_des3_ecb(t_ftssl_args args,
 										const unsigned char *input,

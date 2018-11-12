@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/08 20:07:28 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/11 15:54:51 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -21,7 +21,8 @@ DES			=	$(addprefix des/,	\
 				des					\
 				des3				\
 				permute				\
-				boxes				)
+				boxes				\
+				wrapper				)
 
 MD5			=	$(addprefix md5/,	\
 				md5					)
