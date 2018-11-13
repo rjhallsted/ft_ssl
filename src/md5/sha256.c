@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 17:35:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 15:41:01 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 15:58:18 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ static unsigned int	*generate_words(unsigned int *input)
 		w[i] = SHA_SSIG1(w[i - 2]) + w[i - 7] + SHA_SSIG0(w[i - 15]) + w[i - 16];
 		i++;
 	}
-	hexDump(NULL, w, sizeof(unsigned int) * 64);
 	return (w);
 }
 
@@ -146,10 +145,12 @@ static void		sha256_hash_func(unsigned int *ct, unsigned int *words)
 		ct[4] = ct[3] + tmp1;
 		ct[3] = ct[2];
 		ct[2] = ct[1];
+		ct[1] = ct[0];
 		ct[0] = tmp1 + tmp2;
 //		ft_printf("i%2u -> (a)%10#0x (e)%10#0x\n", i + 1, ct[0], ct[4]);
 		i++;
-	}	
+	}
+	hexDump(NULL, ct, sizeof(unsigned int) * 8);
 }
 
 unsigned char	*ftssl_sha256_algorithm(unsigned char *input, size_t input_len)
@@ -177,5 +178,5 @@ unsigned char	*ftssl_sha256_algorithm(unsigned char *input, size_t input_len)
 		i += 64;
 	}
 	free(ct);
-	return (ftssl_return_hash_output(chain, 8));
+	return (ftssl_return_hash_output(chain, 8, 0));
 }

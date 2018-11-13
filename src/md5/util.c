@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 19:27:56 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/12 20:46:08 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 15:57:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	ftssl_md5_family_wrapper(char *command_name, int argc, char **argv)
 	ftssl_md5_free_args(args);
 }
 
-unsigned char	*ftssl_return_hash_output(unsigned int *chain, int pieces)
+unsigned char	*ftssl_return_hash_output(unsigned int *chain, int pieces,
+											int reverse_bytes)
 {
 	char	*output;
 	char	*tmp;
@@ -66,7 +67,8 @@ unsigned char	*ftssl_return_hash_output(unsigned int *chain, int pieces)
 	i = 0;
 	while (i < pieces)
 	{
-		ft_reverse_bytes(chain + i, sizeof(unsigned int));
+		if (reverse_bytes)
+			ft_reverse_bytes(chain + i, sizeof(unsigned int));
 		tmp = ft_uitoa_base(chain[i], 16);
 		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
 		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);

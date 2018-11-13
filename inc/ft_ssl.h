@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/12 20:46:37 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 15:58:43 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef struct			s_ftssl_command {
 void					ftssl_md5_family_wrapper(char *command_name, int argc,
 										char **argv);
 unsigned char			*ftssl_return_hash_output(unsigned int *chain,
-												int pieces);
+											int pieces, int reverse_bytes);
 size_t					ftssl_md5_pad_input(unsigned char *input,
 											unsigned char **padded,
 											int reverse_len_bits);

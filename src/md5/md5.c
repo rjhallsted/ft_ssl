@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 15:40:31 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 15:58:13 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static unsigned char	*md5_algorithm(unsigned char *input,
 	}
 	free(order);
 	free(chain_tmp);
-	return (ftssl_return_hash_output(chain, 4));
+	return (ftssl_return_hash_output(chain, 4, 1));
 }
 
 static void				do_md5(t_ftssl_md5_args *args, char *filename,
