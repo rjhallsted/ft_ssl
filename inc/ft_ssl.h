@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/12 17:15:00 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 18:32:01 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ enum					e_block_sizes {
 # define FTSSL_DES3ECB_TXT "des3-ecb"
 # define FTSSL_DES3CBC_TXT "des3-cbc"
 # define FTSSL_MD5_TXT "md5"
+# define FTSSL_SHA256_TXT "sha256"
 
 /*
 **MD5/Hashing-related stuff
@@ -78,19 +79,24 @@ typedef struct			s_ftssl_command {
 # define SHL(x,by) (x << by)
 # define ROTR(x,by) ((x >> by) | (x << (32 - by)))
 # define ROTL(x,by) ((x << by) | (x >> (32 - by)))
-# define SHA_CH(x,y,z) ((x & Y) ^ ((~x) & z))
+# define SHA_CH(x,y,z) ((x & y) ^ ((~x) & z))
 # define SHA_MAJ(x,y,z) ((x & y) ^ (x & z) ^ (y & z))
-# define SHA_BSIG0(x) ROTR(x,2) ^ ROTR(x,13) ^ ROTR(x,22)
-# define SHA_BSIG1(x) ROTR(x,6) ^ ROTR(x,11) ^ ROTR(x,25)
-# define SHA_SSIG0(x) ROTR(x,7) ^ ROTR(x,18) ^ SHR(x,3)
-# define SHA_SSIG1(x) ROTR(x,17) ^ ROTR(x,19) ^ SHR(x,10)
+# define SHA_BSIG0(x) (ROTR(x,2) ^ ROTR(x,13) ^ ROTR(x,22))
+# define SHA_BSIG1(x) (ROTR(x,6) ^ ROTR(x,11) ^ ROTR(x,25))
+# define SHA_SSIG0(x) (ROTR(x,7) ^ ROTR(x,18) ^ SHR(x,3))
+# define SHA_SSIG1(x) (ROTR(x,17) ^ ROTR(x,19) ^ SHR(x,10))
 
 /*
 **wrappers
 */
 
-void					ftssl_md5_wrapper(char *command_name, int argc,
+void					ftssl_md5_family_wrapper(char *command_name, int argc,
 										char **argv);
+unsigned char			*ftssl_return_hash_output(unsigned int *chain,
+												int pieces);
+size_t					ftssl_md5_pad_input(unsigned char *input,
+											unsigned char **padded);
+
 void					ftssl_des_family_wrapper(char *command_name,
 												int argc, char **argv);
 
@@ -101,8 +107,9 @@ void					ftssl_md5_rounds(unsigned int *c, unsigned int *in,
 										unsigned int *order);
 
 void					ftssl_md5_outer(t_ftssl_md5_args *args);
-size_t					ftssl_md5_pad_input(unsigned char *input,
-											unsigned char **padded);
+
+unsigned char			*ftssl_sha256_algorithm(unsigned char *inut,
+												size_t input_len);
 
 /*
 **DES/Encryption-related stuff

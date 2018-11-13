@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 19:27:56 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 20:14:27 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 18:28:30 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ size_t	ftssl_md5_pad_input(unsigned char *input, unsigned char **padded)
 	return (len + pad_len + 8);
 }
 
-void	ftssl_md5_wrapper(char *command_name, int argc, char **argv)
+void	ftssl_md5_family_wrapper(char *command_name, int argc, char **argv)
 {
 	t_ftssl_md5_args	*args;
 	int					i;
@@ -51,4 +51,25 @@ void	ftssl_md5_wrapper(char *command_name, int argc, char **argv)
 			"ft_ssl: %s: %s: No such file or directory\n",
 			ft_strtolow(command_name), argv[args->error_indices[i]]);
 	ftssl_md5_free_args(args);
+}
+
+unsigned char	*ftssl_return_hash_output(unsigned int *chain, int pieces)
+{
+	char	*output;
+	char	*tmp;
+	int		i;
+
+	output = ft_strnew(pieces * 8);
+	i = 0;
+	while (i < pieces)
+	{
+		ft_reverse_bytes(chain + i, sizeof(unsigned int));
+		tmp = ft_uitoa_base(chain[i], 16);
+		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
+		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
+		free(tmp);
+		i++;
+	}
+	free(chain);
+	return ((unsigned char *)output);
 }

@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/11 19:32:07 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/12 18:29:04 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -28,7 +28,8 @@ MD5			=	$(addprefix md5/,	\
 				md5					\
 				args				\
 				rounds				\
-				util				)
+				util				\
+				sha256				)
 
 FT_SSL		=	main 			\
 				args			\

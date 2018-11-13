@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/12 17:13:08 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 18:24:10 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,26 +43,6 @@ static void				init_arrays(unsigned int **chain,
 	(*order)[3] = 3;
 }
 
-static unsigned char	*build_md5_output(unsigned int *chain)
-{
-	char	*output;
-	char	*tmp;
-	int		i;
-
-	output = ft_strnew(32);
-	i = 0;
-	while (i < 4)
-	{
-		ft_reverse_bytes(chain + i, sizeof(unsigned int));
-		tmp = ft_uitoa_base(chain[i], 16);
-		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
-		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
-		free(tmp);
-		i++;
-	}
-	return ((unsigned char *)output);
-}
-
 static unsigned char	*md5_algorithm(unsigned char *input,
 										size_t input_len)
 {
@@ -84,7 +64,7 @@ static unsigned char	*md5_algorithm(unsigned char *input,
 	}
 	free(order);
 	free(chain_tmp);
-	return (build_md5_output(chain));
+	return (ftssl_return_hash_output(chain, 4));
 }
 
 static void				do_md5(t_ftssl_md5_args *args, char *filename,
@@ -100,10 +80,13 @@ static void				do_md5(t_ftssl_md5_args *args, char *filename,
 		args->print_input = 0;
 	}
 	len = ftssl_md5_pad_input(input, &padded);
-	output = md5_algorithm(padded, len);
+	if (ft_strcmp(args->command, FTSSL_MD5_TXT) == 0)
+		output = md5_algorithm(padded, len);
+	else
+		output = ftssl_sha256_algorithm(padded, len);
 	free(padded);
 	if (filename && !args->quiet_mode && !args->reverse_output)
-		ft_printf("MD5 (%s) = ", filename);
+		ft_printf("%s (%s) = ", ft_strtoup(args->command), filename);
 	ft_printf("%s", output);
 	if (filename && !args->quiet_mode && args->reverse_output)
 		ft_printf(" %s", filename);

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 15:55:53 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 18:28:37 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 #include "../inc/ft_ssl.h"
 
 const t_ftssl_command		g_command_list[] = {
-	{FTSSL_MD5_TXT, ftssl_md5_wrapper},
+	{FTSSL_MD5_TXT, ftssl_md5_family_wrapper},
+	{FTSSL_SHA256_TXT, ftssl_md5_family_wrapper},
 	{FTSSL_B64_TXT, ftssl_des_family_wrapper},
 	{FTSSL_DES_TXT, ftssl_des_family_wrapper},
 	{FTSSL_DESECB_TXT, ftssl_des_family_wrapper},
