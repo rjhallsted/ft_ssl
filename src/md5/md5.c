@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/12 18:24:10 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 20:53:04 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,16 @@ static void				do_md5(t_ftssl_md5_args *args, char *filename,
 		ft_printf("%s", (char *)input);
 		args->print_input = 0;
 	}
-	len = ftssl_md5_pad_input(input, &padded);
 	if (ft_strcmp(args->command, FTSSL_MD5_TXT) == 0)
+	{
+		len = ftssl_md5_pad_input(input, &padded, 0);
 		output = md5_algorithm(padded, len);
+	}
 	else
+	{
+		len = ftssl_md5_pad_input(input, &padded, 1);
 		output = ftssl_sha256_algorithm(padded, len);
+	}
 	free(padded);
 	if (filename && !args->quiet_mode && !args->reverse_output)
 		ft_printf("%s (%s) = ", ft_strtoup(args->command), filename);

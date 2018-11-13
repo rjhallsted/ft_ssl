@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 17:35:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/12 18:31:38 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 21:07:24 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static const unsigned int	g_sha2_const[] = {
 
 static void		sha_init_arrays(unsigned int **chain, unsigned int **chain_tmp)
 {
+	int i;
+
 	*chain = ft_memalloc(sizeof(unsigned int) * 8);
 	(*chain)[0] = 0x6a09e667;
 	(*chain)[1] = 0xbb67ae85;
@@ -46,6 +48,12 @@ static void		sha_init_arrays(unsigned int **chain, unsigned int **chain_tmp)
 	(*chain)[6] = 0x1f83d9ab;
 	(*chain)[7] = 0x5be0cd19;
 	*chain_tmp = ft_memalloc(sizeof(unsigned int) * 8);
+	i = 0;
+	while (i < 8)
+	{
+		(*chain_tmp)[i] = (*chain)[i];
+		i++;
+	}
 }
 
 static unsigned int	*generate_words(unsigned int *input)
@@ -60,19 +68,13 @@ static unsigned int	*generate_words(unsigned int *input)
 		w[i] = input[i];
 		i++;
 	}
-	i = 16;
 	while (i < 64)
 	{
-		w[i] = SHA_SSIG1(w[i - 2]) + w[i - 7] + SHA_SSIG0((i - 15)) + w[i - 16];
+		w[i] = SHA_SSIG1(w[i - 2]) + w[i - 7] + SHA_SSIG0(w[i - 15]) + w[i - 16];
 		i++;
 	}
 	return (w);
 }
-
-/*
-**tmp1 = chain_tmp[8]
-**tmp2 = chain_tmp[9]
-*/
 
 static void		sha256_hash_func(unsigned int *ct, unsigned int *words)
 {
@@ -93,6 +95,7 @@ static void		sha256_hash_func(unsigned int *ct, unsigned int *words)
 		ct[3] = ct[2];
 		ct[2] = ct[1];
 		ct[0] = tmp1 + tmp2;
+		ft_printf("i%2u -> (a)%10#0x (e)%10#0x\n", i + 1, ct[0], ct[4]);
 		i++;
 	}	
 }
@@ -110,17 +113,12 @@ unsigned char	*ftssl_sha256_algorithm(unsigned char *input, size_t input_len)
 	while (i < input_len)
 	{
 		w = generate_words((unsigned int *)input);
-		j = 0;
-		while (j < 8)
-		{
-			ct[j] += chain[j];
-			j++;
-		}
+		ft_printmemory_binary(&w, sizeof(unsigned int) * 64);
 		sha256_hash_func(ct, w);
 		j = 0;
 		while (j < 8)
 		{
-			chain[j] = ct[j];
+			chain[j] += ct[j];
 			j++;
 		}
 		free(w);
