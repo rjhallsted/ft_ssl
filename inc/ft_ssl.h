@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 20:15:49 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 17:15:00 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,17 @@ typedef struct			s_ftssl_command {
 	char				*name;
 	t_ftssl_comm_wrap	*wrapper_func;
 }						t_ftssl_command;
+
+# define SHR(x,by) (x >> by)
+# define SHL(x,by) (x << by)
+# define ROTR(x,by) ((x >> by) | (x << (32 - by)))
+# define ROTL(x,by) ((x << by) | (x >> (32 - by)))
+# define SHA_CH(x,y,z) ((x & Y) ^ ((~x) & z))
+# define SHA_MAJ(x,y,z) ((x & y) ^ (x & z) ^ (y & z))
+# define SHA_BSIG0(x) ROTR(x,2) ^ ROTR(x,13) ^ ROTR(x,22)
+# define SHA_BSIG1(x) ROTR(x,6) ^ ROTR(x,11) ^ ROTR(x,25)
+# define SHA_SSIG0(x) ROTR(x,7) ^ ROTR(x,18) ^ SHR(x,3)
+# define SHA_SSIG1(x) ROTR(x,17) ^ ROTR(x,19) ^ SHR(x,10)
 
 /*
 **wrappers

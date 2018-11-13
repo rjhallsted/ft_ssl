@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 20:12:20 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 17:13:08 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,4 +136,3 @@ void					ftssl_md5_outer(t_ftssl_md5_args *args)
 			do_md5(args, NULL, input);
 	}
 }
-B

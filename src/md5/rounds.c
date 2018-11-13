@@ -6,9 +6,11 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:41:00 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 19:37:59 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/12 17:14:49 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../../inc/ft_ssl.h"
 
 static const unsigned int	g_r1const[] = {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
@@ -74,12 +76,13 @@ static void					round1_func(unsigned int *c, unsigned int in,
 										unsigned int *o, int i)
 {
 	unsigned int val;
-	unsigned int shifted_off;
+//	unsigned int shifted_off;
 
 	val = c[o[0]] + ((c[o[1]] & c[o[2]]) | ((~c[o[1]]) & c[o[3]]));
 	val += in + g_r1const[i];
-	shifted_off = (val >> (32 - g_r1shift[i]));
-	val = (val << g_r1shift[i]) | shifted_off;
+//	shifted_off = (val >> (32 - g_r1shift[i]));
+//	val = (val << g_r1shift[i]) | shifted_off;
+	val = ROTL(val, g_r1shift[i]);	
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];
@@ -96,12 +99,13 @@ static void					round2_func(unsigned int *c, unsigned int in,
 										unsigned int *o, int i)
 {
 	unsigned int val;
-	unsigned int shifted_off;
+//	unsigned int shifted_off;
 
 	val = c[o[0]] + ((c[o[1]] & c[o[3]]) | (c[o[2]] & (~c[o[3]])));
 	val += in + g_r2const[i];
-	shifted_off = (val >> (32 - g_r2shift[i]));
-	val = (val << g_r2shift[i]) | shifted_off;
+//	shifted_off = (val >> (32 - g_r2shift[i]));
+//	val = (val << g_r2shift[i]) | shifted_off;
+	val = ROTL(val, g_r2shift[i]);	
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];
@@ -118,12 +122,13 @@ static void					round3_func(unsigned int *c, unsigned int in,
 										unsigned int *o, int i)
 {
 	unsigned int val;
-	unsigned int shifted_off;
+//	unsigned int shifted_off;
 
 	val = c[o[0]] + (c[o[1]] ^ c[o[2]] ^ c[o[3]]);
 	val += in + g_r3const[i];
-	shifted_off = (val >> (32 - g_r3shift[i]));
-	val = (val << g_r3shift[i]) | shifted_off;
+//	shifted_off = (val >> (32 - g_r3shift[i]));
+//	val = (val << g_r3shift[i]) | shifted_off;
+	val = ROTL(val, g_r3shift[i]);	
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];
@@ -140,12 +145,13 @@ static void					round4_func(unsigned int *c, unsigned int in,
 										unsigned int *o, int i)
 {
 	unsigned int val;
-	unsigned int shifted_off;
+//	unsigned int shifted_off;
 
 	val = c[o[0]] + (c[o[2]] ^ (c[o[1]] | (~c[o[3]])));
 	val += in + g_r4const[i];
-	shifted_off = (val >> (32 - g_r4shift[i]));
-	val = (val << g_r4shift[i]) | shifted_off;
+//	shifted_off = (val >> (32 - g_r4shift[i]));
+//	val = (val << g_r4shift[i]) | shifted_off;
+	val = ROTL(val, g_r4shift[i]);
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];
