@@ -6,10 +6,9 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/14 11:03:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:04:31 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:15:04 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -66,7 +65,7 @@ static const uint64_t	g_sha512_init[] = {
 	0x1f83d9abfb41bd6b, 0x5be0cd19137e2179
 };
 
-static void			sha_init_arrays(uint64_t **chain,
+static void				sha_init_arrays(uint64_t **chain,
 								uint64_t **chain_tmp,
 								uint64_t sha_version)
 {
@@ -85,7 +84,7 @@ static void			sha_init_arrays(uint64_t **chain,
 	*chain_tmp = ft_memalloc(sizeof(uint64_t) * 8);
 }
 
-static uint64_t	*generate_words(uint64_t *input)
+static uint64_t			*generate_words(uint64_t *input)
 {
 	uint64_t	*w;
 	int			i;
@@ -107,12 +106,12 @@ static uint64_t	*generate_words(uint64_t *input)
 	return (w);
 }
 
-static void			sha512_hash_func(uint64_t *ct,
+static void				sha512_hash_func(uint64_t *ct,
 									uint64_t *words)
 {
 	uint64_t	tmp1;
 	uint64_t	tmp2;
-	int				i;
+	int			i;
 
 	i = 0;
 	while (i < 80)
@@ -136,7 +135,7 @@ static void			sha512_hash_func(uint64_t *ct,
 **Accepts 256 or 224 for sha_version
 */
 
-unsigned char		*ftssl_sha512_algorithm(unsigned char *input,
+unsigned char			*ftssl_sha512_algorithm(unsigned char *input,
 											size_t input_len,
 											unsigned int sha_version)
 {
