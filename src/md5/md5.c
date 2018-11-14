@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 21:24:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 10:35:53 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ static void				do_md5(t_ftssl_md5_args *args, char *filename,
 	if (ft_strcmp(args->command, FTSSL_MD5_TXT) == 0)
 		output = md5_algorithm(padded, len);
 	else
-		output = ftssl_sha256_algorithm(padded, len);
+		output = ftssl_sha256_algorithm(padded, len,
+							(unsigned int)ft_atoi(args->command + 3));
 	free(padded);
 	if (filename && !args->quiet_mode && !args->reverse_output)
 		ft_printf("%s (%s) = ", ft_strtoup(args->command), filename);

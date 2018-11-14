@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 17:35:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 21:14:11 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 10:36:12 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,34 @@ static const unsigned int	g_sha2_const[] = {
 };
 
 static void			sha_init_arrays(unsigned int **chain,
-								unsigned int **chain_tmp)
+								unsigned int **chain_tmp,
+								unsigned int sha_version)
 {
 	int i;
 
 	*chain = ft_memalloc(sizeof(unsigned int) * 8);
-	(*chain)[0] = 0x6a09e667;
-	(*chain)[1] = 0xbb67ae85;
-	(*chain)[2] = 0x3c6ef372;
-	(*chain)[3] = 0xa54ff53a;
-	(*chain)[4] = 0x510e527f;
-	(*chain)[5] = 0x9b05688c;
-	(*chain)[6] = 0x1f83d9ab;
-	(*chain)[7] = 0x5be0cd19;
+	if (sha_version == 256)
+	{
+		(*chain)[0] = 0x6a09e667;
+		(*chain)[1] = 0xbb67ae85;
+		(*chain)[2] = 0x3c6ef372;
+		(*chain)[3] = 0xa54ff53a;
+		(*chain)[4] = 0x510e527f;
+		(*chain)[5] = 0x9b05688c;
+		(*chain)[6] = 0x1f83d9ab;
+		(*chain)[7] = 0x5be0cd19;
+	}
+	else if (sha_version == 224)
+	{
+		(*chain)[0] = 0xc1059ed8;
+		(*chain)[1] = 0x367cd507;
+		(*chain)[2] = 0x3070dd17;
+		(*chain)[3] = 0xf70e5939;
+		(*chain)[4] = 0xffc00b31;
+		(*chain)[5] = 0x68581511;
+		(*chain)[6] = 0x64f98fa7;
+		(*chain)[7] = 0xbefa4fa4;		
+	}
 	*chain_tmp = ft_memalloc(sizeof(unsigned int) * 8);
 	i = 0;
 	while (i < 8)
@@ -104,8 +119,13 @@ static void			sha256_hash_func(unsigned int *ct,
 	}
 }
 
+/*
+**Accepts 256 or 224 for sha_version
+*/
+
 unsigned char		*ftssl_sha256_algorithm(unsigned char *input,
-											size_t input_len)
+											size_t input_len,
+											unsigned int sha_version)
 {
 	unsigned int	*chain;
 	unsigned int	*ct;
@@ -113,7 +133,7 @@ unsigned char		*ftssl_sha256_algorithm(unsigned char *input,
 	size_t			i;
 	int				j;
 
-	sha_init_arrays(&chain, &ct);
+	sha_init_arrays(&chain, &ct, sha_version);
 	i = 0;
 	while (i < input_len)
 	{
@@ -130,5 +150,8 @@ unsigned char		*ftssl_sha256_algorithm(unsigned char *input,
 		i += 64;
 	}
 	free(ct);
-	return (ftssl_return_hash_output(chain, 8, 0));
+	if (sha_version == 256)
+		return (ftssl_return_hash_output(chain, 8, 0));
+	else
+		return (ftssl_return_hash_output(chain, 7, 0));
 }

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 21:18:01 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 10:37:12 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ enum					e_block_sizes {
 # define FTSSL_DES3CBC_TXT "des3-cbc"
 # define FTSSL_MD5_TXT "md5"
 # define FTSSL_SHA256_TXT "sha256"
+# define FTSSL_SHA224_TXT "sha224"
 
 /*
 **MD5/Hashing-related stuff
@@ -110,7 +111,8 @@ void					ftssl_md5_rounds(unsigned int *c, unsigned int *in,
 void					ftssl_md5_outer(t_ftssl_md5_args *args);
 
 unsigned char			*ftssl_sha256_algorithm(unsigned char *inut,
-												size_t input_len);
+												size_t input_len,
+												unsigned int sha_version);
 
 /*
 **DES/Encryption-related stuff
