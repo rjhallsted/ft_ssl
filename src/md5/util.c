@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 19:27:56 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:00:49 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:57:12 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,17 @@ unsigned char	*ftssl_return_hash_output(unsigned int *chain, int pieces,
 }
 
 unsigned char	*ftssl_return_hash_output_512(uint64_t *chain, int pieces,
-											int reverse_bytes)
+										int reverse_bytes, int last_half)
 {
 	char	*output;
 	char	*tmp;
+	int		len;
 	int		i;
 
-	output = ft_strnew(pieces * 16);
+	len = pieces * 16;
+	if (last_half && len > 0)
+		len -= 8;
+	output = ft_strnew(len);
 	i = 0;
 	while (i < pieces)
 	{
@@ -112,7 +116,10 @@ unsigned char	*ftssl_return_hash_output_512(uint64_t *chain, int pieces,
 			ft_reverse_bytes(chain + i, sizeof(__uint128_t));
 		tmp = ft_uintmaxtoa_base((__uint128_t)chain[i], 16);
 		tmp = ft_strjoinfree(ft_xstring('0', 16 - ft_strlen(tmp)), tmp, 3);
-		ft_strncpy((char *)output + (i * 16), (char *)tmp, 16);
+		if (i == pieces - 1 && last_half)
+			ft_strncpy((char *)output + (i * 16), (char *)tmp, 8);
+		else
+			ft_strncpy((char *)output + (i * 16), (char *)tmp, 16);
 		free(tmp);
 		i++;
 	}

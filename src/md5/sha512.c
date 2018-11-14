@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/14 11:03:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:18:43 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 14:07:05 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,20 @@ static const uint64_t	g_sha384_init[] = {
 	0xdb0c2e0d64f98fa7, 0x47b5481dbefa4fa4
 };
 
+static const uint64_t	g_sha512_224_init[] = {
+	0x8c3d37c819544da2, 0x73e1996689dcd4d6,
+	0x1dfab7ae32ff9c82, 0x679dd514582f9fcf,
+	0x0f6d2b697bd44da8, 0x77e36f7304c48942,
+	0x3f9d85a86a1d36c8, 0x1112e6ad91d692a1
+};
+
+static const uint64_t	g_sha512_256_init[] = {
+	0x22312194fc2bf72c, 0x9f555fa3c84c64c2,
+	0x2393b86b6f53b151, 0x963877195940eabd,
+	0x96283ee2a88effe3, 0xbe5e1e2553863992,
+	0x2b0199fc2c85b8aa, 0x0eb72ddc81c52ca2
+};
+
 static void				sha_init_arrays(uint64_t **chain,
 								uint64_t **chain_tmp,
 								uint64_t sha_version)
@@ -82,8 +96,12 @@ static void				sha_init_arrays(uint64_t **chain,
 	*chain = ft_memalloc(sizeof(uint64_t) * 8);
 	if (sha_version == 512)
 		init_vars = g_sha512_init;
-	else
+	else if (sha_version == 384)
 		init_vars = g_sha384_init;
+	else if (sha_version == 5224)
+		init_vars = g_sha512_224_init;
+	else if (sha_version == 5256)
+		init_vars = g_sha512_256_init;
 	i = 0;
 	while (i < 8)
 	{
@@ -140,6 +158,18 @@ static void				sha512_hash_func(uint64_t *ct,
 	}
 }
 
+unsigned char			*get_sha512_hash(uint64_t *chain,
+										 unsigned int sha_version)
+{
+	if (sha_version == 512)
+		return (ftssl_return_hash_output_512(chain, 8, 0, 0));
+	if (sha_version == 384)
+		return (ftssl_return_hash_output_512(chain, 6, 0, 0));
+	if (sha_version == 5256)
+		return (ftssl_return_hash_output_512(chain, 4, 0, 0));
+	return (ftssl_return_hash_output_512(chain, 4, 0, 1));
+}
+
 /*
 **Accepts 512 or 384 for sha_version
 */
@@ -152,7 +182,6 @@ unsigned char			*ftssl_sha512_algorithm(unsigned char *input,
 	uint64_t	*ct;
 	uint64_t	*w;
 	size_t		iter[2];
-	int			pieces;
 
 	sha_init_arrays(&chain, &ct, sha_version);
 	iter[0] = 0;
@@ -170,6 +199,5 @@ unsigned char			*ftssl_sha512_algorithm(unsigned char *input,
 		iter[0] += 128;
 	}
 	free(ct);
-	pieces = (sha_version == 512) ? 8 : 6;
-	return (ftssl_return_hash_output_512(chain, pieces, 0));
+	return (get_sha512_hash(chain, sha_version));
 }

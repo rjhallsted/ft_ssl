@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:19:20 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:58:53 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ enum					e_block_sizes {
 # define FTSSL_SHA224_TXT "sha224"
 # define FTSSL_SHA512_TXT "sha512"
 # define FTSSL_SHA384_TXT "sha384"
+# define FTSSL_SHA512_224_TXT "sha512_224"
+# define FTSSL_SHA512_256_TXT "sha512_256"
 
 /*
 **MD5/Hashing-related stuff
@@ -103,8 +105,8 @@ void					ftssl_md5_family_wrapper(char *command_name, int argc,
 										char **argv);
 unsigned char			*ftssl_return_hash_output(unsigned int *chain,
 											int pieces, int reverse_bytes);
-unsigned char			*ftssl_return_hash_output_512(uint64_t *chain,
-											int pieces, int reverse_bytes);
+unsigned char			*ftssl_return_hash_output_512(uint64_t *chain, int pieces,
+												int reverse_bytes, int last_half);
 size_t					ftssl_md5_pad_input(unsigned char *input,
 											unsigned char **padded,
 											int sha_mode);

@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:19:42 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:59:25 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ const t_ftssl_command		g_command_list[] = {
 	{FTSSL_SHA224_TXT, ftssl_md5_family_wrapper},
 	{FTSSL_SHA512_TXT, ftssl_md5_family_wrapper},
 	{FTSSL_SHA384_TXT, ftssl_md5_family_wrapper},
+	{FTSSL_SHA512_224_TXT, ftssl_md5_family_wrapper},
+	{FTSSL_SHA512_256_TXT, ftssl_md5_family_wrapper},	
 	{FTSSL_B64_TXT, ftssl_des_family_wrapper},
 	{FTSSL_DES_TXT, ftssl_des_family_wrapper},
 	{FTSSL_DESECB_TXT, ftssl_des_family_wrapper},

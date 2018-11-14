@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 12:57:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 14:09:11 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ static unsigned char	*md5_algorithm(unsigned char *input,
 	return (ftssl_return_hash_output(chain, 4, 1));
 }
 
-static unsigned char	*get_output(char *command, unsigned char *input)
+static unsigned char	*get_output(char *command, unsigned char *input,
+									unsigned int sha_version)
 {
 	unsigned char	*output;
 	unsigned char	*padded;
@@ -86,14 +87,12 @@ static unsigned char	*get_output(char *command, unsigned char *input)
 			|| ft_strcmp(command, FTSSL_SHA224_TXT) == 0)
 	{
 		len = ftssl_md5_pad_input(input, &padded, 1);
-		output = ftssl_sha256_algorithm(padded, len,
-							(unsigned int)ft_atoi(command + 3));
+		output = ftssl_sha256_algorithm(padded, len, sha_version);
 	}
 	else
 	{
 		len = ftssl_md5_pad_input_512(input, &padded);
-		output = ftssl_sha512_algorithm(padded, len,
-							(unsigned int)ft_atoi(command + 3));
+		output = ftssl_sha512_algorithm(padded, len, sha_version);
 	}
 	free(padded);
 	return (output);
@@ -103,13 +102,23 @@ static void				do_md5(t_ftssl_md5_args *args, char *filename,
 								unsigned char *input)
 {
 	unsigned char		*output;
-
+	unsigned int		sha_version;
+	
 	if (args->print_input)
 	{
 		ft_printf("%s", (char *)input);
 		args->print_input = 0;
 	}
-	output = get_output(args->command, input);
+	if (ft_strequ(args->command, FTSSL_SHA224_TXT)
+		|| ft_strequ(args->command, FTSSL_SHA512_TXT)
+		|| ft_strequ(args->command, FTSSL_SHA256_TXT)
+		|| ft_strequ(args->command, FTSSL_SHA384_TXT))
+		sha_version = (unsigned int)ft_atoi(args->command + 3);
+	else if (ft_strequ(args->command, FTSSL_SHA512_224_TXT))
+		sha_version = 5224;
+	else
+		sha_version = 5256;
+	output = get_output(args->command, input, sha_version);
 	if (filename && !args->quiet_mode && !args->reverse_output)
 		ft_printf("%s (%s) = ", ft_strtoup(args->command), filename);
 	ft_printf("%s", output);
