@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:10:48 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:19:20 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ enum					e_block_sizes {
 # define FTSSL_SHA256_TXT "sha256"
 # define FTSSL_SHA224_TXT "sha224"
 # define FTSSL_SHA512_TXT "sha512"
+# define FTSSL_SHA384_TXT "sha384"
 
 /*
 **MD5/Hashing-related stuff

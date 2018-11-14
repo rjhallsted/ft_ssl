@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/14 11:03:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:15:04 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:18:43 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,13 @@ static const uint64_t	g_sha512_init[] = {
 	0x1f83d9abfb41bd6b, 0x5be0cd19137e2179
 };
 
+static const uint64_t	g_sha384_init[] = {
+	0xcbbb9d5dc1059ed8, 0x629a292a367cd507,
+	0x9159015a3070dd17, 0x152fecd8f70e5939,
+	0x67332667ffc00b31, 0x8eb44a8768581511,
+	0xdb0c2e0d64f98fa7, 0x47b5481dbefa4fa4
+};
+
 static void				sha_init_arrays(uint64_t **chain,
 								uint64_t **chain_tmp,
 								uint64_t sha_version)
@@ -75,6 +82,8 @@ static void				sha_init_arrays(uint64_t **chain,
 	*chain = ft_memalloc(sizeof(uint64_t) * 8);
 	if (sha_version == 512)
 		init_vars = g_sha512_init;
+	else
+		init_vars = g_sha384_init;
 	i = 0;
 	while (i < 8)
 	{
@@ -132,7 +141,7 @@ static void				sha512_hash_func(uint64_t *ct,
 }
 
 /*
-**Accepts 256 or 224 for sha_version
+**Accepts 512 or 384 for sha_version
 */
 
 unsigned char			*ftssl_sha512_algorithm(unsigned char *input,
@@ -161,6 +170,6 @@ unsigned char			*ftssl_sha512_algorithm(unsigned char *input,
 		iter[0] += 128;
 	}
 	free(ct);
-	pieces = 8;
+	pieces = (sha_version == 512) ? 8 : 6;
 	return (ftssl_return_hash_output_512(chain, pieces, 0));
 }
