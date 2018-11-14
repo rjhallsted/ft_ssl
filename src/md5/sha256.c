@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 17:35:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 15:58:18 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 16:13:10 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,56 +14,6 @@
 #include <stdint.h>
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-
-static void hexDump(char *desc, void *addr, int len) 
-{
-    int i;
-    unsigned char buff[17];
-    unsigned char *pc = (unsigned char*)addr;
-
-    // Output description if given.
-    if (desc != NULL)
-        printf ("%s:\n", desc);
-
-    // Process every byte in the data.
-    for (i = 0; i < len; i++) {
-        // Multiple of 16 means new line (with line offset).
-
-        if ((i % 16) == 0) {
-            // Just don't print ASCII for the zeroth line.
-            if (i != 0)
-                printf("  %s\n", buff);
-
-            // Output the offset.
-            printf("  %04x ", i);
-        }
-
-        // Now the hex code for the specific character.
-        printf(" %02x", pc[i]);
-
-        // And store a printable ASCII character for later.
-        if ((pc[i] < 0x20) || (pc[i] > 0x7e)) {
-            buff[i % 16] = '.';
-        } else {
-            buff[i % 16] = pc[i];
-        }
-
-        buff[(i % 16) + 1] = '\0';
-    }
-
-    // Pad out last line if not exactly 16 characters.
-    while ((i % 16) != 0) {
-        printf("   ");
-        i++;
-    }
-
-    // And print the final ASCII bit.
-    printf("  %s\n", buff);
-}
-
 
 static const unsigned int	g_sha2_const[] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -84,7 +34,8 @@ static const unsigned int	g_sha2_const[] = {
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-static void		sha_init_arrays(unsigned int **chain, unsigned int **chain_tmp)
+static void			sha_init_arrays(unsigned int **chain,
+								unsigned int **chain_tmp)
 {
 	int i;
 
@@ -110,7 +61,7 @@ static unsigned int	*generate_words(unsigned int *input)
 {
 	unsigned int	*w;
 	int				i;
-	
+
 	w = ft_memalloc(sizeof(unsigned int) * 64);
 	i = 0;
 	while (i < 16)
@@ -121,20 +72,22 @@ static unsigned int	*generate_words(unsigned int *input)
 	}
 	while (i < 64)
 	{
-		w[i] = SHA_SSIG1(w[i - 2]) + w[i - 7] + SHA_SSIG0(w[i - 15]) + w[i - 16];
+		w[i] = SHA_SSIG1(w[i - 2]) + w[i - 7]
+				+ SHA_SSIG0(w[i - 15]) + w[i - 16];
 		i++;
 	}
 	return (w);
 }
 
-static void		sha256_hash_func(unsigned int *ct, unsigned int *words)
+static void			sha256_hash_func(unsigned int *ct,
+									unsigned int *words)
 {
 	unsigned int	tmp1;
 	unsigned int	tmp2;
 	int				i;
 
 	i = 0;
-	while(i < 64)
+	while (i < 64)
 	{
 		tmp1 = ct[7] + SHA_BSIG1(ct[4])
 			+ SHA_CH(ct[4], ct[5], ct[6]) + g_sha2_const[i] + words[i];
@@ -147,13 +100,12 @@ static void		sha256_hash_func(unsigned int *ct, unsigned int *words)
 		ct[2] = ct[1];
 		ct[1] = ct[0];
 		ct[0] = tmp1 + tmp2;
-//		ft_printf("i%2u -> (a)%10#0x (e)%10#0x\n", i + 1, ct[0], ct[4]);
 		i++;
 	}
-	hexDump(NULL, ct, sizeof(unsigned int) * 8);
 }
 
-unsigned char	*ftssl_sha256_algorithm(unsigned char *input, size_t input_len)
+unsigned char		*ftssl_sha256_algorithm(unsigned char *input,
+											size_t input_len)
 {
 	unsigned int	*chain;
 	unsigned int	*ct;
@@ -166,7 +118,6 @@ unsigned char	*ftssl_sha256_algorithm(unsigned char *input, size_t input_len)
 	while (i < input_len)
 	{
 		w = generate_words((unsigned int *)input);
-//		ft_printmemory_binary(&w, sizeof(unsigned int) * 64);
 		sha256_hash_func(ct, w);
 		j = 0;
 		while (j < 8)

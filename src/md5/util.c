@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 19:27:56 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 15:57:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 16:01:56 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
-size_t	ftssl_md5_pad_input(unsigned char *input, unsigned char **padded,
-							int reverse_len_bits)
+size_t			ftssl_md5_pad_input(unsigned char *input,
+							unsigned char **padded, int reverse_len_bits)
 {
 	size_t	len;
 	int64_t len_bits;
@@ -41,7 +41,8 @@ size_t	ftssl_md5_pad_input(unsigned char *input, unsigned char **padded,
 	return (len + pad_len + 8);
 }
 
-void	ftssl_md5_family_wrapper(char *command_name, int argc, char **argv)
+void			ftssl_md5_family_wrapper(char *command_name, int argc,
+										char **argv)
 {
 	t_ftssl_md5_args	*args;
 	int					i;

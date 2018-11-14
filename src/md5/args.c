@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:35:22 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 20:18:20 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 16:04:11 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void						ftssl_md5_free_args(t_ftssl_md5_args *args)
 	free(args);
 }
 
-static void					args_handle_files(t_ftssl_md5_args *args, int argc,
-										char **argv, int i)
+static t_ftssl_md5_args		*args_handle_files(t_ftssl_md5_args *args,
+										int argc, char **argv, int i)
 {
 	int fd;
 
@@ -93,6 +93,7 @@ static void					args_handle_files(t_ftssl_md5_args *args, int argc,
 	}
 	args->read_stdin = ((args->fd_count == 0 && !args->string_mode
 						&& !args->error_count) || args->print_input);
+	return (args);
 }
 
 t_ftssl_md5_args			*ftssl_md5_get_args(int argc, char **argv)
@@ -121,6 +122,5 @@ t_ftssl_md5_args			*ftssl_md5_get_args(int argc, char **argv)
 					args->command);
 		}
 	}
-	args_handle_files(args, argc, argv, i - 1);
-	return (args);
+	return (args_handle_files(args, argc, argv, i - 1));
 }
