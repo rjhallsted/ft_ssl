@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:41:00 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 16:11:15 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:08:45 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void					round1_func(unsigned int *c, unsigned int in,
 
 	val = c[o[0]] + ((c[o[1]] & c[o[2]]) | ((~c[o[1]]) & c[o[3]]));
 	val += in + g_r1const[i];
-	val = ROTL(val, g_r1shift[i]);
+	val = ROTL(val, g_r1shift[i], 32);
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];
@@ -99,7 +99,7 @@ static void					round2_func(unsigned int *c, unsigned int in,
 
 	val = c[o[0]] + ((c[o[1]] & c[o[3]]) | (c[o[2]] & (~c[o[3]])));
 	val += in + g_r2const[i];
-	val = ROTL(val, g_r2shift[i]);
+	val = ROTL(val, g_r2shift[i], 32);
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];
@@ -119,7 +119,7 @@ static void					round3_func(unsigned int *c, unsigned int in,
 
 	val = c[o[0]] + (c[o[1]] ^ c[o[2]] ^ c[o[3]]);
 	val += in + g_r3const[i];
-	val = ROTL(val, g_r3shift[i]);
+	val = ROTL(val, g_r3shift[i], 32);
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];
@@ -139,7 +139,7 @@ static void					round4_func(unsigned int *c, unsigned int in,
 
 	val = c[o[0]] + (c[o[2]] ^ (c[o[1]] | (~c[o[3]])));
 	val += in + g_r4const[i];
-	val = ROTL(val, g_r4shift[i]);
+	val = ROTL(val, g_r4shift[i], 32);
 	c[o[0]] = c[o[1]] + val;
 	o[3] ^= o[2];
 	o[2] ^= o[3];

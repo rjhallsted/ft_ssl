@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/14 11:03:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 11:23:38 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:04:31 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
-static const uint128_t	g_sha512_k[] = {
+static const uint64_t	g_sha512_k[] = {
 	0x428a2f98d728ae22, 0x7137449123ef65cd,
 	0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
 	0x3956c25bf348b538, 0x59f111f1b605d019,
@@ -59,21 +59,21 @@ static const uint128_t	g_sha512_k[] = {
 	0x5fcb6fab3ad6faec, 0x6c44198c4a475817
 };
 
-static const uint128_t	g_sha512_init[] = {
+static const uint64_t	g_sha512_init[] = {
 	0x6a09e667f3bcc908, 0xbb67ae8584caa73b,
 	0x3c6ef372fe94f82b, 0xa54ff53a5f1d36f1,
 	0x510e527fade682d1, 0x9b05688c2b3e6c1f,
 	0x1f83d9abfb41bd6b, 0x5be0cd19137e2179
 };
 
-static void			sha_init_arrays(uint128_t **chain,
-								uint128_t **chain_tmp,
-								uint128_t sha_version)
+static void			sha_init_arrays(uint64_t **chain,
+								uint64_t **chain_tmp,
+								uint64_t sha_version)
 {
 	int				i;
-	const uint128_t	*init_vars;
+	const uint64_t	*init_vars;
 
-	*chain = ft_memalloc(sizeof(uint128_t) * 8);
+	*chain = ft_memalloc(sizeof(uint64_t) * 8);
 	if (sha_version == 512)
 		init_vars = g_sha512_init;
 	i = 0;
@@ -82,23 +82,23 @@ static void			sha_init_arrays(uint128_t **chain,
 		(*chain)[i] = init_vars[i];
 		i++;
 	}
-	*chain_tmp = ft_memalloc(sizeof(uint128_t) * 8);
+	*chain_tmp = ft_memalloc(sizeof(uint64_t) * 8);
 }
 
-static uint128_t	*generate_words(uint128_t *input)
+static uint64_t	*generate_words(uint64_t *input)
 {
-	uint128_t	*w;
+	uint64_t	*w;
 	int			i;
 
-	w = ft_memalloc(sizeof(uint128_t) * 64);
+	w = ft_memalloc(sizeof(uint64_t) * 64);
 	i = 0;
 	while (i < 16)
 	{
 		w[i] = input[i];
-		ft_reverse_bytes(w + i, sizeof(uint128_t));
+		ft_reverse_bytes(w + i, sizeof(uint64_t));
 		i++;
 	}
-	while (i < 64)
+	while (i < 80)
 	{
 		w[i] = SHA512_SSIG1(w[i - 2]) + w[i - 7]
 				+ SHA512_SSIG0(w[i - 15]) + w[i - 16];
@@ -107,11 +107,11 @@ static uint128_t	*generate_words(uint128_t *input)
 	return (w);
 }
 
-static void			sha512_hash_func(uint128_t *ct,
-									uint128_t *words)
+static void			sha512_hash_func(uint64_t *ct,
+									uint64_t *words)
 {
-	uint128_t	tmp1;
-	uint128_t	tmp2;
+	uint64_t	tmp1;
+	uint64_t	tmp2;
 	int				i;
 
 	i = 0;
@@ -140,9 +140,9 @@ unsigned char		*ftssl_sha512_algorithm(unsigned char *input,
 											size_t input_len,
 											unsigned int sha_version)
 {
-	uint128_t	*chain;
-	uint128_t	*ct;
-	uint128_t	*w;
+	uint64_t	*chain;
+	uint64_t	*ct;
+	uint64_t	*w;
 	size_t		iter[2];
 	int			pieces;
 
@@ -153,7 +153,7 @@ unsigned char		*ftssl_sha512_algorithm(unsigned char *input,
 		iter[1] = 0;
 		while (++iter[1] < 9)
 			ct[iter[1] - 1] = chain[iter[1] - 1];
-		w = generate_words((uint128_t *)(input + iter[0]));
+		w = generate_words((uint64_t *)(input + iter[0]));
 		sha512_hash_func(ct, w);
 		free(w);
 		iter[1] = 0;

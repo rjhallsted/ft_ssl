@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 10:35:53 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 12:57:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,26 +71,45 @@ static unsigned char	*md5_algorithm(unsigned char *input,
 	return (ftssl_return_hash_output(chain, 4, 1));
 }
 
+static unsigned char	*get_output(char *command, unsigned char *input)
+{
+	unsigned char	*output;
+	unsigned char	*padded;
+	size_t			len;
+
+	if (ft_strcmp(command, FTSSL_MD5_TXT) == 0)
+	{
+		len = ftssl_md5_pad_input(input, &padded, 0);
+		output = md5_algorithm(padded, len);
+	}
+	else if (ft_strcmp(command, FTSSL_SHA256_TXT) == 0
+			|| ft_strcmp(command, FTSSL_SHA224_TXT) == 0)
+	{
+		len = ftssl_md5_pad_input(input, &padded, 1);
+		output = ftssl_sha256_algorithm(padded, len,
+							(unsigned int)ft_atoi(command + 3));
+	}
+	else
+	{
+		len = ftssl_md5_pad_input_512(input, &padded);
+		output = ftssl_sha512_algorithm(padded, len,
+							(unsigned int)ft_atoi(command + 3));
+	}
+	free(padded);
+	return (output);
+}
+
 static void				do_md5(t_ftssl_md5_args *args, char *filename,
 								unsigned char *input)
 {
 	unsigned char		*output;
-	unsigned char		*padded;
-	size_t				len;
 
 	if (args->print_input)
 	{
 		ft_printf("%s", (char *)input);
 		args->print_input = 0;
 	}
-	len = ftssl_md5_pad_input(input, &padded,
-			(ft_strcmp(args->command, FTSSL_MD5_TXT)));
-	if (ft_strcmp(args->command, FTSSL_MD5_TXT) == 0)
-		output = md5_algorithm(padded, len);
-	else
-		output = ftssl_sha256_algorithm(padded, len,
-							(unsigned int)ft_atoi(args->command + 3));
-	free(padded);
+	output = get_output(args->command, input);
 	if (filename && !args->quiet_mode && !args->reverse_output)
 		ft_printf("%s (%s) = ", ft_strtoup(args->command), filename);
 	ft_printf("%s", output);

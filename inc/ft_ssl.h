@@ -6,13 +6,14 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 11:26:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 13:10:48 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_H
 # define FT_SSL_H
 # include <string.h>
+# include <stdint.h>
 
 /*
 **FTSSL_BLCKSZ_B64 must be a mulitple of 12
@@ -48,6 +49,7 @@ enum					e_block_sizes {
 # define FTSSL_MD5_TXT "md5"
 # define FTSSL_SHA256_TXT "sha256"
 # define FTSSL_SHA224_TXT "sha224"
+# define FTSSL_SHA512_TXT "sha512"
 
 /*
 **MD5/Hashing-related stuff
@@ -78,19 +80,19 @@ typedef struct			s_ftssl_command {
 
 # define SHR(x,by) (x >> by)
 # define SHL(x,by) (x << by)
-# define ROTR(x,by) ((x >> by) | (x << (32 - by)))
-# define ROTL(x,by) ((x << by) | (x >> (32 - by)))
+# define ROTR(x,by,w) ((x >> by) | (x << (w - by)))
+# define ROTL(x,by,w) ((x << by) | (x >> (w - by)))
 # define SHA_CH(x,y,z) ((x & y) ^ ((~x) & z))
 # define SHA_MAJ(x,y,z) ((x & y) ^ (x & z) ^ (y & z))
-# define SHA_BSIG0(x) (ROTR(x,2) ^ ROTR(x,13) ^ ROTR(x,22))
-# define SHA_BSIG1(x) (ROTR(x,6) ^ ROTR(x,11) ^ ROTR(x,25))
-# define SHA_SSIG0(x) (ROTR(x,7) ^ ROTR(x,18) ^ SHR(x,3))
-# define SHA_SSIG1(x) (ROTR(x,17) ^ ROTR(x,19) ^ SHR(x,10))
+# define SHA_BSIG0(x) (ROTR(x,2,32) ^ ROTR(x,13,32) ^ ROTR(x,22,32))
+# define SHA_BSIG1(x) (ROTR(x,6,32) ^ ROTR(x,11,32) ^ ROTR(x,25,32))
+# define SHA_SSIG0(x) (ROTR(x,7,32) ^ ROTR(x,18,32) ^ SHR(x,3))
+# define SHA_SSIG1(x) (ROTR(x,17,32) ^ ROTR(x,19,32) ^ SHR(x,10))
 
-# define SHA512_BSIG0(x) (ROTR(x,28) ^ ROTR(x,34) ^ ROTR(x,39))
-# define SHA512_BSIG1(x) (ROTR(x,14) ^ ROTR(x,18) ^ ROTR(x,41))
-# define SHA512_SSIG0(x) (ROTR(x,1) ^ ROTR(x,8) ^ SHR(x,7))
-# define SHA512_SSIG1(x) (ROTR(x,19) ^ ROTR(x,61) ^ SHR(x,6))
+# define SHA512_BSIG0(x) (ROTR(x,28,64) ^ ROTR(x,34,64) ^ ROTR(x,39,64))
+# define SHA512_BSIG1(x) (ROTR(x,14,64) ^ ROTR(x,18,64) ^ ROTR(x,41,64))
+# define SHA512_SSIG0(x) (ROTR(x,1,64) ^ ROTR(x,8,64) ^ SHR(x,7))
+# define SHA512_SSIG1(x) (ROTR(x,19,64) ^ ROTR(x,61,64) ^ SHR(x,6))
 
 /*
 **wrappers
@@ -100,11 +102,13 @@ void					ftssl_md5_family_wrapper(char *command_name, int argc,
 										char **argv);
 unsigned char			*ftssl_return_hash_output(unsigned int *chain,
 											int pieces, int reverse_bytes);
-unsigned char			*ftssl_return_hash_output_512(uint128_t *chain,
+unsigned char			*ftssl_return_hash_output_512(uint64_t *chain,
 											int pieces, int reverse_bytes);
 size_t					ftssl_md5_pad_input(unsigned char *input,
 											unsigned char **padded,
 											int sha_mode);
+size_t					ftssl_md5_pad_input_512(unsigned char *input,
+											unsigned char **padded);
 
 void					ftssl_des_family_wrapper(char *command_name,
 												int argc, char **argv);
@@ -118,6 +122,9 @@ void					ftssl_md5_rounds(unsigned int *c, unsigned int *in,
 void					ftssl_md5_outer(t_ftssl_md5_args *args);
 
 unsigned char			*ftssl_sha256_algorithm(unsigned char *inut,
+												size_t input_len,
+												unsigned int sha_version);
+unsigned char			*ftssl_sha512_algorithm(unsigned char *inut,
 												size_t input_len,
 												unsigned int sha_version);
 
