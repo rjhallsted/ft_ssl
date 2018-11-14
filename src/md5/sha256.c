@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 17:35:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 10:53:22 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 11:03:45 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../../inc/libft/inc/libft.h"
 #include "../../inc/ft_ssl.h"
 
-static const unsigned int	g_sha2_const[] = {
+static const unsigned int	g_sha256_k[] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 	0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -98,7 +98,7 @@ static void			sha256_hash_func(unsigned int *ct,
 	while (i < 64)
 	{
 		tmp1 = ct[7] + SHA_BSIG1(ct[4])
-			+ SHA_CH(ct[4], ct[5], ct[6]) + g_sha2_const[i] + words[i];
+			+ SHA_CH(ct[4], ct[5], ct[6]) + g_sha256_k[i] + words[i];
 		tmp2 = SHA_BSIG0(ct[0]) + SHA_MAJ(ct[0], ct[1], ct[2]);
 		ct[7] = ct[6];
 		ct[6] = ct[5];

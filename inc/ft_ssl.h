@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 10:37:12 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 11:26:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,11 @@ typedef struct			s_ftssl_command {
 # define SHA_SSIG0(x) (ROTR(x,7) ^ ROTR(x,18) ^ SHR(x,3))
 # define SHA_SSIG1(x) (ROTR(x,17) ^ ROTR(x,19) ^ SHR(x,10))
 
+# define SHA512_BSIG0(x) (ROTR(x,28) ^ ROTR(x,34) ^ ROTR(x,39))
+# define SHA512_BSIG1(x) (ROTR(x,14) ^ ROTR(x,18) ^ ROTR(x,41))
+# define SHA512_SSIG0(x) (ROTR(x,1) ^ ROTR(x,8) ^ SHR(x,7))
+# define SHA512_SSIG1(x) (ROTR(x,19) ^ ROTR(x,61) ^ SHR(x,6))
+
 /*
 **wrappers
 */
@@ -94,6 +99,8 @@ typedef struct			s_ftssl_command {
 void					ftssl_md5_family_wrapper(char *command_name, int argc,
 										char **argv);
 unsigned char			*ftssl_return_hash_output(unsigned int *chain,
+											int pieces, int reverse_bytes);
+unsigned char			*ftssl_return_hash_output_512(uint128_t *chain,
 											int pieces, int reverse_bytes);
 size_t					ftssl_md5_pad_input(unsigned char *input,
 											unsigned char **padded,
