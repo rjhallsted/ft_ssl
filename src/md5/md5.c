@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 14:09:11 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 14:14:37 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static void				do_md5(t_ftssl_md5_args *args, char *filename,
 {
 	unsigned char		*output;
 	unsigned int		sha_version;
-	
+
 	if (args->print_input)
 	{
 		ft_printf("%s", (char *)input);

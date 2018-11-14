@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/14 11:03:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 14:07:05 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 14:13:48 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ static void				sha512_hash_func(uint64_t *ct,
 }
 
 unsigned char			*get_sha512_hash(uint64_t *chain,
-										 unsigned int sha_version)
+										unsigned int sha_version)
 {
 	if (sha_version == 512)
 		return (ftssl_return_hash_output_512(chain, 8, 0, 0));
