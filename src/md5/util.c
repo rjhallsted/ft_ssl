@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 19:27:56 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 16:01:56 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 21:21:45 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,22 @@
 #include "../../inc/ft_ssl.h"
 
 size_t			ftssl_md5_pad_input(unsigned char *input,
-							unsigned char **padded, int reverse_len_bits)
+							unsigned char **padded, int sha_mode)
 {
-	size_t	len;
-	int64_t len_bits;
-	size_t	pad_len;
+	size_t		len;
+	uint64_t	len_bits;
+	size_t		pad_len;
 
 	len = ft_strlen((char *)input);
-	pad_len = 0;
+	pad_len = 1;
 	while ((len + pad_len) % 64 != 56)
 		pad_len++;
 	*padded = ft_memrealloc(input, len + pad_len + 8, len);
-	if (pad_len > 0)
-	{
-		(*padded)[len] = (unsigned char)128;
-		ft_bzero(*padded + len + 1, pad_len - 1);
-	}
-	len_bits = (unsigned long long)len * 8;
-	if (reverse_len_bits)
-		ft_reverse_bytes(&len_bits, sizeof(unsigned long long));
+	(*padded)[len] = (unsigned char)128;
+	ft_bzero(*padded + len + 1, pad_len - 1);
+	len_bits = (uint64_t)len * 8;
+	if (sha_mode)
+		ft_reverse_bytes(&len_bits, sizeof(uint64_t));
 	ft_memcpy(*padded + len + pad_len, &len_bits, 8);
 	return (len + pad_len + 8);
 }

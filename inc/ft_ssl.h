@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 15:58:43 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 21:18:01 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ unsigned char			*ftssl_return_hash_output(unsigned int *chain,
 											int pieces, int reverse_bytes);
 size_t					ftssl_md5_pad_input(unsigned char *input,
 											unsigned char **padded,
-											int reverse_len_bits);
+											int sha_mode);
 
 void					ftssl_des_family_wrapper(char *command_name,
 												int argc, char **argv);

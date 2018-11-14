@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 17:35:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 16:13:10 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 21:14:11 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,13 @@ unsigned char		*ftssl_sha256_algorithm(unsigned char *input,
 	i = 0;
 	while (i < input_len)
 	{
-		w = generate_words((unsigned int *)input);
+		w = generate_words((unsigned int *)(input + i));
 		sha256_hash_func(ct, w);
 		j = 0;
 		while (j < 8)
 		{
 			chain[j] += ct[j];
+			ct[j] = chain[j];
 			j++;
 		}
 		free(w);

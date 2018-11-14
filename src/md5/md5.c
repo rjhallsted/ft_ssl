@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/03 22:29:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 16:09:05 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/13 21:24:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,10 @@ static unsigned char	*md5_algorithm(unsigned char *input,
 		chain[1] += chain_tmp[1];
 		chain[2] += chain_tmp[2];
 		chain[3] += chain_tmp[3];
+		chain_tmp[0] = chain[0];
+		chain_tmp[1] = chain[1];
+		chain_tmp[2] = chain[2];
+		chain_tmp[3] = chain[3];
 		i += 64;
 	}
 	free(order);
