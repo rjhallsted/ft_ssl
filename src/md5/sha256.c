@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 17:35:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 10:36:12 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/14 10:53:22 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,42 +34,35 @@ static const unsigned int	g_sha2_const[] = {
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
+static const unsigned int	g_sha256_init[] = {
+	0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+	0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+};
+
+static const unsigned int	g_sha224_init[] = {
+	0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
+	0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
+};
+
 static void			sha_init_arrays(unsigned int **chain,
 								unsigned int **chain_tmp,
 								unsigned int sha_version)
 {
-	int i;
+	int					i;
+	const unsigned int	*init_vars;
 
 	*chain = ft_memalloc(sizeof(unsigned int) * 8);
 	if (sha_version == 256)
-	{
-		(*chain)[0] = 0x6a09e667;
-		(*chain)[1] = 0xbb67ae85;
-		(*chain)[2] = 0x3c6ef372;
-		(*chain)[3] = 0xa54ff53a;
-		(*chain)[4] = 0x510e527f;
-		(*chain)[5] = 0x9b05688c;
-		(*chain)[6] = 0x1f83d9ab;
-		(*chain)[7] = 0x5be0cd19;
-	}
-	else if (sha_version == 224)
-	{
-		(*chain)[0] = 0xc1059ed8;
-		(*chain)[1] = 0x367cd507;
-		(*chain)[2] = 0x3070dd17;
-		(*chain)[3] = 0xf70e5939;
-		(*chain)[4] = 0xffc00b31;
-		(*chain)[5] = 0x68581511;
-		(*chain)[6] = 0x64f98fa7;
-		(*chain)[7] = 0xbefa4fa4;		
-	}
-	*chain_tmp = ft_memalloc(sizeof(unsigned int) * 8);
+		init_vars = g_sha256_init;
+	else
+		init_vars = g_sha224_init;
 	i = 0;
 	while (i < 8)
 	{
-		(*chain_tmp)[i] = (*chain)[i];
+		(*chain)[i] = init_vars[i];
 		i++;
 	}
+	*chain_tmp = ft_memalloc(sizeof(unsigned int) * 8);
 }
 
 static unsigned int	*generate_words(unsigned int *input)
@@ -130,28 +123,25 @@ unsigned char		*ftssl_sha256_algorithm(unsigned char *input,
 	unsigned int	*chain;
 	unsigned int	*ct;
 	unsigned int	*w;
-	size_t			i;
-	int				j;
+	size_t			iter[2];
+	int				pieces;
 
 	sha_init_arrays(&chain, &ct, sha_version);
-	i = 0;
-	while (i < input_len)
+	iter[0] = 0;
+	while (iter[0] < input_len)
 	{
-		w = generate_words((unsigned int *)(input + i));
+		iter[1] = 0;
+		while (++iter[1] < 9)
+			ct[iter[1] - 1] = chain[iter[1] - 1];
+		w = generate_words((unsigned int *)(input + iter[0]));
 		sha256_hash_func(ct, w);
-		j = 0;
-		while (j < 8)
-		{
-			chain[j] += ct[j];
-			ct[j] = chain[j];
-			j++;
-		}
 		free(w);
-		i += 64;
+		iter[1] = 0;
+		while (++iter[1] < 9)
+			chain[iter[1] - 1] += ct[iter[1] - 1];
+		iter[0] += 64;
 	}
 	free(ct);
-	if (sha_version == 256)
-		return (ftssl_return_hash_output(chain, 8, 0));
-	else
-		return (ftssl_return_hash_output(chain, 7, 0));
+	pieces = (sha_version == 256) ? 8 : 7;
+	return (ftssl_return_hash_output(chain, pieces, 0));
 }
