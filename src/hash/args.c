@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:35:22 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/16 19:54:38 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 20:36:31 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <libft.h>
 #include <ft_ssl.h>
+#include "args"
 
 static int					is_flag(const char *input)
 {
@@ -34,11 +35,11 @@ static int					is_flag(const char *input)
 	return (0);
 }
 
-static t_ftssl_md5_args		*init_args(char *command)
+static t_hash_args		*init_args(char *command)
 {
-	t_ftssl_md5_args	*args;
+	t_hash_args	*args;
 
-	args = ft_memalloc(sizeof(t_ftssl_md5_args));
+	args = ft_memalloc(sizeof(t_hash_args));
 	args->command = ft_strtolow(ft_strdup(command));
 	args->print_input = 0;
 	args->quiet_mode = 0;
@@ -54,8 +55,9 @@ static t_ftssl_md5_args		*init_args(char *command)
 	return (args);
 }
 
-void						ftssl_md5_free_args(t_ftssl_md5_args *args)
+void						free_args(t_hash_args *args)
 {
+	//should make it so that args->input_string gets freed here as well.
 	free(args->command);
 	if (args->fds)
 		free(args->fds);
@@ -66,7 +68,7 @@ void						ftssl_md5_free_args(t_ftssl_md5_args *args)
 	free(args);
 }
 
-static t_ftssl_md5_args		*args_handle_files(t_ftssl_md5_args *args,
+static t_hash_args		*args_handle_files(t_hash_args *args,
 										int argc, char **argv, int i)
 {
 	int fd;
@@ -96,9 +98,9 @@ static t_ftssl_md5_args		*args_handle_files(t_ftssl_md5_args *args,
 	return (args);
 }
 
-t_ftssl_md5_args			*ftssl_md5_get_args(int argc, char **argv)
+t_hash_args			*get_args(int argc, char **argv)
 {
-	t_ftssl_md5_args	*args;
+	t_hash_args	*args;
 	int					i;
 
 	args = init_args(argv[1]);

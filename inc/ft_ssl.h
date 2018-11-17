@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 14:11:48 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 20:31:56 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,6 @@ enum					e_block_sizes {
 **MD5/Hashing-related stuff
 */
 
-typedef struct			s_ftssl_md5_args {
-	char				*command;
-	int					print_input;
-	int					quiet_mode;
-	int					reverse_output;
-	int					string_mode;
-	char				*input_string;
-	char				**filenames;
-	int					*fds;
-	int					fd_count;
-	int					read_stdin;
-	int					*error_indices;
-	int					error_count;
-}						t_ftssl_md5_args;
-
 typedef void			t_ftssl_comm_wrap(char *command_name, int argc,
 										char **argv);
 
@@ -116,9 +101,6 @@ size_t					ftssl_md5_pad_input_512(unsigned char *input,
 
 void					ftssl_des_family_wrapper(char *command_name,
 												int argc, char **argv);
-
-void					ftssl_md5_free_args(t_ftssl_md5_args *args);
-t_ftssl_md5_args		*ftssl_md5_get_args(int argc, char **argv);
 
 void					ftssl_md5_rounds(unsigned int *c, unsigned int *in,
 										unsigned int *order);

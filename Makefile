@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/16 19:50:29 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/16 20:28:47 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -26,8 +26,8 @@ DES			=	$(addprefix des/,	\
 				boxes				\
 				wrapper				)
 
-MD5			=	$(addprefix md5/,	\
-				md5					\
+HASH			=	$(addprefix hash/,	\
+				md5old				\
 				args				\
 				rounds				\
 				util				\
@@ -41,7 +41,7 @@ FT_SSL		=	main 			\
 				padding			\
 				prep_args
 
-FILES		=	$(FT_SSL) $(BASE64) $(DES) $(MD5)
+FILES		=	$(FT_SSL) $(BASE64) $(DES) $(HASH)
 
 SRCS		=	$(addprefix src/, $(addsuffix .c, $(FILES)))
 OBJS		=	$(addprefix src/, $(addsuffix .o, $(FILES)))
