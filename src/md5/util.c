@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 19:27:56 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:57:12 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:56:48 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdint.h>
-#include "../../inc/libft/inc/libft.h"
-#include "../../inc/ft_ssl.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 size_t			ftssl_md5_pad_input(unsigned char *input,
 							unsigned char **padded, int sha_mode)

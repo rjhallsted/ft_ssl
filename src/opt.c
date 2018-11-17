@@ -6,13 +6,13 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 23:25:39 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/06 21:13:29 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:57:19 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "../inc/libft/inc/libft.h"
-#include "../inc/ft_ssl.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 t_ftssl_opthelp	ftssl_opthelp_init(int argc, char **argv, char flag,
 									char *label)

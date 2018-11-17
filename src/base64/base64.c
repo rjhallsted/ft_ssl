@@ -6,12 +6,12 @@
 /*   By: suedadam <suedadam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:41:41 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 20:41:24 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:51:21 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/libft/inc/libft.h"
-#include "../../inc/ft_ssl.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 /*
 ** base64_encode_block accepts 3 octets and returns 4 encoded characters.

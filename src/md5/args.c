@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:35:22 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/13 16:04:11 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:54:38 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdint.h>
-#include "../../inc/libft/inc/libft.h"
-#include "../../inc/ft_ssl.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 static int					is_flag(const char *input)
 {

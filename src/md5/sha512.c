@@ -6,14 +6,14 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/14 11:03:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 14:13:48 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:56:23 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdint.h>
-#include "../../inc/libft/inc/libft.h"
-#include "../../inc/ft_ssl.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 static const uint64_t	g_sha512_k[] = {
 	0x428a2f98d728ae22, 0x7137449123ef65cd,

@@ -6,11 +6,11 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:41:00 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/14 13:08:45 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:55:28 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/ft_ssl.h"
+#include <ft_ssl.h>
 
 static const unsigned int	g_r1const[] = {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,

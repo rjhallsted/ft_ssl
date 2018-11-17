@@ -6,13 +6,13 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 20:20:05 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/07 02:57:31 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:47:59 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "../inc/ft_ssl.h"
-#include "../inc/libft/inc/libft.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 static t_ftssl_args	init_args(void)
 {

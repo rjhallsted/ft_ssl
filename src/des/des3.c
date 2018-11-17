@@ -6,13 +6,13 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 02:37:48 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 21:03:47 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:53:02 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "../../inc/libft/inc/libft.h"
-#include "../../inc/ft_ssl.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 int						ftssl_des3_ecb(t_ftssl_args args,
 						const unsigned char *input,

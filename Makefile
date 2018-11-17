@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/14 12:38:28 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/16 19:50:29 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -14,6 +14,8 @@ NAME		= 	ft_ssl
 CC			=	gcc
 EXTRA_FLAGS =	-Weverything -Wno-cast-qual
 CFLAGS		=	-Wall -Werror -Wextra
+CFLAGS		+=	-I inc/ -I inc/libft/inc
+
 
 BASE64		=	base64/base64
 

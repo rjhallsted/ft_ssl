@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/28 14:12:25 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/07 18:00:41 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:53:44 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#include "../inc/ft_ssl.h"
-#include "../inc/libft/inc/libft.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 void		ftssl_flag_arg_error(const char *command, const char *option)
 {

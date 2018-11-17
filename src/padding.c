@@ -6,13 +6,13 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/04 15:00:32 by rhallste          #+#    #+#             */
-/*   Updated: 2018/03/11 17:40:16 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:59:31 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
-#include "../inc/ft_ssl.h"
-#include "../inc/libft/inc/libft.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 unsigned char	*ftssl_padblock_ecb(unsigned char *block, int cursize,
 									int fullsize)

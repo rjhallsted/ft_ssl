@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 15:49:35 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 15:57:28 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:52:59 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "../../inc/libft/inc/libft.h"
-#include "../../inc/ft_ssl.h"
+#include <libft.h>
+#include <ft_ssl.h>
 
 /*
 ** block_size is size in bytes of amount to pass each function
