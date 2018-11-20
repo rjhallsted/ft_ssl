@@ -6,7 +6,7 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/16 20:28:47 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/20 14:16:56 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -26,9 +26,12 @@ DES			=	$(addprefix des/,	\
 				boxes				\
 				wrapper				)
 
-HASH			=	$(addprefix hash/,	\
-				md5old				\
+HASH		=	$(addprefix hash/,	\
+				md5					\
+				md5rounds			\
 				args				\
+				error				\
+				md5old				\
 				rounds				\
 				util				\
 				sha256				\

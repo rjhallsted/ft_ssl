@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/* ***********************************************************************A*** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_ssl.h                                           :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 16:25:27 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/16 20:31:56 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 14:08:37 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,21 @@ typedef struct			s_ftssl_command {
 	t_ftssl_comm_wrap	*wrapper_func;
 }						t_ftssl_command;
 
+typedef struct	t_ftssl_md5_args {
+	char		*command;
+	int			print_input;
+	int			quiet_mode;
+	int			reverse_output;
+	int			string_mode;
+	char		*input_string;
+	char		**filenames;
+	int			*fds;
+	int			fd_count;
+	int			read_stdin;
+	int			*error_indices;
+	int			error_count;
+}				t_ftssl_md5_args;
+
 # define SHR(x,by) (x >> by)
 # define SHL(x,by) (x << by)
 # define ROTR(x,by,w) ((x >> by) | (x << (w - by)))
@@ -113,6 +128,9 @@ unsigned char			*ftssl_sha256_algorithm(unsigned char *inut,
 unsigned char			*ftssl_sha512_algorithm(unsigned char *inut,
 												size_t input_len,
 												unsigned int sha_version);
+
+void					ftssl_md5_free_args(t_ftssl_md5_args *args);
+t_ftssl_md5_args		*ftssl_md5_get_args(int argc, char **argv);
 
 /*
 **DES/Encryption-related stuff

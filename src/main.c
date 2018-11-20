@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 14:19:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/16 19:54:03 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 14:31:21 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 #include <errno.h>
 #include <libft.h>
 #include <ft_ssl.h>
+#include "hash/md5.h"
 
 const t_ftssl_command		g_command_list[] = {
-	{FTSSL_MD5_TXT, ftssl_md5_family_wrapper},
+	{FTSSL_MD5_TXT, ftssl_md5},
 	{FTSSL_SHA256_TXT, ftssl_md5_family_wrapper},
 	{FTSSL_SHA224_TXT, ftssl_md5_family_wrapper},
 	{FTSSL_SHA512_TXT, ftssl_md5_family_wrapper},

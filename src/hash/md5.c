@@ -6,12 +6,13 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 20:24:18 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/17 17:05:10 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 14:42:45 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <unistd.h>
 #include <ft_ssl.h>
 #include <libft.h>
 #include "args.h"
@@ -50,7 +51,7 @@ static char		*build_hash(t_md5_state state)
 	i = 0;
 	while (i < 4)
 	{
-		tmp = ft_uitoa_base(chain[i], 16);
+		tmp = ft_uitoa_base(state.state[i], 16);
 		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
 		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
 		free(tmp);
@@ -59,37 +60,40 @@ static char		*build_hash(t_md5_state state)
 	return (output);
 }
 
-static void	md5_loop(t_hash_args *args, t_md5_state state, int fd)
+static void	md5_loop(t_hash_args *args, t_md5_state *state, int fd)
 {
 	char			block[BLOCK_SIZE + 1];
 	uint64_t		file_len;
 	int				rlen;
 
 	block[BUFF_SIZE] = '\0';
-	while ((rlen = get_block(&block, fd)) > 0)
+	file_len = 0;
+	while ((rlen = get_block(block, fd)) > 0)
 	{
 		if (args->print_input)
 			ft_printf("%s", block);
-		file_len = += rlen;
+		file_len += rlen;
 		if (rlen != 64)
 		{
 			block[rlen] = (unsigned char)128;
 			ft_bzero(block + rlen + 1, BLOCK_SIZE - rlen - 8);
+			file_len *= 8;
 			if (rlen < 56)
 				ft_memcpy(block + 56, &file_len, 8);
 		}
-		md5_rounds(&block, &state);
+		md5_rounds((unsigned int *)block, state);
 	}
 	if ((uint64_t)(block + 56) != file_len)
 	{
 		ft_bzero(block, 56);
+		file_len *= 8;
 		ft_memcpy(block + 56, &file_len, 8);
-		md5_rounds(block, &state);
+		md5_rounds((unsigned int *)block, state);
 	}
 	args->print_input = 0;
 }
 
-static void	md5_string_loop(t_hash_args *args, t_md5_state state)
+static void	md5_string_loop(t_hash_args *args, t_md5_state *state)
 {
 	char			*input_str;
 	uint64_t		str_len;
@@ -101,13 +105,14 @@ static void	md5_string_loop(t_hash_args *args, t_md5_state state)
 	if (str_len % 64 >= 56)
 		final_len += 64;
 	input_str = ft_strnew(final_len);
-	ft_strncpy(final_len, args->input_string, str_len);
-	input_str[str_len] = 128;
+	ft_strncpy(input_str, args->input_string, str_len);
+	input_str[str_len] = -128;
+	str_len *= 8;
 	ft_memcpy(input_str + final_len - 8, &str_len, 8);
 	i = 0;
-	while (i < final_len);
+	while (i < final_len)
 	{
-		md5_rounds(input_str + i, &state);
+		md5_rounds((unsigned int *)(input_str + i), state);
 		i += 64;
 	}
 }
@@ -116,10 +121,11 @@ static void	do_md5(t_hash_args *args, char *filename, int fd)
 {
 	t_md5_state		state;
 	char			*output;
+	unsigned int	file_len;
 
 	file_len = 0;
 	state = init_state();
-	md5_loop(args, state, fd);
+	md5_loop(args, &state, fd);
 	output = build_hash(state);
 	if (filename && !args->quiet_mode && !args->reverse_output)
 		ft_printf("MD5 (%s) = %s\n", filename, output);
@@ -134,10 +140,11 @@ static void do_md5_string(t_hash_args *args)
 {
 	t_md5_state		state;
 	char			*output;
+	unsigned int	file_len;
 
 	file_len = 0;
 	state = init_state();
-	md5_string_loop(args, state);
+	md5_string_loop(args, &state);
 	output = build_hash(state);
 	if (!args->quiet_mode && !args->reverse_output)
 		ft_printf("MD5 (\"%s\") = %s\n", args->input_string, output);
@@ -154,6 +161,7 @@ void	ftssl_md5(char *command, int argc, char **argv)
 	int				i;
 
 	args = get_args(argc, argv);
+	command = NULL;
 	if (args->read_stdin)
 		do_md5(args, NULL, STDIN_FILENO);
 	if (args->string_mode && args->input_string)

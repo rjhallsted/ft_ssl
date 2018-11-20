@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/17 20:09:33 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/17 20:59:19 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 14:39:41 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,29 +31,15 @@ static const unsigned int	g_md5_k[] = {
 	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-static const unsigned int	g_md5_shift[] = {
-	7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
-	5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
-	4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
-	6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
-};
-
-static const unsigned int	g_mi[] = {
-	0, 1,  2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	1, 6, 11, 0, 5, 10, 15, 4, 9, 14, 3, 8, 13, 2, 7, 12,
-	5, 8, 11, 14, 1, 4, 7, 10, 13, 0, 3, 6, 9, 12, 15, 2,
-	0, 7, 14, 5, 12, 3, 10, 1, 8, 15, 6, 13, 4, 11, 2, 9
-};
-
+#define ROTL(x,by,ws) ((x << by) | (x >> (ws - by)))
 #define R1F(a,b,c,d) a + ((b & c) | (~b & d))
 #define R2F(a,b,c,d) a + ((b & d) | (c & ~d))
 #define R3F(a,b,c,d) a + (b ^ c ^ d)
 #define R4F(a,b,c,d) a + (c ^ (b | ~c))
-#define R1(a,b,c,d,i,k,s) a = b + ROTL(R1F(a,b,c,d) + i + k, s, 32)
-#define R2(a,b,c,d,i,k,s) a = b + ROTL(R2F(a,b,c,d) + i + k, s, 32)
-#define R3(a,b,c,d,i,k,s) a = b + ROTL(R3F(a,b,c,d) + i + k, s, 32)
-#define R4(a,b,c,d,i,k,s) a = b + ROTL(R4F(a,b,c,d) + i + k, s, 32)
-
+#define R1(a,b,c,d,i,k,s) a = b + ROTL((R1F(a,b,c,d) + i + k), s, 32)
+#define R2(a,b,c,d,i,k,s) a = b + ROTL((R2F(a,b,c,d) + i + k), s, 32)
+#define R3(a,b,c,d,i,k,s) a = b + ROTL((R3F(a,b,c,d) + i + k), s, 32)
+#define R4(a,b,c,d,i,k,s) a = b + ROTL((R4F(a,b,c,d) + i + k), s, 32)
 #define SA state->working[0]
 #define SB state->working[1]
 #define SC state->working[2]
@@ -138,6 +124,9 @@ static void round4(const unsigned int *block, t_md5_state *state)
 	R4(SC,SD,SA,SB, block[2], g_md5_k[62], 15);
 	R4(SB,SC,SD,SA, block[9], g_md5_k[63], 21);
 }
+
+#include <stdint.h>
+#include <libft.h>
 
 void md5_rounds(const unsigned int *block, t_md5_state *state)
 {
