@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/17 20:09:33 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/20 14:39:41 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 15:00:39 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ static const unsigned int	g_md5_k[] = {
 };
 
 #define ROTL(x,by,ws) ((x << by) | (x >> (ws - by)))
-#define R1F(a,b,c,d) a + ((b & c) | (~b & d))
-#define R2F(a,b,c,d) a + ((b & d) | (c & ~d))
+#define R1F(a,b,c,d) a + ((b & c) | ((~b) & d))
+#define R2F(a,b,c,d) a + ((b & d) | (c & (~d)))
 #define R3F(a,b,c,d) a + (b ^ c ^ d)
-#define R4F(a,b,c,d) a + (c ^ (b | ~c))
+#define R4F(a,b,c,d) a + (c ^ (b | (~c)))
 #define R1(a,b,c,d,i,k,s) a = b + ROTL((R1F(a,b,c,d) + i + k), s, 32)
 #define R2(a,b,c,d,i,k,s) a = b + ROTL((R2F(a,b,c,d) + i + k), s, 32)
 #define R3(a,b,c,d,i,k,s) a = b + ROTL((R3F(a,b,c,d) + i + k), s, 32)
