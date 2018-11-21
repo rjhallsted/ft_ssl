@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:35:22 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/20 14:09:31 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 10:57:26 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <ft_ssl.h>
 #include "args.h"
 
-static int					is_flag(const char *input)
+static int				is_flag(const char *input)
 {
 	int i;
 
@@ -57,7 +57,7 @@ static t_hash_args		*init_args(char *command)
 
 void					free_args(t_hash_args *args)
 {
-	//should make it so that args->input_string gets freed here as well.
+//should make it so that args->input_string gets freed here as well.
 	free(args->command);
 	if (args->fds)
 		free(args->fds);
@@ -103,7 +103,7 @@ static t_hash_args		*args_handle_files(t_hash_args *args,
 	return (args);
 }
 
-t_hash_args			*get_args(int argc, char **argv)
+t_hash_args				*get_args(int argc, char **argv)
 {
 	t_hash_args	*args;
 	int			i;
@@ -132,7 +132,7 @@ t_hash_args			*get_args(int argc, char **argv)
 	return (args_handle_files(args, argc, argv, i - 1));
 }
 
-t_ftssl_md5_args	*ftssl_md5_get_args(int argc, char **argv)
+t_ftssl_md5_args		*ftssl_md5_get_args(int argc, char **argv)
 {
 	return ((t_ftssl_md5_args *)get_args(argc, argv));
 }
