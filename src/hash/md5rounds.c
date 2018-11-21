@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/17 20:09:33 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/20 18:42:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 13:15:16 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,87 +45,87 @@ static const unsigned int	g_md5_k[] = {
 #define SC state->working[2]
 #define SD state->working[3]
 
-static void round1(const unsigned int *block, t_md5_state *state)
+static void	round1(const unsigned int *block, t_md5_state *state)
 {
-	R1(SA,SB,SC,SD, block[0], g_md5_k[0], 7);
-	R1(SD,SA,SB,SC, block[1], g_md5_k[1], 12);
-	R1(SC,SD,SA,SB, block[2], g_md5_k[2], 17);
-	R1(SB,SC,SD,SA, block[3], g_md5_k[3], 22);
-	R1(SA,SB,SC,SD, block[4], g_md5_k[4], 7);
-	R1(SD,SA,SB,SC, block[5], g_md5_k[5], 12);
-	R1(SC,SD,SA,SB, block[6], g_md5_k[6], 17);
-	R1(SB,SC,SD,SA, block[7], g_md5_k[7], 22);
-	R1(SA,SB,SC,SD, block[8], g_md5_k[8], 7);
-	R1(SD,SA,SB,SC, block[9], g_md5_k[9], 12);
-	R1(SC,SD,SA,SB, block[10], g_md5_k[10], 17);
-	R1(SB,SC,SD,SA, block[11], g_md5_k[11], 22);
-	R1(SA,SB,SC,SD, block[12], g_md5_k[12], 7);
-	R1(SD,SA,SB,SC, block[13], g_md5_k[13], 12);
-	R1(SC,SD,SA,SB, block[14], g_md5_k[14], 17);
-	R1(SB,SC,SD,SA, block[15], g_md5_k[15], 22);
+	R1(SA, SB, SC, SD, block[0], g_md5_k[0], 7);
+	R1(SD, SA, SB, SC, block[1], g_md5_k[1], 12);
+	R1(SC, SD, SA, SB, block[2], g_md5_k[2], 17);
+	R1(SB, SC, SD, SA, block[3], g_md5_k[3], 22);
+	R1(SA, SB, SC, SD, block[4], g_md5_k[4], 7);
+	R1(SD, SA, SB, SC, block[5], g_md5_k[5], 12);
+	R1(SC, SD, SA, SB, block[6], g_md5_k[6], 17);
+	R1(SB, SC, SD, SA, block[7], g_md5_k[7], 22);
+	R1(SA, SB, SC, SD, block[8], g_md5_k[8], 7);
+	R1(SD, SA, SB, SC, block[9], g_md5_k[9], 12);
+	R1(SC, SD, SA, SB, block[10], g_md5_k[10], 17);
+	R1(SB, SC, SD, SA, block[11], g_md5_k[11], 22);
+	R1(SA, SB, SC, SD, block[12], g_md5_k[12], 7);
+	R1(SD, SA, SB, SC, block[13], g_md5_k[13], 12);
+	R1(SC, SD, SA, SB, block[14], g_md5_k[14], 17);
+	R1(SB, SC, SD, SA, block[15], g_md5_k[15], 22);
 }
 
-static void round2(const unsigned int *block, t_md5_state *state)
+static void	round2(const unsigned int *block, t_md5_state *state)
 {
-	R2(SA,SB,SC,SD, block[1], g_md5_k[16], 5);
-	R2(SD,SA,SB,SC, block[6], g_md5_k[17], 9);
-	R2(SC,SD,SA,SB, block[11], g_md5_k[18], 14);
-	R2(SB,SC,SD,SA, block[0], g_md5_k[19], 20);
-	R2(SA,SB,SC,SD, block[5], g_md5_k[20], 5);
-	R2(SD,SA,SB,SC, block[10], g_md5_k[21], 9);
-	R2(SC,SD,SA,SB, block[15], g_md5_k[22], 14);
-	R2(SB,SC,SD,SA, block[4], g_md5_k[23], 20);
-	R2(SA,SB,SC,SD, block[9], g_md5_k[24], 5);
-	R2(SD,SA,SB,SC, block[14], g_md5_k[25], 9);
-	R2(SC,SD,SA,SB, block[3], g_md5_k[26], 14);
-	R2(SB,SC,SD,SA, block[8], g_md5_k[27], 20);
-	R2(SA,SB,SC,SD, block[13], g_md5_k[28], 5);
-	R2(SD,SA,SB,SC, block[2], g_md5_k[29], 9);
-	R2(SC,SD,SA,SB, block[7], g_md5_k[30], 14);
-	R2(SB,SC,SD,SA, block[12], g_md5_k[31], 20);
+	R2(SA, SB, SC, SD, block[1], g_md5_k[16], 5);
+	R2(SD, SA, SB, SC, block[6], g_md5_k[17], 9);
+	R2(SC, SD, SA, SB, block[11], g_md5_k[18], 14);
+	R2(SB, SC, SD, SA, block[0], g_md5_k[19], 20);
+	R2(SA, SB, SC, SD, block[5], g_md5_k[20], 5);
+	R2(SD, SA, SB, SC, block[10], g_md5_k[21], 9);
+	R2(SC, SD, SA, SB, block[15], g_md5_k[22], 14);
+	R2(SB, SC, SD, SA, block[4], g_md5_k[23], 20);
+	R2(SA, SB, SC, SD, block[9], g_md5_k[24], 5);
+	R2(SD, SA, SB, SC, block[14], g_md5_k[25], 9);
+	R2(SC, SD, SA, SB, block[3], g_md5_k[26], 14);
+	R2(SB, SC, SD, SA, block[8], g_md5_k[27], 20);
+	R2(SA, SB, SC, SD, block[13], g_md5_k[28], 5);
+	R2(SD, SA, SB, SC, block[2], g_md5_k[29], 9);
+	R2(SC, SD, SA, SB, block[7], g_md5_k[30], 14);
+	R2(SB, SC, SD, SA, block[12], g_md5_k[31], 20);
 }
 
-static void round3(const unsigned int *block, t_md5_state *state)
+static void	round3(const unsigned int *block, t_md5_state *state)
 {
-	R3(SA,SB,SC,SD, block[5], g_md5_k[32], 4);
-	R3(SD,SA,SB,SC, block[8], g_md5_k[33], 11);
-	R3(SC,SD,SA,SB, block[11], g_md5_k[34], 16);
-	R3(SB,SC,SD,SA, block[14], g_md5_k[35], 23);
-	R3(SA,SB,SC,SD, block[1], g_md5_k[36], 4);
-	R3(SD,SA,SB,SC, block[4], g_md5_k[37], 11);
-	R3(SC,SD,SA,SB, block[7], g_md5_k[38], 16);
-	R3(SB,SC,SD,SA, block[10], g_md5_k[39], 23);
-	R3(SA,SB,SC,SD, block[13], g_md5_k[40], 4);
-	R3(SD,SA,SB,SC, block[0], g_md5_k[41], 11);
-	R3(SC,SD,SA,SB, block[3], g_md5_k[42], 16);
-	R3(SB,SC,SD,SA, block[6], g_md5_k[43], 23);
-	R3(SA,SB,SC,SD, block[9], g_md5_k[44], 4);
-	R3(SD,SA,SB,SC, block[12], g_md5_k[45], 11);
-	R3(SC,SD,SA,SB, block[15], g_md5_k[46], 16);
-	R3(SB,SC,SD,SA, block[2], g_md5_k[47], 23);
+	R3(SA, SB, SC, SD, block[5], g_md5_k[32], 4);
+	R3(SD, SA, SB, SC, block[8], g_md5_k[33], 11);
+	R3(SC, SD, SA, SB, block[11], g_md5_k[34], 16);
+	R3(SB, SC, SD, SA, block[14], g_md5_k[35], 23);
+	R3(SA, SB, SC, SD, block[1], g_md5_k[36], 4);
+	R3(SD, SA, SB, SC, block[4], g_md5_k[37], 11);
+	R3(SC, SD, SA, SB, block[7], g_md5_k[38], 16);
+	R3(SB, SC, SD, SA, block[10], g_md5_k[39], 23);
+	R3(SA, SB, SC, SD, block[13], g_md5_k[40], 4);
+	R3(SD, SA, SB, SC, block[0], g_md5_k[41], 11);
+	R3(SC, SD, SA, SB, block[3], g_md5_k[42], 16);
+	R3(SB, SC, SD, SA, block[6], g_md5_k[43], 23);
+	R3(SA, SB, SC, SD, block[9], g_md5_k[44], 4);
+	R3(SD, SA, SB, SC, block[12], g_md5_k[45], 11);
+	R3(SC, SD, SA, SB, block[15], g_md5_k[46], 16);
+	R3(SB, SC, SD, SA, block[2], g_md5_k[47], 23);
 }
 
-static void round4(const unsigned int *block, t_md5_state *state)
+static void	round4(const unsigned int *block, t_md5_state *state)
 {
-	R4(SA,SB,SC,SD, block[0], g_md5_k[48], 6);
-	R4(SD,SA,SB,SC, block[7], g_md5_k[49], 10);
-	R4(SC,SD,SA,SB, block[14], g_md5_k[50], 15);
-	R4(SB,SC,SD,SA, block[5], g_md5_k[51], 21);
-	R4(SA,SB,SC,SD, block[12], g_md5_k[52], 6);
-	R4(SD,SA,SB,SC, block[3], g_md5_k[53], 10);
-	R4(SC,SD,SA,SB, block[10], g_md5_k[54], 15);
-	R4(SB,SC,SD,SA, block[1], g_md5_k[55], 21);
-	R4(SA,SB,SC,SD, block[8], g_md5_k[56], 6);
-	R4(SD,SA,SB,SC, block[15], g_md5_k[57], 10);
-	R4(SC,SD,SA,SB, block[6], g_md5_k[58], 15);
-	R4(SB,SC,SD,SA, block[13], g_md5_k[59], 21);
-	R4(SA,SB,SC,SD, block[4], g_md5_k[60], 6);
-	R4(SD,SA,SB,SC, block[11], g_md5_k[61], 10);
-	R4(SC,SD,SA,SB, block[2], g_md5_k[62], 15);
-	R4(SB,SC,SD,SA, block[9], g_md5_k[63], 21);
+	R4(SA, SB, SC, SD, block[0], g_md5_k[48], 6);
+	R4(SD, SA, SB, SC, block[7], g_md5_k[49], 10);
+	R4(SC, SD, SA, SB, block[14], g_md5_k[50], 15);
+	R4(SB, SC, SD, SA, block[5], g_md5_k[51], 21);
+	R4(SA, SB, SC, SD, block[12], g_md5_k[52], 6);
+	R4(SD, SA, SB, SC, block[3], g_md5_k[53], 10);
+	R4(SC, SD, SA, SB, block[10], g_md5_k[54], 15);
+	R4(SB, SC, SD, SA, block[1], g_md5_k[55], 21);
+	R4(SA, SB, SC, SD, block[8], g_md5_k[56], 6);
+	R4(SD, SA, SB, SC, block[15], g_md5_k[57], 10);
+	R4(SC, SD, SA, SB, block[6], g_md5_k[58], 15);
+	R4(SB, SC, SD, SA, block[13], g_md5_k[59], 21);
+	R4(SA, SB, SC, SD, block[4], g_md5_k[60], 6);
+	R4(SD, SA, SB, SC, block[11], g_md5_k[61], 10);
+	R4(SC, SD, SA, SB, block[2], g_md5_k[62], 15);
+	R4(SB, SC, SD, SA, block[9], g_md5_k[63], 21);
 }
 
-void md5_rounds(const unsigned int *block, t_md5_state *state)
+void		md5_rounds(const unsigned int *block, t_md5_state *state)
 {
 	state->working[0] = state->state[0];
 	state->working[1] = state->state[1];

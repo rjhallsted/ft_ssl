@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 20:55:29 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/20 14:18:52 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 12:48:46 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 void	handle_file_errors(t_hash_args *args, char **argv)
 {
-	int i;
-	char *command;
+	int		i;
+	char	*command;
 
 	command = ft_strtolow(ft_strdup(args->command));
 	i = 0;

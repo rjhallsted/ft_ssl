@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 20:24:18 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 12:41:22 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 13:46:48 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "error.h"
 #include "md5.h"
 
-static t_md5_state init_state(void)
+static t_md5_state	init_state(void)
 {
 	t_md5_state state;
 
@@ -30,7 +30,7 @@ static t_md5_state init_state(void)
 	return (state);
 }
 
-static int		get_block(char *block, int fd)
+static int			get_block(char *block, int fd)
 {
 	int r;
 	int tmp;
@@ -41,7 +41,7 @@ static int		get_block(char *block, int fd)
 	return (r);
 }
 
-static char		*build_hash(t_md5_state state)
+static char			*build_hash(t_md5_state state)
 {
 	char	*output;
 	char	*tmp;
@@ -61,7 +61,16 @@ static char		*build_hash(t_md5_state state)
 	return (output);
 }
 
-static void	md5_loop(t_hash_args *args, t_md5_state *state, int fd)
+static void			md5_last_block(char *block, uint64_t file_len,
+								t_md5_state *state)
+{
+	ft_bzero(block, 56);
+	file_len *= 8;
+	ft_memcpy(block + 56, &file_len, 8);
+	md5_rounds((unsigned int *)block, state);
+}
+
+static void			md5_loop(t_hash_args *args, t_md5_state *state, int fd)
 {
 	char			block[BLOCK_SIZE + 1];
 	uint64_t		file_len;
@@ -85,16 +94,11 @@ static void	md5_loop(t_hash_args *args, t_md5_state *state, int fd)
 		md5_rounds((unsigned int *)block, state);
 	}
 	if (ft_memcmp(block + 56, &file_len, 8))
-	{
-		ft_bzero(block, 56);
-		file_len *= 8;
-		ft_memcpy(block + 56, &file_len, 8);
-		md5_rounds((unsigned int *)block, state);
-	}
+		md5_last_block(block, file_len, state);
 	args->print_input = 0;
 }
 
-static void	md5_string_loop(t_hash_args *args, t_md5_state *state)
+static void			md5_string_loop(t_hash_args *args, t_md5_state *state)
 {
 	char			*input_str;
 	uint64_t		str_len;
@@ -118,7 +122,7 @@ static void	md5_string_loop(t_hash_args *args, t_md5_state *state)
 	}
 }
 
-static void	do_md5(t_hash_args *args, char *filename, int fd)
+static void			do_md5(t_hash_args *args, char *filename, int fd)
 {
 	t_md5_state		state;
 	char			*output;
@@ -137,7 +141,7 @@ static void	do_md5(t_hash_args *args, char *filename, int fd)
 	free(output);
 }
 
-static void do_md5_string(t_hash_args *args)
+static void			do_md5_string(t_hash_args *args)
 {
 	t_md5_state		state;
 	char			*output;
@@ -156,7 +160,7 @@ static void do_md5_string(t_hash_args *args)
 	free(output);
 }
 
-void	ftssl_md5(char *command, int argc, char **argv)
+void				ftssl_md5(char *command, int argc, char **argv)
 {
 	t_hash_args		*args;
 	int				i;

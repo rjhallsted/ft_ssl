@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/11 17:35:22 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 10:57:26 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 12:47:53 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static t_hash_args		*init_args(char *command)
 
 void					free_args(t_hash_args *args)
 {
-//should make it so that args->input_string gets freed here as well.
+//should make it so that args->input_string gets freed here as well. at the end
 	free(args->command);
 	if (args->fds)
 		free(args->fds);
