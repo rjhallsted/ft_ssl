@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/17 20:09:33 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/20 15:00:39 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 18:42:58 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static const unsigned int	g_md5_k[] = {
 #define R1F(a,b,c,d) a + ((b & c) | ((~b) & d))
 #define R2F(a,b,c,d) a + ((b & d) | (c & (~d)))
 #define R3F(a,b,c,d) a + (b ^ c ^ d)
-#define R4F(a,b,c,d) a + (c ^ (b | (~c)))
+#define R4F(a,b,c,d) a + (c ^ (b | (~d)))
 #define R1(a,b,c,d,i,k,s) a = b + ROTL((R1F(a,b,c,d) + i + k), s, 32)
 #define R2(a,b,c,d,i,k,s) a = b + ROTL((R2F(a,b,c,d) + i + k), s, 32)
 #define R3(a,b,c,d,i,k,s) a = b + ROTL((R3F(a,b,c,d) + i + k), s, 32)
@@ -124,9 +124,6 @@ static void round4(const unsigned int *block, t_md5_state *state)
 	R4(SC,SD,SA,SB, block[2], g_md5_k[62], 15);
 	R4(SB,SC,SD,SA, block[9], g_md5_k[63], 21);
 }
-
-#include <stdint.h>
-#include <libft.h>
 
 void md5_rounds(const unsigned int *block, t_md5_state *state)
 {

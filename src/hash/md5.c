@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 20:24:18 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/20 14:42:45 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 18:41:56 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static char		*build_hash(t_md5_state state)
 	i = 0;
 	while (i < 4)
 	{
+		ft_reverse_bytes(state.state + i, sizeof(unsigned int));
 		tmp = ft_uitoa_base(state.state[i], 16);
 		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
 		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
