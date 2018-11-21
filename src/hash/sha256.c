@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 13:22:11 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 14:10:06 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:36:20 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <ft_ssl.h>
 #include "args.h"
 #include "sha256.h"
+#include "error.h"
 
 static t_sha256_state	init_state(void)
 {
@@ -71,15 +72,34 @@ static uint32_t		*generate_words(uint32_t *block)
 	return (w);
 }
 
+static char			*build_hash(t_sha256_state state)
+{
+	char	*output;
+	char	*tmp;
+	int		i;
+
+	output = ft_strnew(64);
+	i = 0;
+	while (i < 8)
+	{
+		tmp = ft_uitoa_base(state.state[i], 16);
+		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
+		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
+		free(tmp);
+		i++;
+	}
+	return (output);
+}
+
 static void			sha256_last_block(char *block, uint64_t file_len,
-								t_md5_state *state)
+								t_sha256_state *state)
 {
 	ft_bzero(block, 56);
 	file_len *= 8;
 	ft_reverse_bytes(&file_len, 8);
 	ft_memcpy(block + 56, &file_len, 8);
 	state->words = generate_words((uint32_t *)block);
-	sha256_rounds((unsigned int *)block, state);
+	sha256_rounds(state);
 	free(state->words);
 }
 
@@ -105,8 +125,8 @@ static void			sha256_loop(t_hash_args *args, t_sha256_state *state, int fd)
 			if (rlen < 56)
 				ft_memcpy(block + 56, &file_len, 8);
 		}
-		state->words = generate_words(block);
-		sha256_rounds((unsigned int *)block, state);
+		state->words = generate_words((uint32_t *)block);
+		sha256_rounds(state);
 		free(state->words);
 	}
 	if (ft_memcmp(block + 56, &file_len, 8))
@@ -134,7 +154,9 @@ static void			sha256_string_loop(t_hash_args *args, t_sha256_state *state)
 	i = 0;
 	while (i < final_len)
 	{
-		sha256_rounds((unsigned int *)(input_str + i), state);
+		state->words = generate_words((uint32_t *)(input_str + i));
+		sha256_rounds(state);
+		free(state->words);
 		i += 64;
 	}
 }
@@ -187,7 +209,7 @@ void				ftssl_sha256(char *command, int argc, char **argv)
 	if (args->read_stdin)
 		do_sha256(args, NULL, STDIN_FILENO);
 	if (args->string_mode && args->input_string)
-		do_256_string(args);
+		do_sha256_string(args);
 	i = 0;
 	while (i < args->fd_count)
 	{
