@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 13:25:10 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 14:51:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:46:49 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ typedef struct	s_sha256_state {
 
 void			ftssl_sha256(char *command, int argc, char **argv);
 void			sha256_rounds(t_sha256_state *state);
+void			ftssl_sha224(char *comman, int argc, char **argv);
 
 #endif

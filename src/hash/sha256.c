@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 13:22:11 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 15:36:20 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 15:47:35 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,32 @@
 #include "sha256.h"
 #include "error.h"
 
-static t_sha256_state	init_state(void)
+static t_sha256_state	init_state(int ver)
 {
 	t_sha256_state state;
 
-	state.state[0] = 0x6a09e667;
-	state.state[1] = 0xbb67ae85;
-	state.state[2] = 0x3c6ef372;
-	state.state[3] = 0xa54ff53a;
-	state.state[4] = 0x510e527f;
-	state.state[5] = 0x9b05688c;
-	state.state[6] = 0x1f83d9ab;
-	state.state[7] = 0x5be0cd19;
+	if (ver == 224)
+	{
+		state.state[0] = 0xc1059ed8;
+		state.state[1] = 0x367cd507;
+		state.state[2] = 0x3070dd17;
+		state.state[3] = 0xf70e5939;
+		state.state[4] = 0xffc00b31;
+		state.state[5] = 0x68581511;
+		state.state[6] = 0x64f98fa7;
+		state.state[7] = 0xbefa4fa4;
+	}
+	else
+	{
+		state.state[0] = 0x6a09e667;
+		state.state[1] = 0xbb67ae85;
+		state.state[2] = 0x3c6ef372;
+		state.state[3] = 0xa54ff53a;
+		state.state[4] = 0x510e527f;
+		state.state[5] = 0x9b05688c;
+		state.state[6] = 0x1f83d9ab;
+		state.state[7] = 0x5be0cd19;
+	}
 	return (state);
 }
 
@@ -72,15 +86,17 @@ static uint32_t		*generate_words(uint32_t *block)
 	return (w);
 }
 
-static char			*build_hash(t_sha256_state state)
+static char			*build_hash(t_sha256_state state, int ver)
 {
 	char	*output;
 	char	*tmp;
 	int		i;
+	int		pieces;
 
-	output = ft_strnew(64);
+	pieces = (ver == 224) ? 7 : 8;
+	output = ft_strnew(pieces * 8);
 	i = 0;
-	while (i < 8)
+	while (i < pieces)
 	{
 		tmp = ft_uitoa_base(state.state[i], 16);
 		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
@@ -161,16 +177,16 @@ static void			sha256_string_loop(t_hash_args *args, t_sha256_state *state)
 	}
 }
 
-static void			do_sha256(t_hash_args *args, char *filename, int fd)
+static void			do_sha256(t_hash_args *args, char *filename, int fd, int ver)
 {
 	t_sha256_state	state;
 	char			*output;
 	unsigned int	file_len;
 
 	file_len = 0;
-	state = init_state();
+	state = init_state(ver);
 	sha256_loop(args, &state, fd);
-	output = build_hash(state);
+	output = build_hash(state, ver);
 	if (filename && !args->quiet_mode && !args->reverse_output)
 		ft_printf("MD5 (%s) = %s\n", filename, output);
 	else if (filename && !args->quiet_mode && args->reverse_output)
@@ -180,16 +196,16 @@ static void			do_sha256(t_hash_args *args, char *filename, int fd)
 	free(output);
 }
 
-static void			do_sha256_string(t_hash_args *args)
+static void			do_sha256_string(t_hash_args *args, int ver)
 {
 	t_sha256_state	state;
 	char			*output;
 	unsigned int	file_len;
 
 	file_len = 0;
-	state = init_state();
+	state = init_state(ver);
 	sha256_string_loop(args, &state);
-	output = build_hash(state);
+	output = build_hash(state, ver);
 	if (!args->quiet_mode && !args->reverse_output)
 		ft_printf("MD5 (\"%s\") = %s\n", args->input_string, output);
 	else if (!args->quiet_mode && args->reverse_output)
@@ -207,13 +223,34 @@ void				ftssl_sha256(char *command, int argc, char **argv)
 	args = get_args(argc, argv);
 	command = NULL;
 	if (args->read_stdin)
-		do_sha256(args, NULL, STDIN_FILENO);
+		do_sha256(args, NULL, STDIN_FILENO, 256);
 	if (args->string_mode && args->input_string)
-		do_sha256_string(args);
+		do_sha256_string(args, 256);
 	i = 0;
 	while (i < args->fd_count)
 	{
-		do_sha256(args, args->filenames[i], args->fds[i]);
+		do_sha256(args, args->filenames[i], args->fds[i], 256);
+		i++;
+	}
+	handle_file_errors(args, argv);
+	free_args(args);
+}
+
+void				ftssl_sha224(char *command, int argc, char **argv)
+{
+	t_hash_args		*args;
+	int				i;
+
+	args = get_args(argc, argv);
+	command = NULL;
+	if (args->read_stdin)
+		do_sha256(args, NULL, STDIN_FILENO, 224);
+	if (args->string_mode && args->input_string)
+		do_sha256_string(args, 224);
+	i = 0;
+	while (i < args->fd_count)
+	{
+		do_sha256(args, args->filenames[i], args->fds[i], 224);
 		i++;
 	}
 	handle_file_errors(args, argv);
