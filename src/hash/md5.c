@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 20:24:18 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/20 18:41:56 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/20 18:45:53 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ static void	md5_loop(t_hash_args *args, t_md5_state *state, int fd)
 				ft_memcpy(block + 56, &file_len, 8);
 		}
 		md5_rounds((unsigned int *)block, state);
+		
 	}
 	if ((uint64_t)(block + 56) != file_len)
 	{
