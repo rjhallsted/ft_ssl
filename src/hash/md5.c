@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 20:24:18 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 16:46:40 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 22:16:45 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,75 +31,79 @@ static t_md5_state	init_state(void)
 	return (state);
 }
 
-static int			get_block(char *block, int fd)
-{
-	int r;
-	int tmp;
-
-	r = 0;
-	while ((tmp = read(fd, block + r, BLOCK_SIZE_MD5 - r)) > 0)
-	{
-		ft_printf("read %d\n", tmp);
-		ft_printf("\n%c\n", block[8]);
-		r += tmp;
-	}	
-	block[r] = '\0';
-	return (r);
-}
-
 static char			*build_hash(t_md5_state state)
 {
 	char	*output;
 	char	*tmp;
 	int		i;
 
+	ft_printf("building hash\n");
 	output = ft_strnew(32);
+	ft_printf("malloced output\n");
 	i = 0;
 	while (i < 4)
 	{
+		ft_printf("%d\n", i);
 		ft_reverse_bytes(state.state + i, sizeof(unsigned int));
+		ft_printf("reversed bytes\n");
 		tmp = ft_uitoa_base(state.state[i], 16);
+		ft_printf("build base\n");
 		tmp = ft_strjoinfree(ft_xstring('0', 8 - ft_strlen(tmp)), tmp, 3);
+		ft_printf("added 0s\n");
 		ft_strncpy((char *)output + (i * 8), (char *)tmp, 8);
 		free(tmp);
+		ft_printf("freed\n");
 		i++;
 	}
 	return (output);
 }
 
-static void			md5_last_block(char *block, uint64_t file_len,
-								t_md5_state *state)
+static void			md5_last_block(uint64_t file_len, t_md5_state *state)
 {
+	char	*block;
+
+	block = ft_memalloc(BLOCK_SIZE_MD5);
 	ft_bzero(block, 56);
 	file_len *= 8;
 	ft_memcpy(block + 56, &file_len, 8);
 	md5_rounds((unsigned int *)block, state);
+	free(block);
 }
 
 static void			md5_loop(t_hash_args *args, t_md5_state *state, int fd)
 {
-	char			block[BLOCK_SIZE_MD5 + 1];
+	char			*block;
 	uint64_t		file_len;
 	int				rlen;
+	int				padded;
 
 	file_len = 0;
-	while ((rlen = get_block(block, fd)) > 0)
+	block = NULL;
+	padded = 0;
+	rlen = 64;
+	while ((rlen == 64) && (rlen = get_next_block(fd, &block, BLOCK_SIZE_MD5)) > 0)
 	{
 		if (args->print_input)
 			ft_printf("%s", block);
 		file_len += rlen;
 		if (rlen != 64)
 		{
+			block = ft_memrealloc(block, rlen, BLOCK_SIZE_MD5);
 			block[rlen] = (unsigned char)128;
 			ft_bzero(block + rlen + 1, BLOCK_SIZE_MD5 - rlen - 8);
 			file_len *= 8;
 			if (rlen < 56)
+			{
 				ft_memcpy(block + 56, &file_len, 8);
+				padded = 1;
+			}
 		}
 		md5_rounds((unsigned int *)block, state);
+		free(block);
+		block = NULL;
 	}
-	if (ft_memcmp(block + 56, &file_len, 8))
-		md5_last_block(block, file_len, state);
+	if (!padded)
+		md5_last_block(file_len, state);
 	args->print_input = 0;
 }
 
@@ -137,6 +141,7 @@ static void			do_md5(t_hash_args *args, char *filename, int fd)
 	state = init_state();
 	md5_loop(args, &state, fd);
 	output = build_hash(state);
+	ft_printf("built hash\n");
 	if (filename && !args->quiet_mode && !args->reverse_output)
 		ft_printf("MD5 (%s) = %s\n", filename, output);
 	else if (filename && !args->quiet_mode && args->reverse_output)

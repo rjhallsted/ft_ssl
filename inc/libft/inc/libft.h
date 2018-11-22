@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:31:58 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 21:27:37 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 21:42:44 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <stdarg.h>
 # include <stdint.h>
 # include <stdlib.h>
+# include "ft_printf.h"
+# include "get_next_line.h"
+# include "get_next_block.h"
 
 typedef struct		s_list
 {
