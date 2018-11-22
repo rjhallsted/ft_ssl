@@ -6,11 +6,12 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/18 18:43:49 by rhallste          #+#    #+#             */
-/*   Updated: 2018/01/19 21:07:14 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 21:32:12 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft.h"
+#include "../../inc/ft_printf.h"
 
 static void	init_format(t_format *format)
 {

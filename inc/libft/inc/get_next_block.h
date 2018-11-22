@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_fd.c                                     :+:      :+:    :+:   */
+/*   get_next_block.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/12 16:47:38 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 21:28:28 by rhallste         ###   ########.fr       */
+/*   Created: 2018/11/21 20:37:02 by rhallste          #+#    #+#             */
+/*   Updated: 2018/11/21 21:05:17 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include "../inc/libft.h"
-#include "../inc/ft_printf.h"
+#ifndef GET_NEXT_BLOCK_H
+# define GET_NEXT_BLOCK_H
 
-int	ft_printf_fd(int fd, const char *format, ...)
+# define BLOCK_BUFF_SIZE 10000
+
+typedef struct		s_gnb
 {
-	va_list	ap;
-	int		len;
+	int				fd;
+	int				len;
+	char			buff[BLOCK_BUFF_SIZE + 1];
+	struct s_gnb	*next;
+}					t_gnb;
 
-	va_start(ap, format);
-	len = ft_vprintf_fd(fd, format, ap);
-	va_end(ap);
-	return (len);
-}
+int					get_next_block(const int fd, char **block,
+								   size_t block_size);
+
+#endif

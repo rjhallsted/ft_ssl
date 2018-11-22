@@ -6,14 +6,15 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 18:28:47 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/11 17:31:58 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 21:36:56 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "../inc/libft.h"
+#include <libft.h>
+#include <get_next_line.h>
 
 char	*ft_get_file_contents(int fd)
 {

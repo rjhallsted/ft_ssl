@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/15 21:40:52 by rhallste          #+#    #+#             */
-/*   Updated: 2018/01/19 20:55:03 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 21:31:13 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include "../../inc/libft.h"
+#include "../../inc/ft_printf.h"
 
 static int			format_var(char **str, const char *format_str, va_list ap,
 					t_format *format)

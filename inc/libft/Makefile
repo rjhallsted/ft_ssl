@@ -6,14 +6,14 @@
 #    By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/18 09:37:14 by rhallste          #+#    #+#              #
-#    Updated: 2018/11/08 20:04:31 by rhallste         ###   ########.fr        #
+#    Updated: 2018/11/21 21:25:16 by rhallste         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME		= 	libftprintf.a
 CC			=	gcc
 EXTRA_FLAGS =	-Weverything -Wno-cast-qual
-CFLAGS		=	-Wall -Werror -Wextra #$(EXTRA_FLAGS)
+CFLAGS		=	-Wall -Werror -Wextra -I inc/
 
 LIST		=	ft_lst_itemcpy				\
 				ft_lst_remove_if			\
@@ -136,7 +136,8 @@ UTIL		=	ft_digitcount				\
 				ft_pow						\
 				ft_pow_mod					\
 				ft_swap						\
-				get_next_line
+				get_next_line				\
+				get_next_block
 
 FILES		= $(LIST) $(LOGIC) $(MEM) $(PRINTING) $(STR) $(UTIL)
 

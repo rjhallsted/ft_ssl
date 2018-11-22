@@ -6,12 +6,13 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/14 23:36:44 by rhallste          #+#    #+#             */
-/*   Updated: 2018/01/19 22:08:20 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 21:31:03 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "../../inc/libft.h"
+#include "../../inc/ft_printf.h"
 
 static void	handle_zero_flag(t_format *fmt, char **s)
 {

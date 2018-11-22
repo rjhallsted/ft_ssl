@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_block.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/10/09 16:38:28 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 20:34:24 by rhallste         ###   ########.fr       */
+/*   Created: 2018/11/21 20:32:02 by rhallste          #+#    #+#             */
+/*   Updated: 2018/11/21 21:04:52 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,20 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../inc/libft.h"
-#include "../inc/get_next_line.h"
+#include "../inc/get_next_block.h"
 
-static int		copy(char **line, t_fdb *data, int rv)
+static int		copy(char **block, t_gnb *data, size_t rv, size_t block_size)
 {
-	char	*char_pos;
 	int		copy_len;
 	int		i;
 	size_t	old_len;
-
-	char_pos = ft_strchr(data->buff, '\n');
-	copy_len = (char_pos) ? (int)(char_pos - data->buff) : rv;
+	
+	copy_len = (rv > block_size) ? block_size : rv;
 	old_len = (size_t)data->len;
 	data->len += copy_len;
-	if (!(*line = ft_memrealloc(*line, (size_t)data->len + 1, old_len)))
+	if (!(*block = ft_memrealloc(*block, (size_t)data->len + 1, old_len)))
 		return (-1);
-	ft_strncat(*line, data->buff, (size_t)copy_len);
+	ft_strncat(*block, data->buff, (size_t)copy_len);
 	i = 0;
 	copy_len++;
 	while (data->buff[i] && data->buff[i + copy_len])
@@ -37,26 +35,26 @@ static int		copy(char **line, t_fdb *data, int rv)
 		data->buff[i] = data->buff[i + copy_len];
 		i++;
 	}
-	ft_bzero(data->buff + i, (size_t)(BUFF_SIZE - i));
-	return ((char_pos != NULL));
+	ft_bzero(data->buff + i, (size_t)(BLOCK_BUFF_SIZE - i));
+	return ((rv >= block_size));
 }
 
-static t_fdb	*new_data_item(int fd)
+static t_gnb	*new_data_item(int fd)
 {
-	t_fdb	*new;
+	t_gnb	*new;
 
-	if (!(new = ft_memalloc(sizeof(t_fdb))))
+	if (!(new = ft_memalloc(sizeof(t_gnb))))
 		return (NULL);
 	new->fd = fd;
 	new->len = 0;
-	ft_bzero(new->buff, BUFF_SIZE + 1);
+	ft_bzero(new->buff, BLOCK_BUFF_SIZE + 1);
 	new->next = NULL;
 	return (new);
 }
 
-static t_fdb	*find_fdb(t_fdb **first, int fd)
+static t_gnb	*find_fdb(t_gnb **first, int fd)
 {
-	t_fdb	*item;
+	t_gnb	*item;
 
 	if (!first)
 		return (NULL);
@@ -81,10 +79,10 @@ static t_fdb	*find_fdb(t_fdb **first, int fd)
 	return (*first);
 }
 
-static void		free_fdb(t_fdb **first, t_fdb *data)
+static void		free_fdb(t_gnb **first, t_gnb *data)
 {
-	t_fdb *tmp;
-	t_fdb *item;
+	t_gnb *tmp;
+	t_gnb *item;
 
 	if (!data || !first)
 		return ;
@@ -105,31 +103,31 @@ static void		free_fdb(t_fdb **first, t_fdb *data)
 	}
 }
 
-int				get_next_line(const int fd, char **line)
+int				get_next_block(const int fd, char **block, size_t block_size)
 {
-	static t_fdb	*first;
-	t_fdb			*d;
+	static t_gnb	*first;
+	t_gnb			*d;
 	ssize_t			rv;
 
-	if (!(line) || fd < 0 || (!(d = find_fdb(&first, fd))))
+	if (!(block) || fd < 0 || (!(d = find_fdb(&first, fd))))
 		return (-1);
-	*line = NULL;
-	if (ft_strlen(d->buff) > 0 && (rv = copy(line, d, (int)ft_strlen(d->buff))))
+	*block = NULL;
+	if (ft_strlen(d->buff) > 0 && (rv = copy(block, d, (int)ft_strlen(d->buff), block_size)))
 		return ((int)rv);
-	if ((rv = read(fd, d->buff, BUFF_SIZE)) == -1 || (rv == 0 && *line == NULL))
+	if ((rv = read(fd, d->buff, BLOCK_BUFF_SIZE)) == -1 || (rv == 0 && *block == NULL))
 	{
 		free_fdb(&first, d);
 		return ((int)rv);
 	}
 	while (rv)
 	{
-		if (copy(line, d, (int)rv))
+		if (copy(block, d, (int)rv, block_size))
 			return (1);
-		if ((rv = (int)read(fd, d->buff, BUFF_SIZE)) == -1)
+		if ((rv = (int)read(fd, d->buff, BLOCK_BUFF_SIZE)) == -1)
 		{
 			free_fdb(&first, d);
 			return (-1);
 		}
 	}
-	return ((rv == 0 && *line != NULL));
+	return ((rv == 0 && *block != NULL));
 }

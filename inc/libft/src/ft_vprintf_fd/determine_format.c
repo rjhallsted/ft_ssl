@@ -6,11 +6,12 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 11:32:11 by rhallste          #+#    #+#             */
-/*   Updated: 2018/01/19 21:06:16 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 21:32:20 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft.h"
+#include "../../inc/ft_printf.h"
 
 const char	*ft_vprintf_set_flags(const char *format_str, t_format *format)
 {

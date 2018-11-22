@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/09 16:40:51 by rhallste          #+#    #+#             */
-/*   Updated: 2017/11/22 10:32:59 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 20:33:37 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 typedef struct		s_fdb
 {
 	int				fd;
-	int				line_len;
+	int				len;
 	char			buff[BUFF_SIZE + 1];
 	struct s_fdb	*next;
 }					t_fdb;

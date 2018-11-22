@@ -6,13 +6,14 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/14 23:50:10 by rhallste          #+#    #+#             */
-/*   Updated: 2018/01/19 21:03:15 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 21:31:50 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 #include "../../inc/libft.h"
+#include "../../inc/ft_printf.h"
 
 void	ft_vprintf_apchar_to_str(t_format *fmt, intmax_t signed_int, char **s)
 {
