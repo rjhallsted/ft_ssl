@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 13:25:10 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 15:46:49 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 16:11:33 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /*
 **512 bits, so 64 bytes
 */
-# define BLOCK_SIZE 64
+# define BLOCK_SIZE_SHA256 64
 
 typedef struct	s_sha256_state {
 	uint32_t	state[8];

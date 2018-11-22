@@ -6,13 +6,14 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 20:24:18 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 13:46:48 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 16:46:40 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <ft_ssl.h>
 #include <libft.h>
 #include "args.h"
@@ -36,8 +37,13 @@ static int			get_block(char *block, int fd)
 	int tmp;
 
 	r = 0;
-	while ((tmp = read(fd, block + r, BUFF_SIZE - r)) > 0)
+	while ((tmp = read(fd, block + r, BLOCK_SIZE_MD5 - r)) > 0)
+	{
+		ft_printf("read %d\n", tmp);
+		ft_printf("\n%c\n", block[8]);
 		r += tmp;
+	}	
+	block[r] = '\0';
 	return (r);
 }
 
@@ -72,11 +78,10 @@ static void			md5_last_block(char *block, uint64_t file_len,
 
 static void			md5_loop(t_hash_args *args, t_md5_state *state, int fd)
 {
-	char			block[BLOCK_SIZE + 1];
+	char			block[BLOCK_SIZE_MD5 + 1];
 	uint64_t		file_len;
 	int				rlen;
 
-	block[BUFF_SIZE] = '\0';
 	file_len = 0;
 	while ((rlen = get_block(block, fd)) > 0)
 	{
@@ -86,7 +91,7 @@ static void			md5_loop(t_hash_args *args, t_md5_state *state, int fd)
 		if (rlen != 64)
 		{
 			block[rlen] = (unsigned char)128;
-			ft_bzero(block + rlen + 1, BLOCK_SIZE - rlen - 8);
+			ft_bzero(block + rlen + 1, BLOCK_SIZE_MD5 - rlen - 8);
 			file_len *= 8;
 			if (rlen < 56)
 				ft_memcpy(block + 56, &file_len, 8);

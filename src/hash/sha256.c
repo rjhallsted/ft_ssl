@@ -6,7 +6,7 @@
 /*   By: rhallste <rhallste@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 13:22:11 by rhallste          #+#    #+#             */
-/*   Updated: 2018/11/21 15:47:35 by rhallste         ###   ########.fr       */
+/*   Updated: 2018/11/21 16:12:49 by rhallste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,9 @@ static int			get_block(char *block, int fd)
 	int tmp;
 
 	r = 0;
-	while ((tmp = read(fd, block + r, BUFF_SIZE - r)) > 0)
+	while ((tmp = read(fd, block + r, BLOCK_SIZE_SHA256 - r)) > 0)
 		r += tmp;
+	block[r] = '\0';
 	return (r);
 }
 
@@ -121,11 +122,10 @@ static void			sha256_last_block(char *block, uint64_t file_len,
 
 static void			sha256_loop(t_hash_args *args, t_sha256_state *state, int fd)
 {
-	char			block[BLOCK_SIZE + 1];
+	char			block[BLOCK_SIZE_SHA256 + 1];
 	uint64_t		file_len;
 	int				rlen;
 
-	block[BUFF_SIZE] = '\0';
 	file_len = 0;
 	while ((rlen = get_block(block, fd)) > 0)
 	{
@@ -135,7 +135,7 @@ static void			sha256_loop(t_hash_args *args, t_sha256_state *state, int fd)
 		if (rlen != 64)
 		{
 			block[rlen] = (unsigned char)128;
-			ft_bzero(block + rlen + 1, BLOCK_SIZE - rlen - 8);
+			ft_bzero(block + rlen + 1, BLOCK_SIZE_SHA256 - rlen - 8);
 			file_len *= 8;
 			ft_reverse_bytes(&file_len, 8);
 			if (rlen < 56)
